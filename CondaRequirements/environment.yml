@@ -1,0 +1,16 @@
+name: CNSMP
+
+dependencies:
+  - python==3.10
+  - pytorch
+  - tensorflow-gpu
+  - keras
+  - pandas
+  - matplotlib
+  - bio
+  - h5py
+  - scikit-learn
+  - nltk
+  - python-Levenshtein
+  - biopython
+  - seaborn
