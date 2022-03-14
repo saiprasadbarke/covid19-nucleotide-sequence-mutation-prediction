@@ -1,10 +1,15 @@
 COVID-19 Nucleotide Sequence Mutation Prediction
 ==============================
 
-Using deep learning methodologies (GAN, VAE,  Transformer, RNN) to predict the mutations in Nucleotide sequences of the COVID-19 virus.
+Using deep learning methodologies (GAN, VAE, Transformer, RNN) to predict the mutations in Nucleotide sequences of the COVID-19 virus.
 
 Getting Started
 ------------
+```angular2html
+1. cd CondaRequirements/
+2. conda env create -f environment.yml
+3. conda activate CNSMP
+```
 
 
 Project Organization
