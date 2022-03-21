@@ -24,7 +24,7 @@ Project Organization
     ├── guide              <- A set of markdown files with documented best practices, guidelines and rools for collaborative projects
     │
     ├── models             <- Trained and serialized models, model predictions, or model summaries
-    │
+    │   
     ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
     │                         the creator's initials, and a short `-` delimited description, e.g
     │                         `1.0-jqp-initial-data-exploration`
