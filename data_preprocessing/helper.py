@@ -1,4 +1,6 @@
-def batch_iterator(iterator, batch_size):
+import imp
+from Bio.SeqIO.FastaIO import FastaIterator
+def batch_iterator(iterator:FastaIterator, batch_size):
     """Returns lists of length batch_size.
 
     This can be used on any iterator, for example to batch up
@@ -17,7 +19,7 @@ def batch_iterator(iterator, batch_size):
         batch = []
         while len(batch) < batch_size:
             try:
-                entry = iterator.next()
+                entry = iterator.__next__()
             except StopIteration:
                 entry = None
             if entry is None:
