@@ -1,16 +1,23 @@
 # Standard
 from pathlib import Path
-import os
 # Local
 from data_preprocessing.helper import batch_iterator
+from data_preprocessing.data_cleaning import check_sequence_completeness
 # External
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
 
-def read_fasta_file(import_file_path: str):  # provide return types here
+def create_complete_fasta_file(import_file_path: str, export_file_path: str):
+    fasta_file_with_completed_sequences = open(export_file_path, "w")
+    number_of_complete_sequences = 0
     for seq_record in SeqIO.parse(import_file_path, "fasta"):
-        date = get_seq_date(seq=seq_record)
-        continue 
+        if check_sequence_completeness(sequence_record_object=seq_record):
+            number_of_complete_sequences+=1
+            fasta_file_with_completed_sequences.write(seq_record.format("fasta"))
+        if number_of_complete_sequences%1000==0:
+            print(f"Wrote {number_of_complete_sequences} to file")
+    fasta_file_with_completed_sequences.close()
+     
 
 def create_subset_fasta_file(import_file_path: str,  number_of_sequences: int,export_file_path: str = None):
     record_iter = SeqIO.parse(open(import_file_path), "fasta")
@@ -32,12 +39,11 @@ def count_number_of_sequences(import_file_path: str):
     return count
 
 def get_seq_date(seq:SeqRecord):
-    name_string = seq.name
+    name_string = seq.description
     sequence_date = name_string.split("|")[2]
     return sequence_date
 
 if __name__ == "__main__":
-    #fasta_file_path = f"{Path.cwd()}/data/input/spikenuc0312.fasta"
-    subset_file_path = f"{Path.cwd()}/data/subsets/"
-    #create_subset_fasta_file(import_file_path=fasta_file_path, number_of_sequences=200000, export_file_path=subset_file_path)
-    read_fasta_file(import_file_path=f"{subset_file_path}/group_1.fasta")
+    input_fasta_file_path = f"{Path.cwd()}/data/input/spikenuc0312.fasta"
+    completed_sequences_file_path = f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
+    create_complete_fasta_file(import_file_path=input_fasta_file_path, export_file_path=completed_sequences_file_path)
