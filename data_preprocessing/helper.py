@@ -1,6 +1,8 @@
 import imp
 from Bio.SeqIO.FastaIO import FastaIterator
-def batch_iterator(iterator:FastaIterator, batch_size):
+
+
+def batch_iterator(iterator: FastaIterator, batch_size):
     """Returns lists of length batch_size.
 
     This can be used on any iterator, for example to batch up
