@@ -68,14 +68,14 @@ def generate_histogram_by_country(
             number_of_sequences.append(
                 read_fasta_file_and_return_length(path=file_path)
             )
-    fig = plt.figure()
-    ax = fig.add_axes([0, 0, 1, 1])
-    ax.set_xlabel("Countries")
-    ax.set_ylabel("# of completed seq")
-    ax.set_title("Countrywise distribution of completed sequences")
-    ax.bar(countries, number_of_sequences)
-    plt.show()
+    plt.figure(figsize=(10, 10))
+    plt.bar(countries, number_of_sequences)
+    plt.xlabel("Countries")
+    plt.ylabel("# of completed seq")
+    plt.xticks(rotation=90)
+    plt.title("Countrywise distribution of completed sequences")
     plt.savefig(output_path)
+    plt.show()
 
 
 def read_fasta_file_and_return_length(path: str) -> int:
