@@ -4,6 +4,7 @@ from Bio.SeqRecord import SeqRecord
 from pathlib import Path
 from globals.constants import list_of_countries
 import matplotlib.pyplot as plt
+import os
 
 
 def get_list_of_countries(import_file_path: str) -> List[str]:
@@ -53,8 +54,20 @@ def generate_histogram_by_country(
     countrywise_dictionary: Dict[str, List[SeqRecord]] = None,
     from_fasta_file: bool = False,
 ):
-    countries = list(countrywise_dictionary.keys())
-    number_of_sequences = [len(x) for x in list(countrywise_dictionary.values())]
+    if not from_fasta_file:
+        countries = list(countrywise_dictionary.keys())
+        number_of_sequences = [len(x) for x in list(countrywise_dictionary.values())]
+    else:
+        country_dir_path = f"{Path.cwd()}/data/countrywise_split"
+        countries = []
+        number_of_sequences = []
+        os.chdir(country_dir_path)
+        for file in os.listdir():
+            file_path = f"{country_dir_path}/{file}"
+            countries.append(file)
+            number_of_sequences.append(
+                read_fasta_file_and_return_length(path=file_path)
+            )
     fig = plt.figure()
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlabel("Countries")
@@ -63,6 +76,11 @@ def generate_histogram_by_country(
     ax.bar(countries, number_of_sequences)
     plt.show()
     plt.savefig(output_path)
+
+
+def read_fasta_file_and_return_length(path: str) -> int:
+
+    return len([1 for line in open(path) if line.startswith(">")])
 
 
 if __name__ == "__main__":
