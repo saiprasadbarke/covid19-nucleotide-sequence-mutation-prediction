@@ -1,6 +1,7 @@
 # Standard
 
 # Local
+from typing import List
 
 # External
 from Bio.SeqRecord import SeqRecord
@@ -15,9 +16,7 @@ def check_sequence_completeness(sequence_record_object: SeqRecord) -> bool:
         return True
 
 
-def remove_duplicate_sequences(sequences):
-    return None
-
-
-def clip_sequence(sequence_begin: int, sequence_end: int):
-    return None
+def remove_duplicate_sequences(
+    claded_sequences: List[dict[str, str]]
+) -> List[dict[str, str]]:
+    return list({frozenset(item.items()): item for item in claded_sequences}.values())
