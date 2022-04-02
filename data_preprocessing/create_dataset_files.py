@@ -6,7 +6,8 @@ import pandas as pd
 from pathlib import Path
 from claded_seq import CladedSequence
 from json import dump
-from data_cleaning import remove_duplicate_sequences
+from data_cleaning import remove_duplicate_sequences, remove_clades
+from globals.constants import list_of_clades
 
 
 def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
@@ -25,6 +26,16 @@ def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
     return claded_sequences
 
 
+def create_clade_datasets(claded_sequences: List[dict[str, str]], output_folder: str):
+    for clade in list_of_clades:
+        single_clade_sequences = []
+        for claded_sequence in claded_sequences:
+            if claded_sequence["clade"] == clade:
+                single_clade_sequences.append(claded_sequence)
+        with open(f"{output_folder}/{clade}.json", "w") as fout:
+            dump(single_clade_sequences, fout)
+
+
 if __name__ == "__main__":
     # clade_filepath = f"{Path.cwd()}/data/complete_sequences/complete_clades.tabular"
     # input_fasta_file_path = (
@@ -37,6 +48,7 @@ if __name__ == "__main__":
     claded_sequences_filepath = (
         f"{Path.cwd()}/data/claded_sequences/claded_sequences_nigeria.json"
     )
+    individual_claded_sequences_folder = f"{Path.cwd()}/data/claded_sequences/clades"
     claded_sequences = create_merged_data(
         sequences_file=input_fasta_filepath,
         clades_file=clade_filepath,
@@ -44,4 +56,8 @@ if __name__ == "__main__":
     )
     print(f"Original Length : {len(claded_sequences)}")
     claded_sequences = remove_duplicate_sequences(claded_sequences)
-    print(f"New Length : {len(claded_sequences)}")
+    print(f"New Length after removing duplicates: {len(claded_sequences)}")
+    claded_sequences = remove_clades(claded_sequences)
+    print(f"New Length after removing clades: {len(claded_sequences)}")
+    create_clade_datasets(claded_sequences, individual_claded_sequences_folder)
+    print("Completed data pre processing...")

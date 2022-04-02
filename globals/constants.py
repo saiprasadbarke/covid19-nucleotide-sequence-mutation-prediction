@@ -40,3 +40,15 @@ list_of_countries = [
     "South Africa",
     "Senegal",
 ]  # Ref: https://www.gisaid.org/submission-tracker-global/
+
+list_of_clades = [
+    "20C",
+    "19A",
+    "21C (Epsilon)",
+    "21F (Iota)",
+    "20B",
+    "20J (Gamma, V3)",
+    "20A",
+    "20E (EU1)",
+    "19B",
+]  # All clades with number of sequences >18000 were chosen and the rest were droppped
