@@ -14,11 +14,22 @@ def read_clade_tabular(file_path: str) -> dict[str, str]:
 
 
 def plot_bar_clades(id_clade_dict: dict[str, str], op_path: str):
-    clades = id_clade_dict.values()
-    plt.figure(figsize=(10, 10))
+    clades = list(id_clade_dict.values())
+    unique_clades = []
+    for clade in clades:
+        if clade not in unique_clades:
+            unique_clades.append(clade)
+    number_of_clades_dict = dict.fromkeys(unique_clades)
+    for unique_clade in unique_clades:
+        number_of_clades_dict[unique_clade] = clades.count(unique_clade)
+    x = [str(clade) for clade in list(number_of_clades_dict.keys())]
+    y = list(number_of_clades_dict.values())
+    plt.xlabel("Clades")
+    plt.title("Frequency of clades")
+    plt.figure(figsize=(20, 20))
     plt.xticks(rotation=90)
-    plt.hist(clades, rwidth=0.5)
-    plt.savefig(clades_histogram_path)
+    plt.bar(x, y)
+    plt.savefig(op_path)
     plt.show()
 
 
