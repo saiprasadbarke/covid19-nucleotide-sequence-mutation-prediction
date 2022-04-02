@@ -10,7 +10,7 @@ from data_cleaning import remove_duplicate_sequences, remove_clades
 from globals.constants import list_of_clades
 
 
-def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
+def create_merged_data(sequences_file: str, clades_file: str, output_file: str = None):
     claded_sequences = []
     sequence_records = SeqIO.parse(sequences_file, "fasta")
     data = pd.read_table(clades_file, header=None)
@@ -21,8 +21,9 @@ def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
             if sequence_record.description == name:
                 claded_sequence = CladedSequence(str(sequence_record.seq), clade)
                 claded_sequences.append(claded_sequence.__dict__)
-    with open(output_file, "w") as fout:
-        dump(claded_sequences, fout)
+    if output_file is not None:
+        with open(output_file, "w") as fout:
+            dump(claded_sequences, fout)
     return claded_sequences
 
 
@@ -37,22 +38,19 @@ def create_clade_datasets(claded_sequences: List[dict[str, str]], output_folder:
 
 
 if __name__ == "__main__":
-    # clade_filepath = f"{Path.cwd()}/data/complete_sequences/complete_clades.tabular"
-    # input_fasta_file_path = (
-    #    f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
+
+    clade_filepath = f"{Path.cwd()}/data/complete_sequences/complete_sequences.tabular"
+    input_fasta_filepath = (
+        f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
+    )
+    # claded_sequences_filepath = (
+    #    f"{Path.cwd()}/data/claded_sequences/claded_sequences_nigeria.json"
     # )
-    clade_filepath = (
-        f"{Path.cwd()}/data/countrywise_split/clades_tabular/nigeria_clades.tabular"
-    )
-    input_fasta_filepath = f"{Path.cwd()}/data/countrywise_split/fasta/Nigeria.fasta"
-    claded_sequences_filepath = (
-        f"{Path.cwd()}/data/claded_sequences/claded_sequences_nigeria.json"
-    )
     individual_claded_sequences_folder = f"{Path.cwd()}/data/claded_sequences/clades"
     claded_sequences = create_merged_data(
         sequences_file=input_fasta_filepath,
         clades_file=clade_filepath,
-        output_file=claded_sequences_filepath,
+        # output_file=claded_sequences_filepath,
     )
     print(f"Original Length : {len(claded_sequences)}")
     claded_sequences = remove_duplicate_sequences(claded_sequences)
