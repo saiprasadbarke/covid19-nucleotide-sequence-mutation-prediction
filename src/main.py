@@ -6,13 +6,22 @@ from visualization.plot_by_country_year import (
     generate_histogram_by_country,
 )
 
+from data_preprocessing.create_dataset_files import (
+    count_sequences,
+    create_clade_datasets,
+)
+import os
+
+from json import load
+
+
 print(Path.cwd())
 # input_fasta_file_path = f"{Path.cwd()}/data/input/spikenuc0312.fasta"
 # completed_sequences_file_path = f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
 # create_complete_fasta_file(import_file_path=input_fasta_file_path, export_file_path=completed_sequences_file_path)
 
 # input_fasta_file_path = f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
-histogram_path = f"{Path.cwd()}/plots/countrywise_wo_year.png"
+# histogram_path = f"{Path.cwd()}/plots/countrywise_wo_year.png"
 # countrywise_fasta_path = f"{Path.cwd()}/data/countrywise_split"
 # countrywise_sequences_dictionary = split_sequences_by_country(
 #    import_file_path=input_fasta_file_path
@@ -21,4 +30,5 @@ histogram_path = f"{Path.cwd()}/plots/countrywise_wo_year.png"
 #    countrywise_dictionary=countrywise_sequences_dictionary,
 #    output_path=countrywise_fasta_path,
 # )
-generate_histogram_by_country(from_fasta_file=True, output_path=histogram_path)
+# generate_histogram_by_country(from_fasta_file=True, output_path=histogram_path)
+count_sequences(f"{Path.cwd()}/data/claded_sequences/clades")

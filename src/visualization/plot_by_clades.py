@@ -1,7 +1,10 @@
-import pandas as pd
+# Standard
+from json import dump
 from pathlib import Path
+
+# External
 import matplotlib.pyplot as plt
-import json
+import pandas as pd
 
 
 def read_clade_tabular(file_path: str) -> dict[str, str]:
@@ -27,7 +30,7 @@ def plot_bar_clades(id_clade_dict: dict[str, str], graph_path: str, stats_path: 
         sorted(number_of_clades_dict.items(), key=lambda item: item[1])
     )
     with open(stats_path, "w") as fp:
-        json.dump(number_of_clades_dict, fp)
+        dump(number_of_clades_dict, fp)
     print(number_of_clades_dict)
     x = [
         str(clade) for clade in list(number_of_clades_dict.keys())

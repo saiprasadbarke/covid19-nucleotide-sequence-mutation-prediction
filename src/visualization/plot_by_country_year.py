@@ -1,31 +1,62 @@
+# Standard
 from typing import Dict, List
+from pathlib import Path
+from os import chdir, listdir
+
+# Local
+
+# External
 from Bio import SeqIO
 from Bio.SeqRecord import SeqRecord
-from pathlib import Path
-from globals.constants import list_of_countries
 import matplotlib.pyplot as plt
-import os
 
 
-def get_list_of_countries(import_file_path: str) -> List[str]:
-    list_of_countries = []
-    for seq_record in SeqIO.parse(import_file_path, "fasta"):
-        country = get_country(seq_record)
-        if country in list_of_countries:
-            continue
-        else:
-            list_of_countries.append(country)
-    return list_of_countries
-
-
-def get_country(seq_record_obj: SeqRecord):
-
-    return seq_record_obj.description.split("|")[-1]
+LIST_OF_COUNTRIES = [
+    "USA",
+    "UK",
+    "Germany",
+    "Denmark",
+    "Canada",
+    "France",
+    "Japan",
+    "India",
+    "Sweden",
+    "Switzerland",
+    "Brazil",
+    "Spain",
+    "Italy",
+    "Belgium",
+    "Turkey",
+    "Austria",
+    "Australia",
+    "Poland",
+    "Ireland",
+    "Slovenia",
+    "Israel",
+    "Mexico",
+    "Norway",
+    "Lithuania",
+    "Portugal",
+    "China",
+    "Finland",
+    "Croatia",
+    "Chile",
+    "Peru",
+    "Argentina",
+    "Thailand",
+    "Greece",
+    "Russia",
+    "Colombia",
+    "Singapore",
+    "Bangladesh",
+    "Nigeria",
+    "South Africa",
+    "Senegal",
+]  # Ref: https://www.gisaid.org/submission-tracker-global/
 
 
 def split_sequences_by_country(import_file_path: str) -> Dict[str, List[SeqRecord]]:
-    # list_of_countries = get_list_of_countries(import_file_path=import_file_path)
-    countrywise_sequences_dictionary = dict.fromkeys(list_of_countries)
+    countrywise_sequences_dictionary = dict.fromkeys(LIST_OF_COUNTRIES)
     for country in countrywise_sequences_dictionary.keys():
         sequences_list = []
         for seq_record in SeqIO.parse(import_file_path, "fasta"):
@@ -61,8 +92,8 @@ def generate_histogram_by_country(
         country_dir_path = f"{Path.cwd()}/data/countrywise_split"
         countries = []
         number_of_sequences = []
-        os.chdir(country_dir_path)
-        for file in os.listdir():
+        chdir(country_dir_path)
+        for file in listdir():
             file_path = f"{country_dir_path}/{file}"
             countries.append(file)
             number_of_sequences.append(
