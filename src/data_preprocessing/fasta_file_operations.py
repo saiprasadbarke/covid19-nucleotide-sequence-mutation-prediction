@@ -31,9 +31,7 @@ def check_sequence_completeness(sequence_record_object: SeqRecord) -> bool:
 
 if __name__ == "__main__":
     input_fasta_file_path = f"{Path.cwd()}/data/input/spikenuc0312.fasta"
-    completed_sequences_file_path = (
-        f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
-    )
+    completed_sequences_file_path = f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
     create_complete_fasta_file(
         import_file_path=input_fasta_file_path,
         export_file_path=completed_sequences_file_path,

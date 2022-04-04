@@ -60,18 +60,13 @@ def split_sequences_by_country(import_file_path: str) -> Dict[str, List[SeqRecor
     for country in countrywise_sequences_dictionary.keys():
         sequences_list = []
         for seq_record in SeqIO.parse(import_file_path, "fasta"):
-            if (
-                country in seq_record.description
-                or country.lower() in seq_record.description
-            ):
+            if country in seq_record.description or country.lower() in seq_record.description:
                 sequences_list.append(seq_record)
         countrywise_sequences_dictionary[country] = sequences_list
     return countrywise_sequences_dictionary
 
 
-def write_fasta_file_by_country(
-    countrywise_dictionary: Dict[str, List[SeqRecord]], output_path: str
-):
+def write_fasta_file_by_country(countrywise_dictionary: Dict[str, List[SeqRecord]], output_path: str):
 
     for country, sequences in countrywise_dictionary.items():
         fasta_file_country = open(f"{output_path}/{country}", "w")
@@ -96,9 +91,7 @@ def generate_histogram_by_country(
         for file in listdir():
             file_path = f"{country_dir_path}/{file}"
             countries.append(file)
-            number_of_sequences.append(
-                read_fasta_file_and_return_length(path=file_path)
-            )
+            number_of_sequences.append(read_fasta_file_and_return_length(path=file_path))
     plt.figure(figsize=(10, 10))
     plt.bar(countries, number_of_sequences)
     plt.xlabel("Countries")
@@ -115,14 +108,10 @@ def read_fasta_file_and_return_length(path: str) -> int:
 
 
 if __name__ == "__main__":
-    input_fasta_file_path = (
-        f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
-    )
+    input_fasta_file_path = f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
     histogram_path = f"{Path.cwd()}/plots/countrywise_wo_year.png"
     countrywise_fasta_path = f"{Path.cwd()}/data/countrywise_split"
-    countrywise_sequences_dictionary = split_sequences_by_country(
-        import_file_path=input_fasta_file_path
-    )
+    countrywise_sequences_dictionary = split_sequences_by_country(import_file_path=input_fasta_file_path)
     write_fasta_file_by_country(
         countrywise_dictionary=countrywise_sequences_dictionary,
         output_path=countrywise_fasta_path,

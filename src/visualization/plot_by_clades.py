@@ -26,9 +26,7 @@ def plot_bar_clades(id_clade_dict: dict[str, str], graph_path: str, stats_path: 
     number_of_clades_dict = dict.fromkeys(unique_clades)
     for unique_clade in unique_clades:
         number_of_clades_dict[unique_clade] = clades.count(unique_clade)
-    number_of_clades_dict = dict(
-        sorted(number_of_clades_dict.items(), key=lambda item: item[1])
-    )
+    number_of_clades_dict = dict(sorted(number_of_clades_dict.items(), key=lambda item: item[1]))
     with open(stats_path, "w") as fp:
         dump(number_of_clades_dict, fp)
     print(number_of_clades_dict)

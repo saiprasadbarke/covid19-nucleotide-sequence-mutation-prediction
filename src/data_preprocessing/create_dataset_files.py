@@ -13,57 +13,47 @@ from Bio import SeqIO
 LIST_OF_CLADES = [
     "20C",
     "19A",
-    "21C",
-    "21F",
+    "21C (Epsilon)",
+    "21F (Iota)",
     "20B",
-    "20J",
+    "20J (Gamma, V3)",
     "20A",
-    "20E",
+    "20E (EU1)",
     "19B",
+    "21B (Kappa)",
+    "21J (Delta)",
+    "20F",
+    "21A (Delta)",
 ]  # All clades with number of sequences >18000 were chosen and the rest were droppped
 
 
-def create_merged_data(sequences_file: str, clades_file: str):
+def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
     description_sequence_dict = {}
     for sequence_record in SeqIO.parse(sequences_file, "fasta"):
-        description_sequence_dict[sequence_record.description] = str(
-            sequence_record.seq
-        )
+        description_sequence_dict[sequence_record.description] = str(sequence_record.seq)
 
     seqname_clade_dict = {}
     for line in open(clades_file):
         line_data = line.split("\t")
-        seqname_clade_dict[line_data[0].replace('"', "")] = line_data[1].split(" ")[0]
+        seqname_clade_dict[line_data[0].replace('"', "")] = line_data[1].replace('"', "")
 
     ds = [description_sequence_dict, seqname_clade_dict]
     merged_dict = {}
     for description in description_sequence_dict.keys():
         merged_dict[description] = tuple(d[description] for d in ds)
-    claded_sequences = {}
-    for _description, sequence_clade_tuple in merged_dict.items():
-        # Don't need a seperate function to remove duplicates
-        claded_sequences[sequence_clade_tuple[0]] = sequence_clade_tuple[1]
-    return claded_sequences
 
-
-def create_cladewise_datasets(claded_sequences: Dict[str, str], output_folder: str):
+    clade_sequence_dict = {}
     for valid_clade in LIST_OF_CLADES:
-        single_clade_sequences = []
-        for sequence, clade in claded_sequences.items():
-            if clade == valid_clade:
-                single_clade_sequences.append(sequence)
-        if len(single_clade_sequences) > 0:
-            with open(f"{output_folder}/{valid_clade}.json", "w") as fout:
-                dump(single_clade_sequences, fout)
+        single_clade_sequences = {}
+        for _seq_description, sequence_clade_tuple in merged_dict.items():
+            if sequence_clade_tuple[1] == valid_clade:
+                single_clade_sequences[sequence_clade_tuple[0]] = ""
+        clade_sequence_dict[valid_clade] = single_clade_sequences
 
-
-def count_sequences(folder_path: str):
-    chdir(folder_path)
-    for file in listdir():
-        file_path = f"{folder_path}/{file}"
-        f = open(file_path)
-        list_of_claded_sequences = load(f)
-        print(f"Number of sequences for {file} is {len(list_of_claded_sequences)}")
+    for clade, sequences in clade_sequence_dict.items():
+        print(f"Number of sequences for clade {clade} after removing duplicates = {len(sequences)}")
+    with open(output_file, "w") as fout:
+        dump(clade_sequence_dict, fout)
 
 
 if __name__ == "__main__":
@@ -71,27 +61,11 @@ if __name__ == "__main__":
     print(Path.cwd())
     # Paths
     clade_filepath = f"{Path.cwd()}/data/complete_sequences/complete_clades.tabular"
-    input_fasta_filepath = (
-        f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
-    )
-    individual_claded_sequences_folder = f"{Path.cwd()}/data/claded_sequences/clades"
-
-    # Nigeria
-    clade_filepath_nigeria = (
-        f"{Path.cwd()}/data/countrywise_split/clades_tabular/nigeria_clades.tabular"
-    )
-    input_fasta_filepath_nigeria = (
-        f"{Path.cwd()}/data/countrywise_split/fasta/Nigeria.fasta"
-    )
-    individual_claded_sequences_folder_nigeria = (
-        f"{Path.cwd()}/data/claded_sequences/nigeria"
-    )
+    input_fasta_filepath = f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
+    claded_sequences_filepath = f"{Path.cwd()}/data/claded_sequences/claded_sequences.json"
 
     # Function call
     claded_sequences = create_merged_data(
-        sequences_file=input_fasta_filepath,
-        clades_file=clade_filepath,
+        sequences_file=input_fasta_filepath, clades_file=clade_filepath, output_file=claded_sequences_filepath
     )
-    create_cladewise_datasets(claded_sequences, individual_claded_sequences_folder)
-    count_sequences(individual_claded_sequences_folder)
     print("Completed data pre processing...")
