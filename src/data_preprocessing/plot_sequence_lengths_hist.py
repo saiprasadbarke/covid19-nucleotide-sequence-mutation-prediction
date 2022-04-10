@@ -14,18 +14,17 @@ def plot_seq_len_hist(inp_file: str, hist_path: str):
     unique_len_array = []
     for length in length_array:
         if length not in unique_len_array:
-            unique_len_array.append(str(length))
+            unique_len_array.append(length)
 
-    counts_list = []
+    number_of_seq_and_counts_dict = {}
     for unique_len in unique_len_array:
-        unique_len = int(unique_len)
-        counts_list.append(length_array.count(unique_len))
-
-    plt.figure(figsize=(20, 20))
-    plt.bar(unique_len_array, counts_list)
+        number_of_seq_and_counts_dict[str(unique_len)] = length_array.count(unique_len)
+    sorted_dict = dict(sorted(number_of_seq_and_counts_dict.items(), key=lambda item: item[1]))
+    plt.figure(figsize=(60, 20))
+    plt.bar(list(sorted_dict.keys()), list(sorted_dict.values()))
     plt.xlabel("Sequence length")
-    plt.xticks(rotation=90)
-    plt.title("Frequency of occurance")
+    plt.xticks(rotation=90, fontsize=5)
+    plt.ylabel("Frequency of occurance")
     plt.savefig(hist_path)
     plt.show()
 

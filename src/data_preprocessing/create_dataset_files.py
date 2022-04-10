@@ -11,19 +11,31 @@ from os import chdir, listdir
 from Bio import SeqIO
 
 LIST_OF_CLADES = [
-    "20C",
     "19A",
-    "21C (Epsilon)",
-    "21F (Iota)",
-    "20B",
-    "20J (Gamma, V3)",
-    "20A",
-    "20E (EU1)",
     "19B",
-    "21B (Kappa)",
-    "21J (Delta)",
+    "20A",
+    "20B",
+    "20C",
+    "20E",
+    "21A",
+    "21B",
+    "21D",
+    "21H",
+    "20D",
     "20F",
-    "21A (Delta)",
+    "20I",
+    "20J",
+    "21M",
+    "21E",
+    "20G",
+    "20H",
+    "21C",
+    "21F",
+    "21I",
+    "21J",
+    "21G",
+    "21K",
+    "21L",
 ]  # All clades with number of sequences >18000 were chosen and the rest were droppped
 
 
@@ -32,12 +44,12 @@ def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
     for sequence_record in SeqIO.parse(sequences_file, "fasta"):
         description_sequence_dict[sequence_record.description] = str(sequence_record.seq)
 
-    seqname_clade_dict = {}
+    description_clade_dict = {}
     for line in open(clades_file):
         line_data = line.split("\t")
-        seqname_clade_dict[line_data[0].replace('"', "")] = line_data[1].replace('"', "")
+        description_clade_dict[line_data[0].replace('"', "")] = line_data[1].replace('"', "").split(" ")[0]
 
-    ds = [description_sequence_dict, seqname_clade_dict]
+    ds = [description_sequence_dict, description_clade_dict]
     merged_dict = {}
     for description in description_sequence_dict.keys():
         merged_dict[description] = tuple(d[description] for d in ds)

@@ -1,4 +1,5 @@
 from json import load
+from pathlib import Path
 
 CLADE_PAIRS = [
     ("19A", "19B"),
@@ -29,16 +30,29 @@ CLADE_PAIRS = [
 ]
 
 
-def generate_clade_pair_dataset_files(claded_sequences_file: str, output_folder: str):
+def generate_clade_pair_dataset_files(
+    claded_sequences_file: str,
+):
     cladepair_sequences_dict = {}
     for clade_pair in CLADE_PAIRS:
-        sequences_pair_list = []
-        for clade, sequences_list in load(open(claded_sequences_file)):
-            if clade == clade_pair[0] or clade == clade_pair[1]:
-                sequences_pair_list.append(sequences_list)
-        cladepair_sequences_dict[f"{clade_pair[0]}_{clade_pair[1]}"] = sequences_pair_list
+        data = load(open(claded_sequences_file))
+        # Check if both clades exist in the dictionary before pairing them.
+        if clade_pair[0] in list(data.keys()) and clade_pair[1] in list(data.keys()):
+            sequences_pair_dict = {}
+            for clade, sequences_dict_list in data.items():
+                if clade == clade_pair[0] or clade == clade_pair[1]:
+                    sequences_pair_dict[clade] = list(sequences_dict_list.keys())
+            cladepair_sequences_dict[f"{clade_pair[0]}_{clade_pair[1]}"] = sequences_pair_dict
     return cladepair_sequences_dict
 
 
-def permute_clade_pairs():
+def permute_clade_pairs(cladepair_sequences_dictionary, output_folder: str):
     return None
+
+
+if __name__ == "__main__":
+    claded_sequences_filepath = f"{Path.cwd()}/data/claded_sequences/claded_sequences.json"
+    cladepair_sequences_dict = generate_clade_pair_dataset_files(
+        claded_sequences_file=claded_sequences_filepath, output_folder=""
+    )
+    permute_clade_pairs(cladepair_sequences_dictionary=cladepair_sequences_dict)
