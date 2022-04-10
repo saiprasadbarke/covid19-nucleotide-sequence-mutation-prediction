@@ -49,12 +49,14 @@ def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
         line_data = line.split("\t")
         # The strings have an additional pair of quotes which needs to be removed for proper comparision.
         # The split and indexing operation on the right hand side splits the full clade name (Eg: 21I (Delta)) by space and selects only the alphanumeric clade name
-        description_clade_dict[line_data[0].replace('"', "")] = line_data[1].replace('"', "").split(" ")[0]
+        if line_data[3] == "good":  # Index is 4 for the clades.tabular
+            description_clade_dict[line_data[0].replace('"', "")] = line_data[1].replace('"', "").split(" ")[0]
 
     ds = [description_sequence_dict, description_clade_dict]
     merged_dict = {}
     for description in description_sequence_dict.keys():
-        merged_dict[description] = tuple(d[description] for d in ds)
+        if description in description_clade_dict.keys():
+            merged_dict[description] = tuple(d[description] for d in ds)
 
     clade_sequence_dict = {}
     for valid_clade in LIST_OF_CLADES:
@@ -67,19 +69,22 @@ def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
         clade_sequence_dict[valid_clade] = single_clade_sequences_dict
 
     for clade, sequences in clade_sequence_dict.items():
-        print(f"Number of sequences for clade {clade} after removing duplicates = {len(sequences)}")
+        print(f"Number of sequences for clade {clade} after removing duplicates and filtering by qc = {len(sequences)}")
     with open(output_file, "w") as fout:
         dump(clade_sequence_dict, fout)
 
 
 if __name__ == "__main__":
 
-    print(Path.cwd())
+    print(f"Parent dir : {Path.cwd().parents[0]}")
     # Paths
-    clade_filepath = f"{Path.cwd()}/data/cleaned/clades.tabular"
-    input_fasta_filepath = f"{Path.cwd()}/data/cleaned/sequences.fasta"
-    claded_sequences_filepath = f"{Path.cwd()}/data/claded_sequences/claded_sequences.json"
+    # clade_filepath = f"{Path.cwd().parents[0]}/data/clades.tabular"
+    # input_fasta_filepath = f"{Path.cwd().parents[0]}/data/sequences.fasta"
+    # claded_sequences_filepath = f"{Path.cwd().parents[0]}/data/clade_seq.json"
 
+    clade_filepath = f"{Path.cwd()}/data/test/india.tabular"
+    input_fasta_filepath = f"{Path.cwd()}/data/test/india.fasta"
+    claded_sequences_filepath = f"{Path.cwd()}/data/clade_seq.json"
     # Function call
     claded_sequences = create_merged_data(
         sequences_file=input_fasta_filepath, clades_file=clade_filepath, output_file=claded_sequences_filepath

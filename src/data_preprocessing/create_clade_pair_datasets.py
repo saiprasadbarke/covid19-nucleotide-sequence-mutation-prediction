@@ -51,7 +51,7 @@ def permute_clade_pairs(cladepair_sequences_dictionary, output_folder: str):
 
 
 if __name__ == "__main__":
-    claded_sequences_filepath = f"{Path.cwd()}/data/claded_sequences/claded_sequences.json"
+    claded_sequences_filepath = f"{Path.cwd()}/data/merged/claded_sequences.json"
     cladepair_sequences_dict = generate_clade_pair_dataset_files(
         claded_sequences_file=claded_sequences_filepath, output_folder=""
     )
