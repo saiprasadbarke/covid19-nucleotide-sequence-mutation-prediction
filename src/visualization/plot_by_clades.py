@@ -39,14 +39,20 @@ def read_clade_tabular(file_path: str) -> dict[str, str]:
     data = pd.read_table(file_path, header=None)
     ids = data.iloc[:, 0]
     clades = data.iloc[:, 1]
+    qc_status = data.iloc[:, 4]
     id_clade_dict = {}
-    for id, clade in zip(ids, clades):
-        id_clade_dict[id] = str(clade).replace('"', "").split(" ")[0]
+    for id, clade, qc in zip(ids, clades, qc_status):
+        if qc == "good":
+            id_clade_dict[id] = str(clade).replace('"', "").split(" ")[0]
     return id_clade_dict
 
 
 def plot_bar_clades(id_clade_dict: dict[str, str], graph_path: str, stats_path: str):
     clades = list(id_clade_dict.values())
+    unique_clades = []
+    for clade in clades:
+        if clade not in unique_clades:
+            unique_clades.append(clade)
     number_of_clades_dict = dict.fromkeys(LIST_OF_CLADES)
     for unique_clade in LIST_OF_CLADES:
         number_of_clades_dict[unique_clade] = clades.count(unique_clade)
@@ -70,7 +76,7 @@ def plot_bar_clades(id_clade_dict: dict[str, str], graph_path: str, stats_path: 
 
 if __name__ == "__main__":
     clade_filepath = f"{Path.cwd()}/data/cleaned/clades.tabular"
-    plot_name = "clades_all_hist"
+    plot_name = "clades_all_hist_after_qc_filter"
     clades_histogram_path = f"{Path.cwd()}/plots/{plot_name}.png"
     id_clade_dict = read_clade_tabular(clade_filepath)
     stats_file = f"{Path.cwd()}/plots/stats/{plot_name}.json"
