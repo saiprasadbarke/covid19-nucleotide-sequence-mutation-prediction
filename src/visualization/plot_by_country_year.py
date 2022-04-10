@@ -108,7 +108,7 @@ def read_fasta_file_and_return_length(path: str) -> int:
 
 
 if __name__ == "__main__":
-    input_fasta_file_path = f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
+    input_fasta_file_path = f"{Path.cwd()}/data/cleaned/sequences.fasta"
     histogram_path = f"{Path.cwd()}/plots/countrywise_wo_year.png"
     countrywise_fasta_path = f"{Path.cwd()}/data/countrywise_split"
     countrywise_sequences_dictionary = split_sequences_by_country(import_file_path=input_fasta_file_path)

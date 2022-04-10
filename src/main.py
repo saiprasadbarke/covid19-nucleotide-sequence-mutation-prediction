@@ -1,5 +1,5 @@
 from pathlib import Path
-from data_preprocessing.fasta_file_operations import create_complete_fasta_file
+from data_preprocessing.fasta_file_operations import create_cleaned_fasta_file
 from visualization.plot_by_country_year import (
     split_sequences_by_country,
     write_fasta_file_by_country,

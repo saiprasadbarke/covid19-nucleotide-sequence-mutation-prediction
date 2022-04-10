@@ -36,7 +36,7 @@ LIST_OF_CLADES = [
     "21G",
     "21K",
     "21L",
-]  # All clades with number of sequences >18000 were chosen and the rest were droppped
+]
 
 
 def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
@@ -47,6 +47,8 @@ def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
     description_clade_dict = {}
     for line in open(clades_file):
         line_data = line.split("\t")
+        # The strings have an additional pair of quotes which needs to be removed for proper comparision.
+        # The split and indexing operation on the right hand side splits the full clade name (Eg: 21I (Delta)) by space and selects only the alphanumeric clade name
         description_clade_dict[line_data[0].replace('"', "")] = line_data[1].replace('"', "").split(" ")[0]
 
     ds = [description_sequence_dict, description_clade_dict]
@@ -56,11 +58,13 @@ def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
 
     clade_sequence_dict = {}
     for valid_clade in LIST_OF_CLADES:
-        single_clade_sequences = {}
+        single_clade_sequences_dict = {}
         for _seq_description, sequence_clade_tuple in merged_dict.items():
+            # The sequence clade tuple has the sequence in index 0 and the clade in index 1
             if sequence_clade_tuple[1] == valid_clade:
-                single_clade_sequences[sequence_clade_tuple[0]] = ""
-        clade_sequence_dict[valid_clade] = single_clade_sequences
+                # Adding the sequences as keys in a dictionary ensures there is no duplication
+                single_clade_sequences_dict[sequence_clade_tuple[0]] = ""
+        clade_sequence_dict[valid_clade] = single_clade_sequences_dict
 
     for clade, sequences in clade_sequence_dict.items():
         print(f"Number of sequences for clade {clade} after removing duplicates = {len(sequences)}")
@@ -72,8 +76,8 @@ if __name__ == "__main__":
 
     print(Path.cwd())
     # Paths
-    clade_filepath = f"{Path.cwd()}/data/complete_sequences/complete_clades.tabular"
-    input_fasta_filepath = f"{Path.cwd()}/data/complete_sequences/complete_sequences.fasta"
+    clade_filepath = f"{Path.cwd()}/data/cleaned/clades.tabular"
+    input_fasta_filepath = f"{Path.cwd()}/data/cleaned/sequences.fasta"
     claded_sequences_filepath = f"{Path.cwd()}/data/claded_sequences/claded_sequences.json"
 
     # Function call
