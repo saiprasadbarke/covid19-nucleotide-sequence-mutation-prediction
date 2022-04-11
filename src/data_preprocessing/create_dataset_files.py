@@ -66,7 +66,8 @@ def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
             if sequence_clade_tuple[1] == valid_clade:
                 # Adding the sequences as keys in a dictionary ensures there is no duplication
                 single_clade_sequences_dict[sequence_clade_tuple[0]] = ""
-        clade_sequence_dict[valid_clade] = single_clade_sequences_dict
+        if single_clade_sequences_dict:
+            clade_sequence_dict[valid_clade] = single_clade_sequences_dict
 
     for clade, sequences in clade_sequence_dict.items():
         print(f"Number of sequences for clade {clade} after removing duplicates and filtering by qc = {len(sequences)}")
@@ -84,7 +85,7 @@ if __name__ == "__main__":
 
     clade_filepath = f"{Path.cwd()}/data/test/india.tabular"
     input_fasta_filepath = f"{Path.cwd()}/data/test/india.fasta"
-    claded_sequences_filepath = f"{Path.cwd()}/data/clade_seq.json"
+    claded_sequences_filepath = f"{Path.cwd()}/data/merged/india.json"
     # Function call
     claded_sequences = create_merged_data(
         sequences_file=input_fasta_filepath, clades_file=clade_filepath, output_file=claded_sequences_filepath
