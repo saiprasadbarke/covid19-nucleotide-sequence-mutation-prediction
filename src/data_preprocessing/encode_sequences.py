@@ -5,6 +5,7 @@ NUCLEOTIDES = ["A", "C", "G", "T"]
 
 
 def generate_vocabulary(kmer_length: int) -> Dict[str, int]:
+    # The number of possible k-combinations of these nucleotides taken with repetition is 4^kmer_length
     vocabulary_list = [list(x) for x in combinations_with_replacement(NUCLEOTIDES, kmer_length)]
     permuted_vocabulary = []
     for word in vocabulary_list:
@@ -23,7 +24,6 @@ def generate_vocabulary(kmer_length: int) -> Dict[str, int]:
     return vocabulary_dict
 
 
-# The number of possible k-combinations of these nucleotides taken with repetition is 4^kmer_length
 def encode_sequence(sequence: str, kmer_length: int) -> List[int]:
     vocabulary_encoding = generate_vocabulary(kmer_length=kmer_length)
     kmer_sequence = sliding_window(sequence, kmer_length)
