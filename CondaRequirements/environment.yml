@@ -14,7 +14,7 @@ dependencies:
       - bio
       - scikit-learn
       - nltk
-      - python-Levenshtein
+      - Levenshtein
       - biopython
       - seaborn
       - black

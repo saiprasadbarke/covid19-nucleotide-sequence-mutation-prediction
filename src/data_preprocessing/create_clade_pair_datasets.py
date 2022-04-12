@@ -1,5 +1,9 @@
+# Standard
 from json import load, dump
 from pathlib import Path
+
+# External
+from Levenshtein import distance
 
 CLADE_PAIRS = [
     ("19A", "19B"),
@@ -61,10 +65,20 @@ def permute_clade_pairs(cladepair_sequences_file: str, output_folder: str):
                         if num_seq == 20000:
                             break
                         else:
-                            fout.write(f"{x},{y}")
-                            fout.write("\n")
-                            num_seq += 1
+                            if filter_generated_sequence_pair(x, y):
+                                fout.write(f"{x},{y}")
+                                fout.write("\n")
+                                num_seq += 1
+                            else:
+                                continue
         print(f"Wrote {num_seq} clade pairs for {clade_pair}")
+
+
+def filter_generated_sequence_pair(seq1: str, seq2: str) -> bool:
+    if len(seq1) < 29000 or len(seq2) < 29000 or distance(seq1, seq2) > 10:
+        return False
+    else:
+        return True
 
 
 if __name__ == "__main__":
