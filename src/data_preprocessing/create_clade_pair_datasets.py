@@ -5,6 +5,12 @@ from pathlib import Path
 # External
 from Levenshtein import distance
 
+# These variables control the various dataset properties
+NUM_SEQ = 30000
+LEVENSHTEIN_THRESHOLD = 10
+MIN_SEQ_LEN = 29000
+START_POSITION = 0
+END_POSITION = 29900
 CLADE_PAIRS = [
     ("19A", "19B"),
     ("19A", "20A"),
@@ -58,14 +64,14 @@ def permute_clade_pairs(cladepair_sequences_file: str, output_folder: str):
         with open(f"{output_folder}/{clade_pair}.csv", "w") as fout:
 
             for x in clade1_sequences:
-                if num_seq == 20000:
+                if num_seq == NUM_SEQ:
                     break
                 else:
                     for y in clade2_sequences:
-                        if num_seq == 20000:
+                        if num_seq == NUM_SEQ:
                             break
                         else:
-                            if filter_generated_sequence_pair(x, y):
+                            if is_valid_sequence_pair(x, y):
                                 fout.write(f"{x},{y}")
                                 fout.write("\n")
                                 num_seq += 1
@@ -74,8 +80,8 @@ def permute_clade_pairs(cladepair_sequences_file: str, output_folder: str):
         print(f"Wrote {num_seq} clade pairs for {clade_pair}")
 
 
-def filter_generated_sequence_pair(seq1: str, seq2: str) -> bool:
-    if len(seq1) < 29000 or len(seq2) < 29000 or distance(seq1, seq2) > 10:
+def is_valid_sequence_pair(seq1: str, seq2: str) -> bool:
+    if len(seq1) < MIN_SEQ_LEN or len(seq2) < MIN_SEQ_LEN or distance(seq1, seq2) > LEVENSHTEIN_THRESHOLD:
         return False
     else:
         return True

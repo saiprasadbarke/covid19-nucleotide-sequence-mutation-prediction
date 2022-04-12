@@ -49,7 +49,7 @@ def create_merged_data(sequences_file: str, clades_file: str, output_file: str):
         line_data = line.split("\t")
         # The strings have an additional pair of quotes which needs to be removed for proper comparision.
         # The split and indexing operation on the right hand side splits the full clade name (Eg: 21I (Delta)) by space and selects only the alphanumeric clade name
-        if line_data[3] == "good":  # Index is 4 for the clades.tabular
+        if line_data[3] == "good":  # Index is 4 for the clades.tabular file
             description_clade_dict[line_data[0].replace('"', "")] = line_data[1].replace('"', "").split(" ")[0]
 
     ds = [description_sequence_dict, description_clade_dict]
