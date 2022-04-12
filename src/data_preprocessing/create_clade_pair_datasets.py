@@ -87,7 +87,7 @@ if __name__ == "__main__":
     # permuted_sequences_folder = f"{Path.cwd()}/data/permuted/india/"
 
     # claded_sequences_filepath = f"{Path.cwd()}/data/02merged/india.json"
-    paired_clades_path = f"{Path.cwd()}/data/03paired/paired_clades_india.json"
-    permuted_sequences_folder = f"{Path.cwd()}/data/04permuted/india"
+    paired_clades_path = f"{Path.cwd()}/data/india/03paired/paired_clades_india.json"
+    permuted_sequences_folder = f"{Path.cwd()}/data/india/04permuted/"
     # generate_clade_pair_dataset_files(claded_sequences_file=claded_sequences_filepath, output_file=paired_clades_path)
     permute_clade_pairs(cladepair_sequences_file=paired_clades_path, output_folder=permuted_sequences_folder)
