@@ -47,7 +47,24 @@ def generate_clade_pair_dataset_files(claded_sequences_file: str, output_file: s
 
 def permute_clade_pairs(cladepair_sequences_file: str, output_folder: str):
     data = load(open(cladepair_sequences_file))
-    return None
+    for clade_pair, clades_lists_dict in data.items():
+        clade1_sequences = list(clades_lists_dict.values())[0]
+        clade2_sequences = list(clades_lists_dict.values())[1]
+        num_seq = 0
+        with open(f"{output_folder}/{clade_pair}.csv", "w") as fout:
+
+            for x in clade1_sequences:
+                if num_seq == 20000:
+                    break
+                else:
+                    for y in clade2_sequences:
+                        if num_seq == 20000:
+                            break
+                        else:
+                            fout.write(f"{x},{y}")
+                            fout.write("\n")
+                            num_seq += 1
+        print(f"Wrote {num_seq} clade pairs for {clade_pair}")
 
 
 if __name__ == "__main__":
@@ -55,8 +72,8 @@ if __name__ == "__main__":
     # paired_clades_path = f"{Path.cwd().parents[0]}/data/paired_clades.json"
     # permuted_sequences_folder = f"{Path.cwd()}/data/permuted/india/"
 
-    claded_sequences_filepath = f"{Path.cwd()}/data/02merged/india.json"
+    # claded_sequences_filepath = f"{Path.cwd()}/data/02merged/india.json"
     paired_clades_path = f"{Path.cwd()}/data/03paired/paired_clades_india.json"
     permuted_sequences_folder = f"{Path.cwd()}/data/04permuted/india"
-    generate_clade_pair_dataset_files(claded_sequences_file=claded_sequences_filepath, output_file=paired_clades_path)
+    # generate_clade_pair_dataset_files(claded_sequences_file=claded_sequences_filepath, output_file=paired_clades_path)
     permute_clade_pairs(cladepair_sequences_file=paired_clades_path, output_folder=permuted_sequences_folder)
