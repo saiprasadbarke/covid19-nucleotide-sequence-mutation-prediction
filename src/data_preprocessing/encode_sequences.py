@@ -16,7 +16,7 @@ def generate_vocabulary(kmer_length: int) -> Dict[str, int]:
             vocabulary_list.append(permuted_word)
 
     vocabulary_dict = {}
-    for index, kmer in enumerate(vocabulary_list):
+    for index, kmer in enumerate(vocabulary_list, 1):
         vocabulary_dict["".join(kmer)] = index
     print(f"For a kmer of length {kmer_length}")
     print(f"The vocabulary is {vocabulary_dict}")
