@@ -75,7 +75,7 @@ def plot_bar_clades(id_clade_dict: dict[str, str], graph_path: str, stats_path: 
 
 
 if __name__ == "__main__":
-    clade_filepath = f"{Path.cwd()}/data/cleaned/clades.tabular"
+    clade_filepath = f"{Path.cwd()}/data/01cleaned/clades.tabular"
     plot_name = "clades_all_hist_after_qc_filter"
     clades_histogram_path = f"{Path.cwd()}/plots/{plot_name}.png"
     id_clade_dict = read_clade_tabular(clade_filepath)

@@ -27,8 +27,8 @@ def check_sequence_completeness(sequence: str) -> bool:
 
 
 if __name__ == "__main__":
-    input_fasta_file_path = f"{Path.cwd()}/data/input/genomic.fna"
-    sequences_file_path = f"{Path.cwd()}/data/cleaned/sequences.fasta"
+    input_fasta_file_path = f"{Path.cwd()}/data/00unfiltered/unfiltered.fasta"
+    sequences_file_path = f"{Path.cwd()}/data/01cleaned/sequences.fasta"
     create_cleaned_fasta_file(
         import_file_path=input_fasta_file_path,
         export_file_path=sequences_file_path,

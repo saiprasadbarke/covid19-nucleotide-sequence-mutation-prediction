@@ -83,9 +83,9 @@ if __name__ == "__main__":
     # input_fasta_filepath = f"{Path.cwd().parents[0]}/data/sequences.fasta"
     # claded_sequences_filepath = f"{Path.cwd().parents[0]}/data/clade_seq.json"
 
-    clade_filepath = f"{Path.cwd()}/data/test/india.tabular"
-    input_fasta_filepath = f"{Path.cwd()}/data/test/india.fasta"
-    claded_sequences_filepath = f"{Path.cwd()}/data/merged/india.json"
+    clade_filepath = f"{Path.cwd()}/data/india/india.tabular"
+    input_fasta_filepath = f"{Path.cwd()}/data/india/india.fasta"
+    claded_sequences_filepath = f"{Path.cwd()}/data/02merged/india.json"
     # Function call
     claded_sequences = create_merged_data(
         sequences_file=input_fasta_filepath, clades_file=clade_filepath, output_file=claded_sequences_filepath

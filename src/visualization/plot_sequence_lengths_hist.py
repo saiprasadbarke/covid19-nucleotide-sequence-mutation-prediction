@@ -31,5 +31,5 @@ def plot_seq_len_hist(inp_file: str, hist_path: str):
 
 if __name__ == "__main__":
     histogram_path = f"{Path.cwd()}/plots/sequence_length_plot.png"
-    sequences_file_path = f"{Path.cwd()}/data/cleaned/sequences.fasta"
+    sequences_file_path = f"{Path.cwd()}/data/01cleaned/sequences.fasta"
     plot_seq_len_hist(inp_file=sequences_file_path, hist_path=histogram_path)
