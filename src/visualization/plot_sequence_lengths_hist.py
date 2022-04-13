@@ -1,15 +1,22 @@
 # Standard
 from pathlib import Path
+from json import load
 
 # External
 import matplotlib.pyplot as plt
 from Bio import SeqIO
 
 
-def plot_seq_len_hist(inp_file: str, hist_path: str):
+def plot_seq_len_hist(hist_path: str, inp_file: str = None, sequences_array: list[str] = None):
     length_array = []
-    for seq_record in SeqIO.parse(inp_file, "fasta"):
-        length_array.append(len(seq_record.seq))
+    if inp_file and not sequences_array:
+        for seq_record in SeqIO.parse(inp_file, "fasta"):
+            length_array.append(len(seq_record.seq))
+    elif sequences_array and not inp_file:
+        for seq in sequences_array:
+            length_array.append(len(seq))
+    else:
+        return "Warning: You can either choose the file input or the sequences array and not both!"
 
     unique_len_array = []
     for length in length_array:
@@ -29,7 +36,17 @@ def plot_seq_len_hist(inp_file: str, hist_path: str):
     plt.show()
 
 
+def plot_cladewise_sequence_lengths(merged_file: str, output_folder: str):
+    data = load(open(merged_file))
+    for clade, sequences_list in data.items():
+        plot_seq_len_hist(hist_path=f"{output_folder}/{clade}.png", sequences_array=sequences_list)
+
+
 if __name__ == "__main__":
-    histogram_path = f"{Path.cwd()}/plots/sequence_length_plot.png"
-    sequences_file_path = f"{Path.cwd()}/data/01cleaned/sequences.fasta"
-    plot_seq_len_hist(inp_file=sequences_file_path, hist_path=histogram_path)
+    # histogram_path = f"{Path.cwd()}/plots/sequence_length_plot.png"
+    # sequences_file_path = f"{Path.cwd()}/data/01cleaned/sequences.fasta"
+    # plot_seq_len_hist(inp_file=sequences_file_path, hist_path=histogram_path)
+
+    merged_file = f"{Path.cwd()}/data/02merged/clade_seq.json"
+    output_folder = f"{Path.cwd()}/plots/cladewise_seqlen"
+    plot_cladewise_sequence_lengths(merged_file=merged_file, output_folder=output_folder)
