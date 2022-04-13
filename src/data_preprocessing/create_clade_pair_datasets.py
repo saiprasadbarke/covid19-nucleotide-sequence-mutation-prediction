@@ -7,10 +7,10 @@ from Levenshtein import distance
 
 # These variables control the various dataset properties
 NUM_SEQ = 30000
-LEVENSHTEIN_THRESHOLD = 10
-MIN_SEQ_LEN = 29000
+LEVENSHTEIN_THRESHOLD = 200
+MIN_SEQ_LEN = 29600
 START_POSITION = 0
-END_POSITION = 29900
+END_POSITION = 29600
 CLADE_PAIRS = [
     ("19A", "19B"),
     ("19A", "20A"),
@@ -72,11 +72,12 @@ def permute_clade_pairs(cladepair_sequences_file: str, output_folder: str):
                             break
                         else:
                             if is_valid_sequence_pair(x, y):
-                                fout.write(f"{x},{y}")
+                                fout.write(f"{x[START_POSITION:END_POSITION]},{y[START_POSITION:END_POSITION]}")
                                 fout.write("\n")
                                 num_seq += 1
                             else:
                                 continue
+        fout.close()
         print(f"Wrote {num_seq} clade pairs for {clade_pair}")
 
 
@@ -89,11 +90,11 @@ def is_valid_sequence_pair(seq1: str, seq2: str) -> bool:
 
 if __name__ == "__main__":
     # claded_sequences_filepath = f"{Path.cwd().parents[0]}/data/clade_seq.json"
-    # paired_clades_path = f"{Path.cwd().parents[0]}/data/paired_clades.json"
-    # permuted_sequences_folder = f"{Path.cwd()}/data/permuted/india/"
+    # paired_clades_path = f"{Path.cwd()}/data/india/03paired/paired_clades_india.json"
+    # permuted_sequences_folder = f"{Path.cwd()}/data/india/04permuted/"
 
     # claded_sequences_filepath = f"{Path.cwd()}/data/02merged/india.json"
-    paired_clades_path = f"{Path.cwd()}/data/india/03paired/paired_clades_india.json"
-    permuted_sequences_folder = f"{Path.cwd()}/data/india/04permuted/"
+    paired_clades_path = f"{Path.cwd().parents[0]}/data/paired_clades.json"
+    permuted_sequences_folder = f"{Path.cwd().parents[0]}/data/permuted"
     # generate_clade_pair_dataset_files(claded_sequences_file=claded_sequences_filepath, output_file=paired_clades_path)
     permute_clade_pairs(cladepair_sequences_file=paired_clades_path, output_folder=permuted_sequences_folder)

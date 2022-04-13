@@ -42,11 +42,21 @@ def plot_cladewise_sequence_lengths(merged_file: str, output_folder: str):
         plot_seq_len_hist(hist_path=f"{output_folder}/{clade}.png", sequences_array=sequences_list)
 
 
+def plot_cleaned_seq_len(merged_file: str, graph_path: str):
+    data = load(open(merged_file))
+    all_seq_list = []
+    for clade, sequences_list in data.items():
+        all_seq_list += sequences_list
+    plot_seq_len_hist(hist_path=graph_path, sequences_array=all_seq_list)
+
+
 if __name__ == "__main__":
     # histogram_path = f"{Path.cwd()}/plots/sequence_length_plot.png"
     # sequences_file_path = f"{Path.cwd()}/data/01cleaned/sequences.fasta"
     # plot_seq_len_hist(inp_file=sequences_file_path, hist_path=histogram_path)
 
-    merged_file = f"{Path.cwd()}/data/02merged/clade_seq.json"
-    output_folder = f"{Path.cwd()}/plots/cladewise_seqlen"
-    plot_cladewise_sequence_lengths(merged_file=merged_file, output_folder=output_folder)
+    merged_file = f"{Path.cwd().parents[0]}/data/clade_seq.json"
+    histogram_path = f"{Path.cwd().parents[0]}/data/sequence_length_cleaned_plot.png"
+    # output_folder = f"{Path.cwd()}/plots/cladewise_seqlen"
+    # plot_cladewise_sequence_lengths(merged_file=merged_file, output_folder=output_folder)
+    plot_cleaned_seq_len(merged_file=merged_file, graph_path=histogram_path)
