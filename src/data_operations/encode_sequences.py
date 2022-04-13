@@ -1,5 +1,7 @@
+# Standard
 from typing import List, Dict
 from itertools import combinations_with_replacement, permutations
+from json import dump
 
 NUCLEOTIDES = ["A", "C", "G", "T"]
 
@@ -36,6 +38,19 @@ def sliding_window(sequence: str, kmer_length: int) -> List[str]:
     for i in range(len(sequence) - kmer_length + 1):
         kmerized_sequence.append(sequence[i : i + kmer_length])
     return kmerized_sequence
+
+
+def create_encoded_sequence_pairs_file(permuted_clade_pair_file_path: str, encoded_permuted_clade_pair_file_path: str):
+    data = open(permuted_clade_pair_file_path)
+    encoded_sequences_list = []
+    for line in data:
+        line_data = line.split(",")
+        x_sequence = encode_sequence(line_data[0])
+        y_sequence = encode_sequence(line_data[1])
+        x_y_dict = {"x_sequence": x_sequence, "y_sequence": y_sequence}
+        encoded_sequences_list.append(x_y_dict)
+    with open(encoded_permuted_clade_pair_file_path, "w") as fout:
+        dump(encoded_sequences_list, fout)
 
 
 if __name__ == "__main__":
