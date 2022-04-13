@@ -1,6 +1,7 @@
 # Standard
 from json import load, dump
 from pathlib import Path
+from itertools import product
 
 # External
 from Levenshtein import distance
@@ -61,22 +62,19 @@ def permute_clade_pairs(cladepair_sequences_file: str, output_folder: str):
         clade1_sequences = list(clades_lists_dict.values())[0]
         clade2_sequences = list(clades_lists_dict.values())[1]
         num_seq = 0
+        cartesian_product_iterator = product(clade1_sequences, clade2_sequences)
         with open(f"{output_folder}/{clade_pair}.csv", "w") as fout:
 
-            for x in clade1_sequences:
+            for clade_pair in cartesian_product_iterator:
                 if num_seq == NUM_SEQ:
                     break
-                else:
-                    for y in clade2_sequences:
-                        if num_seq == NUM_SEQ:
-                            break
-                        else:
-                            if is_valid_sequence_pair(x, y):
-                                fout.write(f"{x[START_POSITION:END_POSITION]},{y[START_POSITION:END_POSITION]}")
-                                fout.write("\n")
-                                num_seq += 1
-                            else:
-                                continue
+                elif is_valid_sequence_pair(clade_pair[0], clade_pair[1]):
+                    fout.write(
+                        f"{clade_pair[0][START_POSITION:END_POSITION]},{clade_pair[1][START_POSITION:END_POSITION]}"
+                    )
+                    fout.write("\n")
+                    num_seq += 1
+
         fout.close()
         print(f"Wrote {num_seq} clade pairs for {clade_pair}")
 
