@@ -6,14 +6,44 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import pandas as pd
 
+LIST_OF_CLADES = [
+    "19A",
+    "19B",
+    "20A",
+    "20B",
+    "20C",
+    "20E",
+    "21A",
+    "21B",
+    "21D",
+    "21H",
+    "20D",
+    "20F",
+    "20I",
+    "20J",
+    "21M",
+    "21E",
+    "20G",
+    "20H",
+    "21C",
+    "21F",
+    "21I",
+    "21J",
+    "21G",
+    "21K",
+    "21L",
+]
+
 
 def read_clade_tabular(file_path: str) -> dict[str, str]:
     data = pd.read_table(file_path, header=None)
     ids = data.iloc[:, 0]
     clades = data.iloc[:, 1]
+    qc_status = data.iloc[:, 4]
     id_clade_dict = {}
-    for id, clade in zip(ids, clades):
-        id_clade_dict[id] = clade
+    for id, clade, qc in zip(ids, clades, qc_status):
+        if qc == "good":
+            id_clade_dict[id] = str(clade).replace('"', "").split(" ")[0]
     return id_clade_dict
 
 
@@ -23,8 +53,8 @@ def plot_bar_clades(id_clade_dict: dict[str, str], graph_path: str, stats_path: 
     for clade in clades:
         if clade not in unique_clades:
             unique_clades.append(clade)
-    number_of_clades_dict = dict.fromkeys(unique_clades)
-    for unique_clade in unique_clades:
+    number_of_clades_dict = dict.fromkeys(LIST_OF_CLADES)
+    for unique_clade in LIST_OF_CLADES:
         number_of_clades_dict[unique_clade] = clades.count(unique_clade)
     number_of_clades_dict = dict(sorted(number_of_clades_dict.items(), key=lambda item: item[1]))
     with open(stats_path, "w") as fp:
@@ -45,8 +75,8 @@ def plot_bar_clades(id_clade_dict: dict[str, str], graph_path: str, stats_path: 
 
 
 if __name__ == "__main__":
-    clade_filepath = f"{Path.cwd()}/data/complete_sequences/complete_clades.tabular"
-    plot_name = "clades_all_hist"
+    clade_filepath = f"{Path.cwd()}/data/01cleaned/clades.tabular"
+    plot_name = "clades_all_hist_after_qc_filter"
     clades_histogram_path = f"{Path.cwd()}/plots/{plot_name}.png"
     id_clade_dict = read_clade_tabular(clade_filepath)
     stats_file = f"{Path.cwd()}/plots/stats/{plot_name}.json"
