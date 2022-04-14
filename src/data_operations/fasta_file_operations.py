@@ -21,7 +21,7 @@ def create_cleaned_fasta_file(import_file_path: str, export_file_path: str):
 
 
 def check_sequence_completeness(sequence: str) -> bool:
-    if match("^([ACTG])+$", sequence):
+    if "N" in sequence or "." in sequence or "-" in sequence:
         return False
     else:
         return True
