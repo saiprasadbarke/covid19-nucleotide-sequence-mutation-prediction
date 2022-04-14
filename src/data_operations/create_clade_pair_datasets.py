@@ -16,7 +16,6 @@ CLADE_PAIRS = [
     ("19A", "19B"),
     ("19A", "20A"),
     ("20A", "20B"),
-    ("20A", "20B"),
     ("20A", "20C"),
     ("20A", "20E"),
     ("20A", "21A"),
@@ -59,24 +58,25 @@ def generate_clade_pair_dataset_files(claded_sequences_file: str, output_file: s
 def permute_clade_pairs(cladepair_sequences_file: str, output_folder: str):
     data = load(open(cladepair_sequences_file))
     for clade_pair, clades_lists_dict in data.items():
-        clade1_sequences = list(clades_lists_dict.values())[0]
-        clade2_sequences = list(clades_lists_dict.values())[1]
-        num_seq = 0
-        cartesian_product_iterator = product(clade1_sequences, clade2_sequences)
-        with open(f"{output_folder}/{clade_pair}.csv", "w") as fout:
+        if (clade_pair.split("_")[0], clade_pair.split("_")[1]) in CLADE_PAIRS:
+            clade1_sequences = list(clades_lists_dict.values())[0]
+            clade2_sequences = list(clades_lists_dict.values())[1]
+            num_seq = 0
+            cartesian_product_iterator = product(clade1_sequences, clade2_sequences)
+            with open(f"{output_folder}/{clade_pair}.csv", "w") as fout:
 
-            for clade_pair in cartesian_product_iterator:
-                if num_seq == NUM_SEQ:
-                    break
-                elif is_valid_sequence_pair(clade_pair[0], clade_pair[1]):
-                    fout.write(
-                        f"{clade_pair[0][START_POSITION:END_POSITION]},{clade_pair[1][START_POSITION:END_POSITION]}"
-                    )
-                    fout.write("\n")
-                    num_seq += 1
+                for clade_pair in cartesian_product_iterator:
+                    if num_seq == NUM_SEQ:
+                        break
+                    elif is_valid_sequence_pair(clade_pair[0], clade_pair[1]):
+                        fout.write(
+                            f"{clade_pair[0][START_POSITION:END_POSITION]},{clade_pair[1][START_POSITION:END_POSITION]}"
+                        )
+                        fout.write("\n")
+                        num_seq += 1
 
-        fout.close()
-        print(f"Wrote {num_seq} clade pairs for {clade_pair}")
+            fout.close()
+            print(f"Wrote {num_seq} clade pairs for {clade_pair}")
 
 
 def is_valid_sequence_pair(seq1: str, seq2: str) -> bool:

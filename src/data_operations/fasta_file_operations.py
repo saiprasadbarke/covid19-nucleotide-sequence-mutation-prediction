@@ -1,5 +1,6 @@
 # Standard
 from pathlib import Path
+from re import match
 
 # Local
 
@@ -20,7 +21,7 @@ def create_cleaned_fasta_file(import_file_path: str, export_file_path: str):
 
 
 def check_sequence_completeness(sequence: str) -> bool:
-    if "N" in sequence:
+    if match("^([ACTG])+$", sequence):
         return False
     else:
         return True
