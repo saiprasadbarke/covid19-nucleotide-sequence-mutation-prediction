@@ -140,8 +140,6 @@ def permute_clade_pairs(paired_clades_file: str, permuted_output_folder: str):
                         )
                         fout.write("\n")
                         num_seq += 1
-
-            fout.close()
             print(f"Wrote {num_seq} clade pairs for {clade_pair}")
 
 
