@@ -21,7 +21,7 @@ def generate_vocabulary(kmer_length: int) -> Dict[str, int]:
             vocabulary_list.append(permuted_word)
 
     vocabulary_dict = {}
-    for index, kmer in enumerate(vocabulary_list, 3):  # 0, 1 and  are for SOS , EOS and PAD respectively
+    for index, kmer in enumerate(vocabulary_list, 3):  # 0, 1 and 2 are for SOS , EOS and PAD respectively
         vocabulary_dict["".join(kmer)] = index
     return vocabulary_dict
 
@@ -65,8 +65,9 @@ def create_encoded_sequence_pairs_file(
 if __name__ == "__main__":
     # generate_vocabulary(5)
     # print(encode_sequence("AGCTAT", 3))
-    permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/permuted"
-    encoded_permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/encoded"
-    create_encoded_sequence_pairs_file(
-        permuted_clade_pair_folder, encoded_permuted_clade_pair_folder, kmer_length=KMER_LENGTH
-    )
+    print(generate_vocabulary(4))
+    # permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/permuted"
+    # encoded_permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/encoded"
+    # create_encoded_sequence_pairs_file(
+    #    permuted_clade_pair_folder, encoded_permuted_clade_pair_folder, kmer_length=KMER_LENGTH
+    # )
