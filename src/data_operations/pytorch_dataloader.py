@@ -1,5 +1,6 @@
 # Standard
 from json import load
+from pathlib import Path
 
 # External
 from torch.utils.data import Dataset, DataLoader
@@ -43,7 +44,7 @@ class SequencesDataset(Dataset):
 
 if __name__ == "__main__":
 
-    data_path = f""
+    data_path = f"{Path.cwd()}/data/05encoded/21M_21L.json"
     sequences_data = SequencesDataset(dataset_file_path=data_path)
     data_loader = DataLoader(sequences_data, batch_size=1, shuffle=True)
     for idx, xy_values in enumerate(data_loader):
