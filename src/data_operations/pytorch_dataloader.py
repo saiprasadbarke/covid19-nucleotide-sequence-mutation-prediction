@@ -46,7 +46,7 @@ class SequencesDataset(Dataset):
 
     @staticmethod
     def prepend_append_start_end(sequences: List[List[int]], is_target: bool = True):
-
+        """This function appends or prepends a EOS / BOS respectively depending on whether the sequence is an input sequence or a target sequence"""
         for sequence in sequences:
             if is_target:
                 sequence.insert(0, 0)  # Prepend 0 as BOS at the start
