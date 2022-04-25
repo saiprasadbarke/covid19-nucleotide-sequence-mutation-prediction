@@ -21,7 +21,7 @@ def generate_vocabulary(kmer_length: int) -> Dict[str, int]:
             vocabulary_list.append(permuted_word)
 
     vocabulary_dict = {}
-    for index, kmer in enumerate(vocabulary_list, 3):  # 0, 1 and 2 are for SOS , EOS and PAD respectively
+    for index, kmer in enumerate(vocabulary_list, 3):  # 0, 1 and 2 are for BOS , EOS and PAD respectively
         vocabulary_dict["".join(kmer)] = index
     return vocabulary_dict
 

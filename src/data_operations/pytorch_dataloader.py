@@ -1,6 +1,7 @@
 # Standard
 from json import load
 from pathlib import Path
+from typing import List
 
 # External
 from torch.utils.data import Dataset, DataLoader
@@ -39,13 +40,25 @@ class SequencesDataset(Dataset):
             x_sequences = [sequence_pair["x_sequence"] for sequence_pair in data]
             y_sequences = [sequence_pair["y_sequence"] for sequence_pair in data]
             assert len(x_sequences) == len(y_sequences)
+            x_sequences = SequencesDataset.prepend_append_start_end(x_sequences, is_target=False)
+            y_sequences = SequencesDataset.prepend_append_start_end(y_sequences)
         return x_sequences, y_sequences
+
+    @staticmethod
+    def prepend_append_start_end(sequences: List[List[int]], is_target: bool = True):
+
+        for sequence in sequences:
+            if is_target:
+                sequence.insert(0, 0)  # Prepend 0 as BOS at the start
+            else:
+                sequence.append(1)  # Append 1 as EOS at the end
+        return sequences
 
 
 if __name__ == "__main__":
 
-    data_path = f"{Path.cwd()}/data/05encoded/21M_21L.json"
+    data_path = f"{Path.cwd().parents[0]}/data/21M_21L_test.json"
     sequences_data = SequencesDataset(dataset_file_path=data_path)
-    data_loader = DataLoader(sequences_data, batch_size=1, shuffle=True)
+    data_loader = DataLoader(sequences_data, batch_size=2, shuffle=True)
     for idx, xy_values in enumerate(data_loader):
         print(f"XY at position {idx} is {xy_values}")
