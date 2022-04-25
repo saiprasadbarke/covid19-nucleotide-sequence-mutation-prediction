@@ -18,3 +18,4 @@ dependencies:
       - biopython
       - seaborn
       - black
+      - ijson
