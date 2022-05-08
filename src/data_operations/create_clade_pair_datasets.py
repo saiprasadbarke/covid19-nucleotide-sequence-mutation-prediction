@@ -10,35 +10,38 @@ from Bio import SeqIO
 
 # These variables control the various dataset properties
 NUM_SEQ = 30000
-LEVENSHTEIN_THRESHOLD = 300
-MIN_SEQ_LEN = 29600
+LEVENSHTEIN_THRESHOLD = 10
+MIN_SEQ_LEN = 3700
 START_POSITION = 0
-END_POSITION = 29600
+END_POSITION = 3700
 CLADE_PAIRS = [
-    ("19A", "19B"),
-    ("19A", "20A"),
-    ("20A", "20B"),
-    ("20A", "20C"),
-    ("20A", "20E"),
-    ("20A", "21A"),
-    ("20A", "21B"),
-    ("20A", "21D"),
-    ("20A", "21H"),
-    ("20B", "20D"),
-    ("20B", "20F"),
-    ("20B", "20I"),
-    ("20B", "20J"),
-    ("20B", "21E"),
-    ("20B", "21M"),
-    ("20C", "20G"),
-    ("20C", "20H"),
-    ("20C", "21C"),
-    ("20C", "21F"),
-    ("21A", "21I"),
+    # ("19A", "19B"),
+    # ("19A", "20A"),
+    # ("20A", "20B"),
+    # ("20A", "20C"),
+    # ("20A", "20E"),
+    # ("20A", "21A"),
+    # ("20A", "21B"),
+    # ("20A", "21D"),
+    # ("20A", "21H"),
+    # ("20B", "20D"),
+    # ("20B", "20F"),
+    # ("20B", "20I"),
+    # ("20B", "20J"),
+    # ("20B", "21E"),
+    # ("20B", "21M"),
+    # ("20C", "20G"),
+    # ("20C", "20H"),
+    # ("20C", "21C"),
+    # ("20C", "21F"),
+    # ("21A", "21I"),
     ("21A", "21J"),
-    ("20D", "21G"),
-    ("21M", "21K"),
-    ("21M", "21L"),
+    # ("20D", "21G"),
+    # ("21M", "21K"),
+    # ("21M", "21L"),
+    # ("21L", "22A"),
+    # ("21L", "22B"),
+    # ("21L", "22C"),
 ]
 
 LIST_OF_CLADES = [
@@ -67,6 +70,9 @@ LIST_OF_CLADES = [
     "21G",
     "21K",
     "21L",
+    "22A",
+    "22B",
+    "22C",
 ]
 
 
@@ -131,16 +137,16 @@ def permute_clade_pairs(paired_clades_file: str, permuted_output_folder: str):
             cartesian_product_iterator = product(clade1_sequences, clade2_sequences)
             with open(f"{permuted_output_folder}/{clade_pair}.csv", "w") as fout:
 
-                for clade_pair in cartesian_product_iterator:
+                for current_clade_pair in cartesian_product_iterator:
                     if num_seq == NUM_SEQ:
                         break
-                    elif is_valid_sequence_pair(clade_pair[0], clade_pair[1]):
+                    elif is_valid_sequence_pair(current_clade_pair[0], current_clade_pair[1]):
                         fout.write(
-                            f"{clade_pair[0][START_POSITION:END_POSITION]},{clade_pair[1][START_POSITION:END_POSITION]}"
+                            f"{current_clade_pair[0][START_POSITION:END_POSITION]},{current_clade_pair[1][START_POSITION:END_POSITION]}"
                         )
                         fout.write("\n")
                         num_seq += 1
-            print(f"Wrote {num_seq} clade pairs for {clade_pair}")
+            print(f"Wrote {num_seq} clade pairs for {(clade_pair.split('_')[0], clade_pair.split('_')[1])}")
 
 
 def is_valid_sequence_pair(seq1: str, seq2: str) -> bool:
@@ -152,17 +158,18 @@ def is_valid_sequence_pair(seq1: str, seq2: str) -> bool:
 
 if __name__ == "__main__":
 
-    clades_file = f"{Path.cwd().parents[0]}/data/clades.tabular"
-    sequences_file = f"{Path.cwd().parents[0]}/data/sequences.fasta"
-    sequence_clade_merged_file = f"{Path.cwd().parents[0]}/data/merged.json"
+    # clades_file = f"{Path.cwd().parents[0]}/data/clades.tabular"
+    # sequences_file = f"{Path.cwd().parents[0]}/data/sequences.fasta"
+    # sequence_clade_merged_file = f"{Path.cwd().parents[0]}/data/merged.json"
     paired_clades_file = f"{Path.cwd().parents[0]}/data/paired.json"
     permuted_sequences_folder = f"{Path.cwd().parents[0]}/data/permuted"
-    create_merged_data(
-        clades_file=clades_file, sequences_file=sequences_file, sequence_clade_merged_file=sequence_clade_merged_file
-    )
-    generate_clade_pair_files(
-        sequence_clade_merged_file=sequence_clade_merged_file, paired_clades_file=paired_clades_file
-    )
-    print("Clade pair file generated...Permuting pairs now...")
+
+    # create_merged_data(
+    #    clades_file=clades_file, sequences_file=sequences_file, sequence_clade_merged_file=sequence_clade_merged_file
+    # )
+    # generate_clade_pair_files(
+    #    sequence_clade_merged_file=sequence_clade_merged_file, paired_clades_file=paired_clades_file
+    # )
+    # print("Clade pair file generated...Permuting pairs now...")
     permute_clade_pairs(paired_clades_file=paired_clades_file, permuted_output_folder=permuted_sequences_folder)
     print("Completed data pre processing...")

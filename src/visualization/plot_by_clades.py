@@ -32,6 +32,9 @@ LIST_OF_CLADES = [
     "21G",
     "21K",
     "21L",
+    "22A",
+    "22B",
+    "22C",
 ]
 
 
@@ -41,9 +44,13 @@ def read_clade_tabular(file_path: str) -> dict[str, str]:
     clades = data.iloc[:, 1]
     qc_status = data.iloc[:, 4]
     id_clade_dict = {}
-    for id, clade, qc in zip(ids, clades, qc_status):
+    number_of_good_sequences = 0
+    for idx, (id, clade, qc) in enumerate(zip(ids, clades, qc_status), 1):
         if qc == "good":
             id_clade_dict[id] = str(clade).replace('"', "").split(" ")[0]
+            number_of_good_sequences += 1
+    print(f"Total sequences: {idx}")
+    print(f"Number of good sequences: {number_of_good_sequences}")
     return id_clade_dict
 
 
@@ -75,11 +82,12 @@ def plot_bar_clades(id_clade_dict: dict[str, str], graph_path: str, stats_path: 
 
 
 if __name__ == "__main__":
-    clade_filepath = f"{Path.cwd()}/data/01cleaned/clades.tabular"
-    plot_name = "clades_all_hist_after_qc_filter"
-    clades_histogram_path = f"{Path.cwd()}/plots/{plot_name}.png"
+    clade_filepath = f"{Path.cwd().parents[0]}/data/clades.tabular"
+    plot_name = "clades_all_hist_after_qc_filter_spike"
+    clades_histogram_path = f"{Path.cwd()}/reports/plots/{plot_name}.png"
     id_clade_dict = read_clade_tabular(clade_filepath)
-    stats_file = f"{Path.cwd()}/plots/stats/{plot_name}.json"
+    print("Printing Graphs now...")
+    stats_file = f"{Path.cwd()}/reports/stats/{plot_name}.json"
     plot_bar_clades(
         id_clade_dict=id_clade_dict,
         graph_path=clades_histogram_path,

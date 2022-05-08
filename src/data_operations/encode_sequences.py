@@ -8,8 +8,8 @@ from torch.utils.data import Dataset, DataLoader
 from numpy import zeros
 
 NUCLEOTIDES = ["A", "C", "G", "T"]
-KMER_LENGTH = 5
-num_special_characters = 3  # 0, 1 and 2 are for BOS , EOS and PAD respectively
+KMER_LENGTH = 3
+num_special_characters = 2  # 0, 1 and 2 are for BOS , EOS and PAD respectively #TODO: Look at old commit. Changed 3 to 2 as not using PAD anymore
 
 
 def generate_vocabulary(kmer_length: int) -> Dict[str, int]:
@@ -24,7 +24,9 @@ def generate_vocabulary(kmer_length: int) -> Dict[str, int]:
             vocabulary_list.append(permuted_word)
 
     vocabulary_dict = {}
-    for index, kmer in enumerate(vocabulary_list, 3):  # 0, 1 and 2 are for BOS , EOS and PAD respectively
+    for index, kmer in enumerate(
+        vocabulary_list, 2
+    ):  # 0, 1 and 2 are for BOS , EOS and PAD respectively #TODO: Look at old commit. Changed 3 to 2 as not using PAD anymore
         vocabulary_dict["".join(kmer)] = index
     return vocabulary_dict
 
@@ -140,14 +142,14 @@ if __name__ == "__main__":
     # generate_vocabulary(5)
     # print(encode_sequence("AGCTAT", 3))
     # print(generate_vocabulary(4))
-    # permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/permuted"
-    # encoded_permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/encoded"
-    # create_encoded_sequence_pairs_file(
-    #    permuted_clade_pair_folder, encoded_permuted_clade_pair_folder, kmer_length=KMER_LENGTH
-    # )
+    permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/permuted"
+    encoded_permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/encoded"
+    create_encoded_sequence_pairs_file(
+        permuted_clade_pair_folder, encoded_permuted_clade_pair_folder, kmer_length=KMER_LENGTH
+    )
 
-    data_path = f"{Path.cwd().parents[0]}/data/21M_21L_test.json"
+    data_path = f"{Path.cwd().parents[0]}/data/encoded/21A_21J.json"
     sequences_data = SequencesDataset(dataset_file_path=data_path)
-    data_loader = DataLoader(sequences_data, batch_size=2, shuffle=True)
+    data_loader = DataLoader(sequences_data, batch_size=1, shuffle=True)
     for idx, xy_values in enumerate(data_loader):
         print(f"XY at position {idx} is {xy_values}")

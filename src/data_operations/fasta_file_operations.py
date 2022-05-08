@@ -26,8 +26,8 @@ def is_valid_sequence(sequence: str) -> bool:
 
 
 if __name__ == "__main__":
-    input_fasta_file_path = f"{Path.cwd()}/data/00unfiltered/unfiltered.fasta"
-    sequences_file_path = f"{Path.cwd()}/data/01cleaned/sequences_new.fasta"
+    input_fasta_file_path = f"{Path.cwd().parents[0]}/data/spikenuc0428.fasta"
+    sequences_file_path = f"{Path.cwd().parents[0]}/data/sequences.fasta"
     create_cleaned_fasta_file(
         import_file_path=input_fasta_file_path,
         export_file_path=sequences_file_path,
