@@ -129,7 +129,7 @@ class SequencesDataset(Dataset):
         sequence_vector = zeros([len(sequence), 1, len(VOCABULARY) + num_special_characters])
         for index, kmer in enumerate(sequence):
             sequence_vector[index] = SequencesDataset.encode_onehot_kmer(kmer)
-        return sequence_vector[:-1]
+        return sequence_vector
 
     @staticmethod
     def encode_onehot_kmer(kmer: int) -> List[int]:
@@ -142,13 +142,13 @@ if __name__ == "__main__":
     # generate_vocabulary(5)
     # print(encode_sequence("AGCTAT", 3))
     # print(generate_vocabulary(4))
-    permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/permuted"
-    encoded_permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/encoded"
-    create_encoded_sequence_pairs_file(
-        permuted_clade_pair_folder, encoded_permuted_clade_pair_folder, kmer_length=KMER_LENGTH
-    )
+    # permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/permuted"
+    # encoded_permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/encoded"
+    # create_encoded_sequence_pairs_file(
+    #    permuted_clade_pair_folder, encoded_permuted_clade_pair_folder, kmer_length=KMER_LENGTH
+    # )
 
-    data_path = f"{Path.cwd().parents[0]}/data/encoded/21A_21J.json"
+    data_path = f"{Path.cwd().parents[0]}/data/encoded/21A_21J_test.json"
     sequences_data = SequencesDataset(dataset_file_path=data_path)
     data_loader = DataLoader(sequences_data, batch_size=1, shuffle=True)
     for idx, xy_values in enumerate(data_loader):

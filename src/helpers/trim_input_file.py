@@ -1,4 +1,4 @@
-from json import load, dumps
+from json import load, dump
 from pathlib import Path
 
 
@@ -6,12 +6,14 @@ def trim_input_file(file_path: str, output_file: str, number_of_sequence_pairs: 
 
     with open(file_path) as f:
         data = load(f)
+        trimmed_list = []
+        for i, item in enumerate(data, 1):
+            trimmed_list.append(item)
+            if i == number_of_sequence_pairs:
+                break
+
         with open(output_file, "w") as out:
-            for i, item in enumerate(data, 1):
-                # print(item)
-                out.write(dumps(item))
-                if i == number_of_sequence_pairs:
-                    break
+            dump(trimmed_list, out)
 
 
 if __name__ == "__main__":
