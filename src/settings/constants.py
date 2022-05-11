@@ -8,3 +8,7 @@ from settings.vocabulary import generate_vocabulary
 VOCABULARY = generate_vocabulary(kmer_length=KMER_LENGTH)
 train_remaining_fraction = 0.2
 validation_test_fraction = 0.5
+
+from torch.cuda import is_available
+
+USE_CUDA = is_available()
