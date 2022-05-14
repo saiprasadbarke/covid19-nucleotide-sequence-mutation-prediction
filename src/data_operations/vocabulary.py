@@ -1,8 +1,7 @@
 # Standard
 from json import dump
-from collections import defaultdict
 from itertools import combinations_with_replacement, permutations
-from typing import Dict, List
+from typing import Dict
 
 # Local
 from settings.constants import NUCLEOTIDES, num_special_characters

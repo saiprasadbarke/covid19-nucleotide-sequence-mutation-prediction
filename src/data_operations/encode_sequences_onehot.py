@@ -4,7 +4,7 @@ from typing import List
 
 # Local
 from json import load
-from settings.constants import VOCABULARY, num_special_characters
+from settings.constants import num_special_characters, KMER_LENGTH
 
 # External
 from numpy import zeros
@@ -42,7 +42,9 @@ def encode_onehot(sequences: List[List[int]]) -> List[List[list[int]]]:
 
 
 def encode_onehot_singleseq(sequence: List[int]) -> List[list[int]]:
-    sequence_vector = zeros([len(sequence), 1, len(VOCABULARY) + num_special_characters])
+    sequence_vector = zeros(
+        [len(sequence), 1, 4**KMER_LENGTH + num_special_characters]
+    )  # 4**KMER_LENGTH is the size of the vocabulary
     for index, kmer in enumerate(sequence):
         sequence_vector[index][0][kmer] = 1
     return sequence_vector
@@ -50,7 +52,9 @@ def encode_onehot_singleseq(sequence: List[int]) -> List[list[int]]:
 
 # We are not using this method instead line 131 inserts the "one" at the appropriate position as per the kmer value
 def encode_onehot_kmer(kmer: int) -> List[int]:
-    onehot_vector = zeros([1, len(VOCABULARY) + num_special_characters])
+    onehot_vector = zeros(
+        [1, 4**KMER_LENGTH + num_special_characters]
+    )  # 4**KMER_LENGTH is the size of the vocabulary
     onehot_vector[0][kmer] = 1
     return onehot_vector
 
