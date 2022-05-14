@@ -38,5 +38,6 @@ def get_split_data(dataset_file_path: str, batch_size: int):
 if __name__ == "__main__":
     path = f"{Path.cwd().parents[0]}/data/encoded/21A_21J_test.json"
     print(path)
-    train, val, test = get_split_data(path, 6)
+    train_dataloader, val_dataloader, test_dataloader = get_split_data(path, 6)
+    x_y = next(iter(train_dataloader))
     print()

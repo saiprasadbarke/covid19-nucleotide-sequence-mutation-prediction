@@ -7,7 +7,10 @@ from typing import Dict, List
 
 # Local
 
-from settings.constants import KMER_LENGTH, VOCABULARY
+from settings.constants import KMER_LENGTH
+from data_operations.vocabulary import Vocabulary
+
+vocabulary = Vocabulary(KMER_LENGTH)
 
 
 def sliding_window(sequence: str, kmer_length: int) -> List[str]:
@@ -19,7 +22,7 @@ def sliding_window(sequence: str, kmer_length: int) -> List[str]:
 
 def encode_sequence(sequence: str, kmer_length: int) -> List[int]:
     kmer_sequence = sliding_window(sequence, kmer_length)
-    encoded_kmer_seq = [VOCABULARY[kmer] for kmer in kmer_sequence]
+    encoded_kmer_seq = [vocabulary.stoi[kmer] for kmer in kmer_sequence]
     return encoded_kmer_seq
 
 
