@@ -2,7 +2,7 @@
 from pathlib import Path
 
 # External
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset
 
 
 class SequencesDataset(Dataset):
