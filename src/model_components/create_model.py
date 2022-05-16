@@ -10,7 +10,7 @@ from settings.constants import USE_CUDA
 from torch.nn import Embedding
 
 
-def create_model(src_vocab, tgt_vocab, emb_size=256, hidden_size=512, num_layers=1, dropout=0.1):
+def create_model(src_vocab, tgt_vocab, emb_size=256, hidden_size=512, num_layers=1, dropout=0):
 
     attention = BahdanauAttention(hidden_size)
 

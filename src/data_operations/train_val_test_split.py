@@ -30,8 +30,8 @@ def get_split_data(dataset_file_path: str, batch_size: int):
     print(f"Size of Test dataset: {test_dataset.__len__()}")
 
     train_dataloader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
-    val_dataloader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True)
-    test_dataloader = DataLoader(test_dataset, batch_size=batch_size)
+    val_dataloader = DataLoader(val_dataset, batch_size=1, shuffle=True)
+    test_dataloader = DataLoader(test_dataset, batch_size=1)
     return train_dataloader, val_dataloader, test_dataloader
 
 
