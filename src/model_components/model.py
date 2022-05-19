@@ -1,8 +1,13 @@
+#Local
+from model_components.decoder import Decoder
+from model_components.encoder import Encoder
+
 # External
 import torch.nn as nn
-from model_components.decoder import Decoder
+from torch.nn import Embedding
 
-from model_components.encoder import Encoder
+
+
 
 
 class EncoderDecoder(nn.Module):
@@ -11,7 +16,7 @@ class EncoderDecoder(nn.Module):
     other models.
     """
 
-    def __init__(self, encoder: Encoder, decoder: Decoder, src_embed, trg_embed, generator):
+    def __init__(self, encoder: Encoder, decoder: Decoder, src_embed:Embedding, trg_embed:Embedding, generator):
         super(EncoderDecoder, self).__init__()
         self.encoder = encoder
         self.decoder = decoder

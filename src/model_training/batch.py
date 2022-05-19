@@ -41,4 +41,6 @@ class Batch:
 
 def rebatch(pad_idx, batch):
     """Wrap torchtext batch into our own Batch class for pre-processing"""
-    return Batch(batch[0], batch[1], pad_idx)
+    src = batch[0]
+    trg = batch[1]
+    return Batch(src, trg, pad_idx)
