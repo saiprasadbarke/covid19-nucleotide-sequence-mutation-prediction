@@ -38,7 +38,16 @@ class Decoder(nn.Module):
 
         return output, hidden, pre_output
 
-    def forward(self, trg_embed, encoder_hidden, encoder_final, src_mask, trg_mask, hidden=None, max_len=None):
+    def forward(
+        self,
+        trg_embed,
+        encoder_hidden,
+        encoder_final,
+        src_mask,
+        trg_mask,
+        hidden=None,
+        max_len=None,
+    ):
         """Unroll the decoder one step at a time."""
 
         # the maximum number of steps to unroll the RNN

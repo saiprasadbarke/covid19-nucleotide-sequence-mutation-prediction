@@ -1,6 +1,7 @@
 import time, math
 
 from model_components.model import EncoderDecoder
+from settings.constants import KMER_LENGTH, NUM_SPECIAL_CHARS
 
 
 def run_epoch(data_iter, model: EncoderDecoder, loss_compute, print_every=50):
@@ -10,9 +11,10 @@ def run_epoch(data_iter, model: EncoderDecoder, loss_compute, print_every=50):
     total_tokens = 0
     total_loss = 0
     print_tokens = 0
-
+    sequence_len = 3700 - KMER_LENGTH + 1
+    input_feature_len = 4**KMER_LENGTH + NUM_SPECIAL_CHARS
     for i, batch in enumerate(data_iter, 1):
-        src, trg = batch[0], batch[1]
+        src, trg = batch[0].reshape(-1, sequence_len, input_feature_len), batch[1]
         out, _, pre_output = model.forward(
             src,
             trg,

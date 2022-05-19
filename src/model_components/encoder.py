@@ -14,7 +14,7 @@ class Encoder(nn.Module):
         self,
         input_size: int = KMER_LENGTH,
         hidden_size: int = 128,
-        num_layers: int = 2,
+        num_layers: int = 1,
         dropout=0.1,
     ):
         super(Encoder, self).__init__()
