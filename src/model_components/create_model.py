@@ -10,15 +10,22 @@ from settings.constants import USE_CUDA
 from torch.nn import Embedding
 
 
-def create_model(src_vocab, tgt_vocab, emb_size=256, hidden_size=512, num_layers=1, dropout=0):
+def create_model(
+    src_vocab,
+    tgt_vocab,
+    emb_size=256,
+    hidden_size=512,
+    num_layers=1,
+    dropout=0,
+):
 
     attention = BahdanauAttention(hidden_size)
 
     model = EncoderDecoder(
         Encoder(emb_size, hidden_size, num_layers=num_layers, dropout=dropout),
         Decoder(emb_size, hidden_size, attention, num_layers=num_layers, dropout=dropout),
-        Embedding(src_vocab, emb_size),
-        Embedding(tgt_vocab, emb_size),
+        # Embedding(src_vocab, emb_size),
+        # Embedding(tgt_vocab, emb_size),
         Generator(hidden_size, tgt_vocab),
     )
 

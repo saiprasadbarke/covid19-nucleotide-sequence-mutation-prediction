@@ -10,11 +10,11 @@ from model_training.batch import rebatch
 # External
 
 from torch.utils.data import DataLoader
-import torch.optim as optim
+from torch.optim import Adam
 import torch.nn as nn
 import torch
-from timeit import default_timer as timer
-from argparse import ArgumentParser
+
+# from timeit import default_timer as timer
 
 
 def train_loop(
@@ -30,7 +30,7 @@ def train_loop(
         model.cuda()
 
     criterion = nn.NLLLoss(reduction="sum")
-    optim = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    optim = Adam(model.parameters(), lr=learning_rate)
 
     dev_perplexities = []
 
@@ -40,7 +40,7 @@ def train_loop(
         model.train()
         with torch.set_grad_enabled(True):
             train_perplexity = run_epoch(
-                ((rebatch(PAD_IDX, b) for b in train_dataloader)),
+                (b for b in train_dataloader),
                 model,
                 SimpleLossCompute(model.generator, criterion, optim),
                 print_every=print_every,
@@ -50,7 +50,7 @@ def train_loop(
         with torch.no_grad():
 
             dev_perplexity = run_epoch(
-                ((rebatch(PAD_IDX, b) for b in validation_dataloader)),
+                (b for b in validation_dataloader),
                 model,
                 SimpleLossCompute(model.generator, criterion, None),
             )
