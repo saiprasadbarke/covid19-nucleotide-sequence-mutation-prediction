@@ -2,7 +2,7 @@
 
 from helpers.check_dir_exists import check_dir_exists
 from model_components.model import EncoderDecoder
-from settings.constants import USE_CUDA, PAD_IDX
+from settings.constants import LEARNING_RATE_ALPHA, N_EPOCHS, USE_CUDA, PAD_IDX
 from model_training.run_epoch import run_epoch
 from model_training.loss_computation import SimpleLossCompute
 from model_training.batch import rebatch
@@ -21,8 +21,8 @@ def train_loop(
     model: EncoderDecoder,
     train_dataloader: DataLoader,
     validation_dataloader: DataLoader,
-    num_epochs: int = 10,
-    learning_rate: float = 0.0003,
+    num_epochs: int = N_EPOCHS,
+    learning_rate: float = LEARNING_RATE_ALPHA,
     print_every=100,
 ):
 

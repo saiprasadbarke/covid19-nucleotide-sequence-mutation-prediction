@@ -5,7 +5,8 @@ from model_components.generator import Generator
 
 # External
 import torch.nn as nn
-from torch.nn import Embedding
+
+# from torch.nn import Embedding
 
 
 class EncoderDecoder(nn.Module):
