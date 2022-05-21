@@ -9,6 +9,7 @@ from model_components.create_model import create_model
 from data_operations.vocabulary import Vocabulary
 from settings.constants import (
     KMER_LENGTH,
+    LEN_VOCABULARY,
     MINIBATCH_SIZE,
     RNN_DROPOUT,
     RNN_HIDDEN_SIZE,
@@ -20,10 +21,9 @@ from settings.constants import (
 dataset_file_path = f"{Path.cwd().parents[0]}/data/encoded/21A_21J_test.json"
 print(f"Path to dataset : {dataset_file_path}")
 train_dataloader, val_dataloader, test_dataloader = get_split_data(dataset_file_path, MINIBATCH_SIZE)
-len_vocab = len(Vocabulary(KMER_LENGTH))
 model = create_model(
-    len_vocab,
-    len_vocab,
+    # LEN_VOCABULARY,
+    # LEN_VOCABULARY,
     input_size=RNN_INPUT_FEATURE_SIZE,
     hidden_size=RNN_HIDDEN_SIZE,
     num_layers=RNN_NUM_LAYERS,

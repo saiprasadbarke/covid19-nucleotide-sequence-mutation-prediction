@@ -13,22 +13,20 @@ import torch
 
 
 def create_model(
-    src_vocab,
-    tgt_vocab,
+    # src_vocab,
+    # tgt_vocab,
     input_size=RNN_INPUT_FEATURE_SIZE,
     hidden_size=RNN_HIDDEN_SIZE,
     num_layers=RNN_NUM_LAYERS,
     dropout=RNN_DROPOUT,
 ):
 
-    attention = BahdanauAttention(hidden_size)
-
     model = EncoderDecoder(
         Encoder(input_size, hidden_size, num_layers=num_layers, dropout=dropout),
-        Decoder(input_size, hidden_size, attention, num_layers=num_layers, dropout=dropout),
+        Decoder(input_size, hidden_size, BahdanauAttention(hidden_size), num_layers=num_layers, dropout=dropout),
         # Embedding(src_vocab, emb_size),
         # Embedding(tgt_vocab, emb_size),
-        Generator(hidden_size, tgt_vocab),
+        Generator(hidden_size, input_size),
     )
 
     return model.to("cuda", dtype=torch.float32) if USE_CUDA else model.to("cpu", dtype=torch.float32)

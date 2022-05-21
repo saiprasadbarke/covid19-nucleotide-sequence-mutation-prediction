@@ -40,7 +40,7 @@ def train_loop(
         model.train()
         with torch.set_grad_enabled(True):
             train_perplexity = run_epoch(
-                (b for b in train_dataloader),
+                (rebatch(b) for b in train_dataloader),
                 model,
                 SimpleLossCompute(model.generator, criterion, optim),
                 print_every=print_every,
@@ -50,7 +50,7 @@ def train_loop(
         with torch.no_grad():
 
             dev_perplexity = run_epoch(
-                (b for b in validation_dataloader),
+                (rebatch(b) for b in validation_dataloader),
                 model,
                 SimpleLossCompute(model.generator, criterion, None),
             )

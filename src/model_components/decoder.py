@@ -68,10 +68,9 @@ class Decoder(nn.Module):
             max_len = trg.size(1)
 
         # initialize decoder hidden state
+        # hidden = torch.Size([1, 8, 512]) or [1, batch_size, encoder_hidden_size]
         if hidden is None:
-            hidden = self.init_hidden(
-                encoder_final
-            )  # hidden = torch.Size([1, 8, 512]) or [1, batch_size, 2*encoder_hidden_size]
+            hidden = self.init_hidden(encoder_final)
 
         # pre-compute projected encoder hidden states
         # (the "keys" for the attention mechanism)

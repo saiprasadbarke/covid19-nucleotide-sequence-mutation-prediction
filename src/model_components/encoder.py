@@ -33,9 +33,9 @@ class Encoder(nn.Module):
         x should have dimensions [batch, time, dim].
         """
         # packed = pack_padded_sequence(x, lengths, batch_first=True)
-        output, final = self.rnn(
-            x
-        )  # x = torch.Size([8, 3699, 66]), output = torch.Size([8, 3699, 1024]), final = torch.Size([2, 8, 512])
+        # x = torch.Size([8, 3699, 66]), output = torch.Size([8, 3699, 1024]), final = torch.Size([2, 8, 512])
+        output, final = self.rnn(x)
+
         # output, _ = pad_packed_sequence(output, batch_first=True)
 
         # we need to manually concatenate the final states for both directions
