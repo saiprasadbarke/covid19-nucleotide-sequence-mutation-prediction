@@ -7,7 +7,7 @@ from json import load
 from settings.constants import NUM_SPECIAL_CHARS, KMER_LENGTH
 
 # External
-from numpy import zeros
+from numpy import zeros, float32
 
 
 def kmer_to_onehot(dataset_file_path: str):
@@ -43,7 +43,7 @@ def encode_onehot(sequences: List[List[int]]) -> List[List[list[int]]]:
 
 def encode_onehot_singleseq(sequence: List[int]) -> List[list[int]]:
     sequence_vector = zeros(
-        [len(sequence), 1, 4**KMER_LENGTH + NUM_SPECIAL_CHARS]
+        [len(sequence), 1, 4**KMER_LENGTH + NUM_SPECIAL_CHARS], dtype=float32
     )  # 4**KMER_LENGTH is the size of the vocabulary
     for index, kmer in enumerate(sequence):
         sequence_vector[index][0][kmer] = 1

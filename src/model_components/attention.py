@@ -3,6 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+
 class BahdanauAttention(nn.Module):
     """Implements Bahdanau (MLP) attention"""
 
@@ -21,7 +22,7 @@ class BahdanauAttention(nn.Module):
         self.alphas = None
 
     def forward(self, query=None, proj_key=None, value=None, mask=None):
-        assert mask is not None, "mask is required"
+        # assert mask is not None, "mask is required"
 
         # We first project the query (the decoder state).
         # The projected keys (the encoder states) were already pre-computated.
@@ -33,7 +34,7 @@ class BahdanauAttention(nn.Module):
 
         # Mask out invalid positions.
         # The mask marks valid positions so we invert it using `mask & 0`.
-        scores.data.masked_fill_(mask == 0, -float("inf"))
+        # scores.data.masked_fill_(mask == 0, -float("inf"))
 
         # Turn scores to probabilities.
         alphas = F.softmax(scores, dim=-1)

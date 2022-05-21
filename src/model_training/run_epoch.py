@@ -13,7 +13,8 @@ def run_epoch(data_iter, model: EncoderDecoder, loss_compute, print_every=50):
     print_tokens = 0
 
     for i, batch in enumerate(data_iter, 1):
-        src, trg = batch[0].reshape(-1, RNN_INPUT_SEQUENCE_LENGTH, RNN_INPUT_FEATURE_SIZE), batch[1]
+        src = batch[0].reshape(-1, RNN_INPUT_SEQUENCE_LENGTH, RNN_INPUT_FEATURE_SIZE)
+        trg = batch[1].reshape(-1, RNN_INPUT_SEQUENCE_LENGTH, RNN_INPUT_FEATURE_SIZE)
         out, _, pre_output = model.forward(
             src,
             trg,

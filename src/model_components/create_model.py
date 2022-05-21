@@ -1,4 +1,5 @@
 # Local
+
 from model_components.attention import BahdanauAttention
 from model_components.generator import Generator
 from model_components.decoder import Decoder
@@ -8,6 +9,7 @@ from settings.constants import RNN_DROPOUT, RNN_HIDDEN_SIZE, RNN_INPUT_FEATURE_S
 
 # External
 from torch.nn import Embedding
+import torch
 
 
 def create_model(
@@ -29,4 +31,4 @@ def create_model(
         Generator(hidden_size, tgt_vocab),
     )
 
-    return model.cuda() if USE_CUDA else model
+    return model.to("cuda", dtype=torch.float32) if USE_CUDA else model.to("cpu", dtype=torch.float32)
