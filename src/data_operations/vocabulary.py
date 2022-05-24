@@ -4,7 +4,7 @@ from itertools import combinations_with_replacement, permutations
 from typing import Dict
 
 # Local
-from settings.constants import NUCLEOTIDES, num_special_characters
+from settings.constants import NUCLEOTIDES, NUM_SPECIAL_CHARS
 
 
 class Vocabulary:
@@ -40,7 +40,8 @@ class Vocabulary:
                 vocabulary_list.append(permuted_word)
 
         vocabulary_dict = {}
-        for index, kmer in enumerate(vocabulary_list, num_special_characters):
+        for index, kmer in enumerate(vocabulary_list, NUM_SPECIAL_CHARS):
+            # We start the indexing from NUM_SPECIAL_CHARS as the first NUM_SPECIAL_CHARS indices are for the special characters such as BOS, EOS and PAD
             vocabulary_dict["".join(kmer)] = index
         return vocabulary_dict
 

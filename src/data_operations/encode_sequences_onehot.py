@@ -4,10 +4,12 @@ from typing import List
 
 # Local
 from json import load
-from settings.constants import num_special_characters, KMER_LENGTH
+from settings.constants import NUM_SPECIAL_CHARS, KMER_LENGTH
 
 # External
 from numpy import zeros
+from numpy import float32 as f32
+from torch import LongTensor, float32, int64, tensor
 
 
 def kmer_to_onehot(dataset_file_path: str):
@@ -18,9 +20,10 @@ def kmer_to_onehot(dataset_file_path: str):
         assert len(x_sequences) == len(y_sequences)
         x_sequences = prepend_append_start_end(x_sequences, is_target=False)
         y_sequences = prepend_append_start_end(y_sequences)
-
-        x_sequences = encode_onehot(x_sequences)
-        y_sequences = encode_onehot(y_sequences)
+        x_sequences = [tensor(x, dtype=float32) for x in x_sequences]
+        y_sequences = [tensor(y, dtype=float32) for y in y_sequences]
+        # x_sequences = encode_onehot(x_sequences)
+        # y_sequences = encode_onehot(y_sequences)
     return x_sequences, y_sequences
 
 
@@ -29,6 +32,7 @@ def prepend_append_start_end(sequences: List[List[int]], is_target: bool = True)
     for sequence in sequences:
         if is_target:
             sequence.insert(0, 0)  # Prepend 0 as BOS at the start
+            sequence.append(1)  # Append 1 as EOS at the end
         else:
             sequence.append(1)  # Append 1 as EOS at the end
     return sequences
@@ -43,7 +47,7 @@ def encode_onehot(sequences: List[List[int]]) -> List[List[list[int]]]:
 
 def encode_onehot_singleseq(sequence: List[int]) -> List[list[int]]:
     sequence_vector = zeros(
-        [len(sequence), 1, 4**KMER_LENGTH + num_special_characters]
+        [len(sequence), 1, 4**KMER_LENGTH + NUM_SPECIAL_CHARS], dtype=f32
     )  # 4**KMER_LENGTH is the size of the vocabulary
     for index, kmer in enumerate(sequence):
         sequence_vector[index][0][kmer] = 1
@@ -52,9 +56,7 @@ def encode_onehot_singleseq(sequence: List[int]) -> List[list[int]]:
 
 # We are not using this method instead line 131 inserts the "one" at the appropriate position as per the kmer value
 def encode_onehot_kmer(kmer: int) -> List[int]:
-    onehot_vector = zeros(
-        [1, 4**KMER_LENGTH + num_special_characters]
-    )  # 4**KMER_LENGTH is the size of the vocabulary
+    onehot_vector = zeros([1, 4**KMER_LENGTH + NUM_SPECIAL_CHARS])  # 4**KMER_LENGTH is the size of the vocabulary
     onehot_vector[0][kmer] = 1
     return onehot_vector
 

@@ -2,7 +2,7 @@
 
 from helpers.check_dir_exists import check_dir_exists
 from model_components.model import EncoderDecoder
-from settings.constants import USE_CUDA, PAD_IDX
+from settings.constants import LEARNING_RATE_ALPHA, N_EPOCHS, USE_CUDA, PAD_IDX
 from model_training.run_epoch import run_epoch
 from model_training.loss_computation import SimpleLossCompute
 from model_training.batch import rebatch
@@ -10,19 +10,19 @@ from model_training.batch import rebatch
 # External
 
 from torch.utils.data import DataLoader
-import torch.optim as optim
+from torch.optim import Adam
 import torch.nn as nn
 import torch
-from timeit import default_timer as timer
-from argparse import ArgumentParser
+
+# from timeit import default_timer as timer
 
 
 def train_loop(
     model: EncoderDecoder,
     train_dataloader: DataLoader,
     validation_dataloader: DataLoader,
-    num_epochs: int = 10,
-    learning_rate: float = 0.0003,
+    num_epochs: int = N_EPOCHS,
+    learning_rate: float = LEARNING_RATE_ALPHA,
     print_every=100,
 ):
 
@@ -30,7 +30,7 @@ def train_loop(
         model.cuda()
 
     criterion = nn.NLLLoss(reduction="sum")
-    optim = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    optim = Adam(model.parameters(), lr=learning_rate)
 
     dev_perplexities = []
 
@@ -40,7 +40,7 @@ def train_loop(
         model.train()
         with torch.set_grad_enabled(True):
             train_perplexity = run_epoch(
-                ((rebatch(PAD_IDX, b) for b in train_dataloader)),
+                (rebatch(b) for b in train_dataloader),
                 model,
                 SimpleLossCompute(model.generator, criterion, optim),
                 print_every=print_every,
@@ -50,7 +50,7 @@ def train_loop(
         with torch.no_grad():
 
             dev_perplexity = run_epoch(
-                ((rebatch(PAD_IDX, b) for b in validation_dataloader)),
+                (rebatch(b) for b in validation_dataloader),
                 model,
                 SimpleLossCompute(model.generator, criterion, None),
             )

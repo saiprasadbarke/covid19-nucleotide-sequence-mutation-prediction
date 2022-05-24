@@ -11,7 +11,7 @@ from Bio import SeqIO
 # These variables control the various dataset properties
 NUM_SEQ = 30000
 LEVENSHTEIN_THRESHOLD = 10
-MIN_SEQ_LEN = 3700
+MAX_SEQ_LENGTH = 3700
 START_POSITION = 0
 END_POSITION = 3700
 CLADE_PAIRS = [
@@ -150,7 +150,7 @@ def permute_clade_pairs(paired_clades_file: str, permuted_output_folder: str):
 
 
 def is_valid_sequence_pair(seq1: str, seq2: str) -> bool:
-    if len(seq1) < MIN_SEQ_LEN or len(seq2) < MIN_SEQ_LEN or distance(seq1, seq2) > LEVENSHTEIN_THRESHOLD:
+    if len(seq1) < MAX_SEQ_LENGTH or len(seq2) < MAX_SEQ_LENGTH or distance(seq1, seq2) > LEVENSHTEIN_THRESHOLD:
         return False
     else:
         return True
