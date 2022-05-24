@@ -41,6 +41,7 @@ class Vocabulary:
 
         vocabulary_dict = {}
         for index, kmer in enumerate(vocabulary_list, NUM_SPECIAL_CHARS):
+            # We start the indexing from NUM_SPECIAL_CHARS as the first NUM_SPECIAL_CHARS indices are for the special characters such as BOS, EOS and PAD
             vocabulary_dict["".join(kmer)] = index
         return vocabulary_dict
 

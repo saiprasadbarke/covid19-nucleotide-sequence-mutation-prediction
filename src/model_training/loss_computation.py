@@ -9,7 +9,7 @@ class SimpleLossCompute:
     def __call__(self, x, y, norm):
         x = self.generator(x)
         log_probs = x.contiguous().view(-1, x.size(-1))
-        targets = y.contiguous().view(-1)
+        targets = y.contiguous().view(-1).long()
         loss = self.criterion(log_probs, targets)
         loss = loss / norm
 

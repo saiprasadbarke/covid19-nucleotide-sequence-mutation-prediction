@@ -26,7 +26,7 @@ def create_model(
         Decoder(input_size, hidden_size, BahdanauAttention(hidden_size), num_layers=num_layers, dropout=dropout),
         # Embedding(src_vocab, emb_size),
         # Embedding(tgt_vocab, emb_size),
-        Generator(hidden_size, input_size),
+        Generator(hidden_size, 66),
     )
 
     return model.to("cuda", dtype=torch.float32) if USE_CUDA else model.to("cpu", dtype=torch.float32)
