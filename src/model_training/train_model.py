@@ -26,9 +26,6 @@ def train_loop(
     print_every=100,
 ):
 
-    if USE_CUDA:
-        model.cuda()
-
     criterion = nn.NLLLoss(reduction="sum")
     optim = Adam(model.parameters(), lr=learning_rate)
 
