@@ -27,4 +27,4 @@ model = create_model(
     num_layers=RNN_NUM_LAYERS,
     dropout=RNN_DROPOUT,
 )
-dev_preplex = train_loop(model=model, train_dataloader=train_dataloader, validation_dataloader=val_dataloader)
+train_loop(model=model, train_dataloader=train_dataloader, validation_dataloader=val_dataloader)
