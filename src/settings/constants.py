@@ -89,8 +89,8 @@ RNN_DROPOUT = 0
 
 # Training related parameters
 N_EPOCHS = 10
-MINIBATCH_SIZE = 2
-LEARNING_RATE_ALPHA = 0.0003
+MINIBATCH_SIZE = 32
+LEARNING_RATE_ALPHA = 1e-3
 from torch.cuda import is_available
 
 USE_CUDA = is_available()
