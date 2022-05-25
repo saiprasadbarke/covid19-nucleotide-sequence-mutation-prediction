@@ -13,7 +13,6 @@ from settings.constants import (
     MINIBATCH_SIZE,
     RNN_DROPOUT,
     RNN_HIDDEN_SIZE,
-    RNN_INPUT_FEATURE_SIZE,
     RNN_NUM_LAYERS,
 )
 

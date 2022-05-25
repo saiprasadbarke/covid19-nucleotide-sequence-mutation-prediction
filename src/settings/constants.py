@@ -2,10 +2,9 @@
 
 NUCLEOTIDES = ["A", "C", "G", "T"]
 KMER_LENGTH = 3
-NUM_SPECIAL_CHARS = 2  # 0, 1 and 2 are for BOS , EOS and PAD respectively #TODO: Look at old commit. Changed 3 to 2 as not using PAD anymore
+NUM_SPECIAL_CHARS = 2  # 0, 1 are for BOS , EOS respectively
 BOS_IDX = 0
 EOS_IDX = 1
-PAD_IDX = 2  # TODO: Not used anymore as all sequence lengths are equal now
 
 # Data set related parameters
 # These variables control the various dataset properties
@@ -79,7 +78,6 @@ TRAIN_REMAINDER_FRACTION = 0.2
 VAL_TEST_FRACTION = 0.5
 
 # Model parameters
-RNN_INPUT_FEATURE_SIZE = 1
 EMBEDDING_SIZE = 4
 LEN_VOCABULARY = 4**KMER_LENGTH + NUM_SPECIAL_CHARS
 RNN_HIDDEN_SIZE = 16
