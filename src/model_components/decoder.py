@@ -21,24 +21,12 @@ class Decoder(nn.Module):
         self.dropout_layer = nn.Dropout(p=dropout)
         self.pre_output_layer = nn.Linear(hidden_size + 2 * hidden_size + emb_size, hidden_size, bias=False)
 
-    def forward_step(
-        self,
-        prev_embed,
-        encoder_hidden,
-        # src_mask,
-        proj_key,
-        hidden,
-    ):
+    def forward_step(self, prev_embed, encoder_hidden, proj_key, hidden):
         """Perform a single decoder step (1 word)"""
 
         # compute context vector using attention mechanism
         query = hidden[-1].unsqueeze(1)  # [#layers, B, D] -> [B, 1, D]
-        context, attn_probs = self.attention(
-            query=query,
-            proj_key=proj_key,
-            value=encoder_hidden,
-            # mask=src_mask,
-        )
+        context, attn_probs = self.attention(query=query, proj_key=proj_key, value=encoder_hidden)
 
         # update rnn hidden state
         rnn_input = torch.cat([prev_embed, context], dim=2)
@@ -50,22 +38,12 @@ class Decoder(nn.Module):
 
         return output, hidden, pre_output
 
-    def forward(
-        self,
-        trg,
-        # trg_embed,
-        encoder_hidden,
-        encoder_final,
-        # src_mask,
-        # trg_mask,
-        hidden=None,
-        max_len=None,
-    ):
+    def forward(self, trg_embed, encoder_hidden, encoder_final, hidden=None, max_len=None):
         """Unroll the decoder one step at a time."""
 
         # the maximum number of steps to unroll the RNN
         if max_len is None:
-            max_len = trg.size(1)
+            max_len = trg_embed.size(1)
 
         # initialize decoder hidden state
         # hidden = torch.Size([1, 8, 512]) or [1, batch_size, encoder_hidden_size]
@@ -83,7 +61,7 @@ class Decoder(nn.Module):
 
         # unroll the decoder RNN for max_len steps
         for i in range(max_len):
-            prev_embed = trg[:, i].unsqueeze(1)
+            prev_embed = trg_embed[:, i].unsqueeze(1)
             output, hidden, pre_output = self.forward_step(
                 prev_embed,
                 encoder_hidden,

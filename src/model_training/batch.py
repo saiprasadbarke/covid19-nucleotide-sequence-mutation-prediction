@@ -1,4 +1,4 @@
-from settings.constants import RNN_INPUT_FEATURE_SIZE, RNN_INPUT_SEQUENCE_LENGTH, RNN_TARGET_SEQUENCE_LENGTH, USE_CUDA
+from settings.constants import USE_CUDA
 
 
 class Batch:
@@ -6,11 +6,7 @@ class Batch:
     Input is a batch from a pytorch dataloader.
     """
 
-    def __init__(
-        self,
-        src,
-        trg,
-    ):
+    def __init__(self, src, trg):
         self.src_input = src
         self.nseqs = src.size(0)
 
@@ -34,10 +30,6 @@ class Batch:
 
 def rebatch(batch):
     """Wrap Dataloader batch into custom Batch class for pre-processing"""
-    src = batch[0].reshape(-1, RNN_INPUT_SEQUENCE_LENGTH, 1)
-    trg = batch[1].reshape(-1, RNN_TARGET_SEQUENCE_LENGTH, 1)
-    return Batch(
-        src,
-        trg,
-        #   pad_idx,
-    )
+    src = batch[0]
+    trg = batch[1]
+    return Batch(src, trg)

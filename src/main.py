@@ -8,6 +8,7 @@ from model_training.train_model import train_loop
 from model_components.create_model import create_model
 from data_operations.vocabulary import Vocabulary
 from settings.constants import (
+    EMBEDDING_SIZE,
     LEN_VOCABULARY,
     MINIBATCH_SIZE,
     RNN_DROPOUT,
@@ -22,7 +23,7 @@ print(f"Path to dataset : {dataset_file_path}")
 train_dataloader, val_dataloader, test_dataloader = get_split_data(dataset_file_path, MINIBATCH_SIZE)
 model = create_model(
     vocab_size=LEN_VOCABULARY,
-    embedding_size=RNN_INPUT_FEATURE_SIZE,
+    embedding_size=EMBEDDING_SIZE,
     hidden_size=RNN_HIDDEN_SIZE,
     num_layers=RNN_NUM_LAYERS,
     dropout=RNN_DROPOUT,
