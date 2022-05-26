@@ -2,47 +2,23 @@
 from json import load, dump
 from pathlib import Path
 from itertools import product
+from random import sample
 
 # External
 from Levenshtein import distance
 
 from Bio import SeqIO
 
+
 # These variables control the various dataset properties
+RANDOM_SEED = 42
 NUM_SEQ = 30000
-LEVENSHTEIN_THRESHOLD = 10
+LEVENSHTEIN_THRESHOLD_MIN = 10
+LEVENSHTEIN_THRESHOLD_MAX = 25
 MAX_SEQ_LENGTH = 3700
 START_POSITION = 0
-END_POSITION = 3700
-CLADE_PAIRS = [
-    # ("19A", "19B"),
-    # ("19A", "20A"),
-    # ("20A", "20B"),
-    # ("20A", "20C"),
-    # ("20A", "20E"),
-    # ("20A", "21A"),
-    # ("20A", "21B"),
-    # ("20A", "21D"),
-    # ("20A", "21H"),
-    # ("20B", "20D"),
-    # ("20B", "20F"),
-    # ("20B", "20I"),
-    # ("20B", "20J"),
-    # ("20B", "21E"),
-    # ("20B", "21M"),
-    # ("20C", "20G"),
-    # ("20C", "20H"),
-    # ("20C", "21C"),
-    # ("20C", "21F"),
-    # ("21A", "21I"),
-    ("21A", "21J"),
-    # ("20D", "21G"),
-    # ("21M", "21K"),
-    # ("21M", "21L"),
-    # ("21L", "22A"),
-    # ("21L", "22B"),
-    # ("21L", "22C"),
-]
+END_POSITION = 500
+CLADE_PAIRS = [("21A", "21J")]
 
 LIST_OF_CLADES = [
     "19A",
@@ -134,23 +110,30 @@ def permute_clade_pairs(paired_clades_file: str, permuted_output_folder: str):
             clade1_sequences = list(clades_lists_dict.values())[0]
             clade2_sequences = list(clades_lists_dict.values())[1]
             num_seq = 0
-            cartesian_product_iterator = product(clade1_sequences, clade2_sequences)
+            cartesian_product_list = list(product(clade1_sequences, clade2_sequences))
+            random_sampled_cartesian_product_list = sample(cartesian_product_list, len(cartesian_product_list))
             with open(f"{permuted_output_folder}/{clade_pair}.csv", "w") as fout:
-
-                for current_clade_pair in cartesian_product_iterator:
+                for seq_pair in random_sampled_cartesian_product_list:
                     if num_seq == NUM_SEQ:
                         break
-                    elif is_valid_sequence_pair(current_clade_pair[0], current_clade_pair[1]):
+                    elif is_valid_sequence_pair(seq_pair[0], seq_pair[1]):
                         fout.write(
-                            f"{current_clade_pair[0][START_POSITION:END_POSITION]},{current_clade_pair[1][START_POSITION:END_POSITION]}"
+                            f"{seq_pair[0][START_POSITION:END_POSITION]},{seq_pair[1][START_POSITION:END_POSITION]} \n"
                         )
-                        fout.write("\n")
                         num_seq += 1
+                        if num_seq % 1000 == 0:
+                            print(f"Wrote {num_seq} pairs to file.")
             print(f"Wrote {num_seq} clade pairs for {(clade_pair.split('_')[0], clade_pair.split('_')[1])}")
 
 
 def is_valid_sequence_pair(seq1: str, seq2: str) -> bool:
-    if len(seq1) < MAX_SEQ_LENGTH or len(seq2) < MAX_SEQ_LENGTH or distance(seq1, seq2) > LEVENSHTEIN_THRESHOLD:
+    lev_distance = distance(seq1, seq2)
+    if (
+        len(seq1) < MAX_SEQ_LENGTH
+        or len(seq2) < MAX_SEQ_LENGTH
+        or lev_distance < LEVENSHTEIN_THRESHOLD_MIN
+        or lev_distance > LEVENSHTEIN_THRESHOLD_MAX
+    ):
         return False
     else:
         return True

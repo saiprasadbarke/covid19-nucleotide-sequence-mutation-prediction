@@ -8,11 +8,13 @@ EOS_IDX = 1
 
 # Data set related parameters
 # These variables control the various dataset properties
+RANDOM_SEED = 42
 NUM_SEQ = 30000
-LEVENSHTEIN_THRESHOLD = 10
-MAX_SEQ_LEN = 3700
+LEVENSHTEIN_THRESHOLD_MIN = 10
+LEVENSHTEIN_THRESHOLD_MAX = 25
+MAX_SEQ_LENGTH = 3700
 START_POSITION = 0
-END_POSITION = 3700
+END_POSITION = 500
 CLADE_PAIRS = [
     ("19A", "19B"),
     ("19A", "20A"),
