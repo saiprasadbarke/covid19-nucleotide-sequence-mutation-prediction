@@ -1,9 +1,9 @@
-from json import load
+from json import load, dump
 from pathlib import Path
 import matplotlib.pyplot as plt
 
 
-def plot_mutations(json_path: str, graph_path: str):
+def plot_mutations(json_path: str, graph_path: str, data_dump_path: str):
     with open(json_path) as json_file:
         mutation_data = load(json_file)
         sorted_mutation_data = dict(sorted(mutation_data.items(), key=lambda x: int(x[0])))
@@ -19,6 +19,8 @@ def plot_mutations(json_path: str, graph_path: str):
             else:
                 complete_sequence_mutation_data[i] = 0
 
+        with open(data_dump_path, "w") as fout:
+            dump(complete_sequence_mutation_data, fout)
         x = list(complete_sequence_mutation_data.keys())
         y = list(complete_sequence_mutation_data.values())
 
@@ -34,4 +36,5 @@ def plot_mutations(json_path: str, graph_path: str):
 if __name__ == "__main__":
     json_file_path = f"{Path.cwd()}/reports/stats/most_mutated_indices.json"
     graph_path = f"{Path.cwd()}/reports/plots/most_mutated_indices.png"
-    plot_mutations(json_file_path, graph_path)
+    data_dump_path = f"{Path.cwd()}/reports/stats/most_mutated_indices_complete.json"
+    plot_mutations(json_file_path, graph_path, data_dump_path)

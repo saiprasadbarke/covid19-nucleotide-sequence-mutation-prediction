@@ -24,4 +24,5 @@ def run_epoch(data_iter, model: EncoderDecoder, loss_compute, print_every=50):
             start = time.time()
             print_tokens = 0
 
-    return math.exp(total_loss / float(total_tokens))
+    perplexity = math.exp(total_loss / float(total_tokens))
+    return total_loss, perplexity

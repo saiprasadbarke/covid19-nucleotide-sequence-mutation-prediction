@@ -85,7 +85,7 @@ RNN_NUM_LAYERS = 1
 RNN_DROPOUT = 0
 
 # Training related parameters
-N_EPOCHS = 10
+N_EPOCHS = 50
 MINIBATCH_SIZE = 8
 LEARNING_RATE_ALPHA = 1e-3
 EARLY_STOPPING_THRESHOLD = 5
@@ -97,4 +97,5 @@ USE_CUDA = is_available()
 # RUN
 RUN_NAME = "RUN_1"
 from pathlib import Path
+
 SAVED_MODELS_PATH = f"{Path.cwd()}/saved_models"

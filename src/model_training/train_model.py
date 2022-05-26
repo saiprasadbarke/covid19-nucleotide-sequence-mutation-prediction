@@ -31,48 +31,57 @@ def train_loop(
     optim = Adam(model.parameters(), lr=learning_rate)
     number_of_epochs_without_improvement = 0
     best_val_loss = inf
-    losses = {"training": [], "validation": []}
+    returned_metrics = {
+        "training_loss": [],
+        "validation_loss": [],
+        "training_perplexity": [],
+        "validation_perplexity": [],
+    }
 
     for epoch in range(num_epochs):
 
         print("Epoch", epoch)
         model.train()
         with torch.set_grad_enabled(True):
-            train_pp = run_epoch(
+            training_loss, training_perplexity = run_epoch(
                 (rebatch(b) for b in train_dataloader),
                 model,
                 SimpleLossCompute(model.generator, criterion, optim),
                 print_every=print_every,
             )
-            print(f"Train perplexity: {train_pp}")
-            losses["training"].append(train_pp)
+            print(f"Training loss: {training_loss}")
+            print(f"Training perplexity: {training_perplexity}")
+            returned_metrics["training_loss"].append(training_loss)
+            returned_metrics["training_perplexity"].append(training_perplexity)
         model.eval()
         with torch.no_grad():
-            validation_pp = run_epoch(
+            validation_loss, validation_perplexity = run_epoch(
                 (rebatch(b) for b in validation_dataloader),
                 model,
                 SimpleLossCompute(model.generator, criterion, None),
             )
-            print(f"Validation perplexity: {validation_pp}")
-            losses["validation"].append(validation_pp)
+            print(f"Validation loss: {validation_loss}")
+            print(f"Validation perplexity: {validation_perplexity}")
+            returned_metrics["validation_loss"].append(validation_loss)
+            returned_metrics["validation_perplexity"].append(validation_perplexity)
 
-        # Early stopping
-        if losses["validation"][-1] < best_val_loss:
-            check_dir_exists(f"{SAVED_MODELS_PATH}/{RUN_NAME}")
-            torch.save(
-                {
-                    "epoch": epoch,
-                    "model_state_dict": model.state_dict(),
-                    "optimizer_state_dict": optim.state_dict(),
-                    "loss": losses,
-                },
-                f"{SAVED_MODELS_PATH}/{RUN_NAME}/MODEL_{epoch}.pt",
-            )
-            best_val_loss = losses["validation"][-1]
-            number_of_epochs_without_improvement = 0
-        else:
-            if number_of_epochs_without_improvement == EARLY_STOPPING_THRESHOLD:
-                print(f"Early stopping on epoch number {epoch}!")
-                break
+            # Early stopping
+            if validation_loss < best_val_loss:
+                check_dir_exists(f"{SAVED_MODELS_PATH}/{RUN_NAME}")
+                torch.save(
+                    {
+                        "epoch": epoch,
+                        "model_state_dict": model.state_dict(),
+                        "optimizer_state_dict": optim.state_dict(),
+                        "returned_metrics": returned_metrics,
+                    },
+                    f"{SAVED_MODELS_PATH}/{RUN_NAME}/MODEL_{epoch}.pt",
+                )
+                best_val_loss = validation_loss
+                number_of_epochs_without_improvement = 0
             else:
-                number_of_epochs_without_improvement += 1
+                if number_of_epochs_without_improvement == EARLY_STOPPING_THRESHOLD:
+                    print(f"Early stopping on epoch number {epoch}!")
+                    break
+                else:
+                    number_of_epochs_without_improvement += 1
