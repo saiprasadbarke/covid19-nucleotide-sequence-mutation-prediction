@@ -118,7 +118,7 @@ def permute_clade_pairs(paired_clades_file: str, permuted_output_folder: str):
                         break
                     elif is_valid_sequence_pair(seq_pair[0], seq_pair[1]):
                         fout.write(
-                            f"{seq_pair[0][START_POSITION:END_POSITION]},{seq_pair[1][START_POSITION:END_POSITION]} \n"
+                            f"{seq_pair[0][START_POSITION:END_POSITION]},{seq_pair[1][START_POSITION:END_POSITION]}\n"
                         )
                         num_seq += 1
                         if num_seq % 1000 == 0:

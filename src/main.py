@@ -17,7 +17,7 @@ from settings.constants import (
 )
 
 
-dataset_file_path = f"{Path.cwd().parents[0]}/data/encoded/21A_21J_test.json"
+dataset_file_path = f"{Path.cwd().parents[0]}/data/encoded/21A_21J.json"
 print(f"Path to dataset : {dataset_file_path}")
 train_dataloader, val_dataloader, test_dataloader = get_split_data(dataset_file_path, MINIBATCH_SIZE)
 model = create_model(
@@ -28,3 +28,16 @@ model = create_model(
     dropout=RNN_DROPOUT,
 )
 train_loop(model=model, train_dataloader=train_dataloader, validation_dataloader=val_dataloader)
+
+
+# from pathlib import Path
+
+# from data_operations.encode_sequences_kmer import create_encoded_sequence_pairs_file
+# from settings.constants import KMER_LENGTH
+
+
+# permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/permuted"
+# encoded_permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/encoded"
+# create_encoded_sequence_pairs_file(
+#     permuted_clade_pair_folder, encoded_permuted_clade_pair_folder, kmer_length=KMER_LENGTH
+# )
