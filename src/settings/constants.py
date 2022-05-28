@@ -88,8 +88,8 @@ RNN_DROPOUT = 0
 
 # Training related parameters
 N_EPOCHS = 50
-MINIBATCH_SIZE = 8
-LEARNING_RATE_ALPHA = 1e-3
+MINIBATCH_SIZE = 64
+LEARNING_RATE_ALPHA = 3e-3
 EARLY_STOPPING_THRESHOLD = 5
 from torch.cuda import is_available
 
@@ -97,7 +97,7 @@ USE_CUDA = is_available()
 
 
 # RUN
-RUN_NAME = "RUN_1"
+RUN_NAME = "RUN_1_local"
 from pathlib import Path
 
 SAVED_MODELS_PATH = f"{Path.cwd()}/saved_models"
