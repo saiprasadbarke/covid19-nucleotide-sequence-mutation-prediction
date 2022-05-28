@@ -26,7 +26,9 @@ class Vocabulary:
             and so on...
         """
         self.stoi = self._generate_vocabulary(kmer_length=kmer_length)
-        self.itos = [s_v for s_v in self.stoi.values()]
+        self.itos = [s_k for s_k in self.stoi.keys()]
+        self.itos.insert(0, "<BOS>")
+        self.itos.insert(1, "<EOS>")
 
     def _generate_vocabulary(self, kmer_length: int) -> Dict[str, int]:
         # The number of possible k-combinations of these nucleotides taken with repetition is 4^kmer_length

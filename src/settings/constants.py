@@ -2,18 +2,19 @@
 
 NUCLEOTIDES = ["A", "C", "G", "T"]
 KMER_LENGTH = 3
-NUM_SPECIAL_CHARS = 2  # 0, 1 and 2 are for BOS , EOS and PAD respectively #TODO: Look at old commit. Changed 3 to 2 as not using PAD anymore
+NUM_SPECIAL_CHARS = 2  # 0, 1 are for BOS , EOS respectively
 BOS_IDX = 0
 EOS_IDX = 1
-PAD_IDX = 2  # TODO: Not used anymore as all sequence lengths are equal now
 
 # Data set related parameters
 # These variables control the various dataset properties
+RANDOM_SEED = 42
 NUM_SEQ = 30000
-LEVENSHTEIN_THRESHOLD = 10
-MAX_SEQ_LEN = 3700
+LEVENSHTEIN_THRESHOLD_MIN = 10
+LEVENSHTEIN_THRESHOLD_MAX = 25
+MAX_SEQ_LENGTH = 3700
 START_POSITION = 0
-END_POSITION = 3700
+END_POSITION = 500
 CLADE_PAIRS = [
     ("19A", "19B"),
     ("19A", "20A"),
@@ -79,18 +80,24 @@ TRAIN_REMAINDER_FRACTION = 0.2
 VAL_TEST_FRACTION = 0.5
 
 # Model parameters
-RNN_INPUT_FEATURE_SIZE = 1
+EMBEDDING_SIZE = 4
 LEN_VOCABULARY = 4**KMER_LENGTH + NUM_SPECIAL_CHARS
-RNN_INPUT_SEQUENCE_LENGTH = (MAX_SEQ_LEN - KMER_LENGTH + 1) + 1  # The additional one is for EOS
-RNN_TARGET_SEQUENCE_LENGTH = RNN_INPUT_SEQUENCE_LENGTH + 1  # The additional one is for the SOS
-RNN_HIDDEN_SIZE = 64
+RNN_HIDDEN_SIZE = 16
 RNN_NUM_LAYERS = 1
 RNN_DROPOUT = 0
 
 # Training related parameters
-N_EPOCHS = 10
-MINIBATCH_SIZE = 2
-LEARNING_RATE_ALPHA = 0.0003
+N_EPOCHS = 50
+MINIBATCH_SIZE = 64
+LEARNING_RATE_ALPHA = 3e-3
+EARLY_STOPPING_THRESHOLD = 5
 from torch.cuda import is_available
 
 USE_CUDA = is_available()
+
+
+# RUN
+RUN_NAME = "RUN_1_local"
+from pathlib import Path
+
+SAVED_MODELS_PATH = f"{Path.cwd()}/saved_models"

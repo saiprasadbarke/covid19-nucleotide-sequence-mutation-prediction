@@ -19,3 +19,4 @@ dependencies:
       - seaborn
       - black
       - ijson
+      - sacrebleu
