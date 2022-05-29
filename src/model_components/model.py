@@ -1,4 +1,5 @@
 # Local
+from torch import Tensor
 from model_components.decoder import Decoder
 from model_components.encoder import Encoder
 from model_components.generator import Generator
@@ -41,5 +42,18 @@ class EncoderDecoder(nn.Module):
         src_embedded = self.src_embed(src)
         return self.encoder(src_embedded)
 
-    def decode(self, encoder_hidden, encoder_final, trg, decoder_hidden=None):
-        return self.decoder(self.trg_embed(trg), encoder_hidden, encoder_final, hidden=decoder_hidden)
+    def decode(
+        self,
+        encoder_hidden,
+        encoder_final,
+        trg,
+        unroll_steps: int = None,
+        decoder_hidden: Tensor = None,
+    ):
+        return self.decoder(
+            trg_embed=self.trg_embed(trg),
+            encoder_hidden=encoder_hidden,
+            encoder_final=encoder_final,
+            hidden=decoder_hidden,
+            unroll_steps=unroll_steps,
+        )

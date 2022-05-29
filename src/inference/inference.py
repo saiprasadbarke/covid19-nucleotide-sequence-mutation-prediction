@@ -8,6 +8,7 @@ from inference.greedy_search import greedy_decode
 from model_components.create_model import create_model
 
 from model_components.model import EncoderDecoder
+from model_training.batch import rebatch
 from settings.constants import (
     EMBEDDING_SIZE,
     LEN_VOCABULARY,
@@ -19,22 +20,17 @@ from settings.constants import (
 )
 
 
-def generate_sequence(model: nn.Module, src, search_type: str = "greedy"):
-    model.eval()
-    prediction = greedy_decode(model, src).flatten().tolist()
-
-    return prediction
-
-
-def test_model(test_dataloader: DataLoader, model: EncoderDecoder, search_type: str = "greedy"):
+def test_model(test_dataloader: DataLoader, model: EncoderDecoder):
     ground_truth_sequences = []
     predicted_sequences = []
-
+    alphas = []
     for batch in test_dataloader:
-        ground_truth_sequences.append(batch[1][:, 1:].tolist())
-        generated_sequence = generate_sequence(model, batch[0])
-        predicted_sequences.append(generated_sequence)
-    return ground_truth_sequences, predicted_sequences
+        batch = rebatch(batch)
+        ground_truth_sequences.append(batch.trg_y.tolist())
+        pred, attention = greedy_decode(model, batch.src_input, max_len=500)
+    predicted_sequences.append(pred)
+    alphas.append(attention)
+    return ground_truth_sequences, predicted_sequences, alphas
 
 
 def inference():
@@ -50,4 +46,4 @@ def inference():
     )
     checkpoint = torch.load(f"{SAVED_MODELS_PATH}/{RUN_NAME}/MODEL_{35}.pt")
     model.load_state_dict(checkpoint["model_state_dict"])
-    ground_truth_sequences, predicted_sequences = test_model(test_dataloader, model)
+    ground_truth_sequences, predicted_sequences, alphas = test_model(test_dataloader, model)
