@@ -1,3 +1,4 @@
+from typing import List
 import torch
 import numpy as np
 from model_components.model import EncoderDecoder
@@ -37,4 +38,4 @@ def greedy_decode(model: EncoderDecoder, src, max_len=500):
     if len(first_eos) > 0:
         output = output[: first_eos[0]]
 
-    return output, np.concatenate(attention_scores, axis=1)
+    return output.tolist(), np.concatenate(attention_scores, axis=1)
