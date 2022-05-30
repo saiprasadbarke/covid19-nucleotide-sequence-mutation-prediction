@@ -1,49 +1,45 @@
-# Vocabulary related
+from pathlib import Path
+from torch.cuda import is_available
+
+#################### Vocabulary
 
 NUCLEOTIDES = ["A", "C", "G", "T"]
-KMER_LENGTH = 3
 NUM_SPECIAL_CHARS = 2  # 0, 1 are for BOS , EOS respectively
 BOS_IDX = 0
 EOS_IDX = 1
 
-# Data set related parameters
-# These variables control the various dataset properties
+################### Dataset
 RANDOM_SEED = 42
-NUM_SEQ = 30000
-LEVENSHTEIN_THRESHOLD_MIN = 10
-LEVENSHTEIN_THRESHOLD_MAX = 25
-MAX_SEQ_LENGTH = 3700
-START_POSITION = 0
-END_POSITION = 500
-CLADE_PAIRS = [
-    ("19A", "19B"),
-    ("19A", "20A"),
-    ("20A", "20B"),
-    ("20A", "20C"),
-    ("20A", "20E"),
-    ("20A", "21A"),
-    ("20A", "21B"),
-    ("20A", "21D"),
-    ("20A", "21H"),
-    ("20B", "20D"),
-    ("20B", "20F"),
-    ("20B", "20I"),
-    ("20B", "20J"),
-    ("20B", "21E"),
-    ("20B", "21M"),
-    ("20C", "20G"),
-    ("20C", "20H"),
-    ("20C", "21C"),
-    ("20C", "21F"),
-    ("21A", "21I"),
-    ("21A", "21J"),
-    ("20D", "21G"),
-    ("21M", "21K"),
-    ("21M", "21L"),
-    ("21L", "22A"),
-    ("21L", "22B"),
-    ("21L", "22C"),
-]
+CLADE_PAIRS = {
+    1: ("19A", "19B"),
+    2: ("19A", "20A"),
+    3: ("20A", "20B"),
+    4: ("20A", "20C"),
+    5: ("20A", "20E"),
+    6: ("20A", "21A"),
+    7: ("20A", "21B"),
+    8: ("20A", "21D"),
+    9: ("20A", "21H"),
+    10: ("20B", "20D"),
+    11: ("20B", "20F"),
+    12: ("20B", "20I"),
+    13: ("20B", "20J"),
+    14: ("20B", "21E"),
+    # 15: ("20B", "21M"),
+    16: ("20C", "20G"),
+    17: ("20C", "20H"),
+    18: ("20C", "21C"),
+    19: ("20C", "21F"),
+    20: ("21A", "21I"),
+    21: ("21A", "21J"),
+    22: ("20D", "21G"),
+    # 23: ("21M", "21K"),
+    # 24: ("21M", "21L"),
+    # 25: ("21L", "22A"),
+    # 26: ("21L", "22B"),
+    # 27: ("21L", "22C"),
+}
+
 
 LIST_OF_CLADES = [
     "19A",
@@ -75,29 +71,28 @@ LIST_OF_CLADES = [
     "22B",
     "22C",
 ]
-# Train-Val-Test split
-TRAIN_REMAINDER_FRACTION = 0.2
-VAL_TEST_FRACTION = 0.5
+ROOT_DATA_DIR = f"{Path.cwd().parents[0]}/data"
+MERGED_DATA = f"{ROOT_DATA_DIR}/merged.json"
 
-# Model parameters
-EMBEDDING_SIZE = 4
-LEN_VOCABULARY = 4**KMER_LENGTH + NUM_SPECIAL_CHARS
-RNN_HIDDEN_SIZE = 16
-RNN_NUM_LAYERS = 1
-RNN_DROPOUT = 0
 
-# Training related parameters
+################## RUN
+RUN_NAME = "RUN_2"
+ROOT_RUN_DIR = f"{Path.cwd().parents[0]}/runs"
+CURRENT_RUN_DIR = f"{ROOT_RUN_DIR}/{RUN_NAME}"
+CURRENT_RUN_DATA_DIR = f"{CURRENT_RUN_DIR}/data"
+
+################### Training parameters
 N_EPOCHS = 50
-MINIBATCH_SIZE = 5
 LEARNING_RATE_ALPHA = 3e-3
 EARLY_STOPPING_THRESHOLD = 5
-from torch.cuda import is_available
-
 USE_CUDA = is_available()
+SAVED_MODELS_PATH = f"{CURRENT_RUN_DIR}/saved_models"
+SAVED_PLOTS_PATH = f"{CURRENT_RUN_DIR}/reports/plots"
+SAVED_STATS_PATH = f"{CURRENT_RUN_DIR}/reports/stats"
 
-
-# RUN
-RUN_NAME = "RUN_1_local"
-from pathlib import Path
-
-SAVED_MODELS_PATH = f"{Path.cwd()}/saved_models"
+# Entry point
+ROUTINES_TO_EXECUTE = {
+    1: "Create Datasets",
+    2: "Train network",
+    3: "Run Inference",
+}

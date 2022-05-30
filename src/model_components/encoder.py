@@ -11,10 +11,10 @@ class Encoder(nn.Module):
 
     def __init__(
         self,
-        input_size: int = EMBEDDING_SIZE,
-        hidden_size: int = 64,
+        input_size: int = 4,
+        hidden_size: int = 16,
         num_layers: int = 1,
-        dropout: float = 0.1,
+        dropout: float = 0.0,
     ):
         super(Encoder, self).__init__()
         self.num_layers = num_layers

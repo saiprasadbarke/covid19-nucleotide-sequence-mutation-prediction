@@ -1,10 +1,11 @@
 from pathlib import Path
 from statistics import mean
 from typing import List
+from numpy import size
 import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
-from data_operations.train_val_test_split import get_split_data
+from data_operations.get_dataloaders import get_dataloader
 from inference.greedy_search import greedy_decode
 from metrics.index_diff import index_diff
 from model_components.create_model import create_model
@@ -42,6 +43,7 @@ def test_model(test_dataloader: DataLoader, model: EncoderDecoder):
 
 
 def plot_mismatch(mismatch_list: int, graph_path: str):
+    plt.figure(size=(20, 20))
     plt.hist(mismatch_list, bins=500)
     plt.xlabel("Number of mismatches in test set")
     plt.ylabel("Frequency")
@@ -52,7 +54,7 @@ def plot_mismatch(mismatch_list: int, graph_path: str):
 def inference():
     dataset_file_path = f"{Path.cwd()}/data/21A_21J.json"
     print(f"Path to dataset : {dataset_file_path}")
-    _, _, test_dataloader = get_split_data(dataset_file_path)
+    _, _, test_dataloader = get_dataloader(dataset_file_path)
     model = create_model(
         vocab_size=LEN_VOCABULARY,
         embedding_size=EMBEDDING_SIZE,

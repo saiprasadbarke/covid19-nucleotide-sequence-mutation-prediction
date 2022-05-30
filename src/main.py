@@ -1,51 +1,25 @@
-######################################################### Call the train network function from here #########################################
-
-# from pathlib import Path
-
-
-# from data_operations.train_val_test_split import get_split_data
-# from model_training.train_model import train_loop
-# from model_components.create_model import create_model
-# from data_operations.vocabulary import Vocabulary
-# from settings.constants import (
-#     EMBEDDING_SIZE,
-#     LEN_VOCABULARY,
-#     MINIBATCH_SIZE,
-#     RNN_DROPOUT,
-#     RNN_HIDDEN_SIZE,
-#     RNN_NUM_LAYERS,
-# )
+# Standard
+from pprint import pprint as pp
 
 
-# dataset_file_path = f"{Path.cwd()}/data/21A_21J.json"
-# print(f"Path to dataset : {dataset_file_path}")
-# train_dataloader, val_dataloader, test_dataloader = get_split_data(dataset_file_path, MINIBATCH_SIZE)
-# model = create_model(
-#     vocab_size=LEN_VOCABULARY,
-#     embedding_size=EMBEDDING_SIZE,
-#     hidden_size=RNN_HIDDEN_SIZE,
-#     num_layers=RNN_NUM_LAYERS,
-#     dropout=RNN_DROPOUT,
-# )
-# train_loop(model=model, train_dataloader=train_dataloader, validation_dataloader=val_dataloader)
+# Local
+from settings.constants import ROUTINES_TO_EXECUTE
 
 
-########################################################### Create new dataset ###########################################################
-# from pathlib import Path
+pp(ROUTINES_TO_EXECUTE, indent=3)
+activity_number = int(input("Choose a task to run :   "))
+#################################### Create new dataset ####################################
+if activity_number == 1:
+    from scripts.create_dataset import create_dataset
 
-# from data_operations.encode_sequences_kmer import create_encoded_sequence_pairs_file
-# from settings.constants import KMER_LENGTH
+    create_dataset()
+############################### Call the train network function ###############################
+elif activity_number == 2:
+    from scripts.train import train
 
+    train()
+############################### Inference ################################
+elif activity_number == 3:
+    from inference.inference import inference
 
-# permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/permuted"
-# encoded_permuted_clade_pair_folder = f"{Path.cwd().parents[0]}/data/encoded"
-# create_encoded_sequence_pairs_file(
-#     permuted_clade_pair_folder, encoded_permuted_clade_pair_folder, kmer_length=KMER_LENGTH
-# )
-
-
-######################################################### Inference #####################################################################
-from inference.inference import inference
-
-
-inference()
+    inference()
