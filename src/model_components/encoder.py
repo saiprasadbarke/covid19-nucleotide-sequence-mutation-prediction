@@ -1,5 +1,4 @@
 # Local
-from settings.constants import EMBEDDING_SIZE
 
 # External
 import torch

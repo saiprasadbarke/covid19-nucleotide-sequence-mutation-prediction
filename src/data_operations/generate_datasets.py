@@ -65,7 +65,7 @@ def generate_datasets(
     for i, input_target_pair in enumerate(input_target_list, 1):
         if i <= train_val_test_indices["train_upto"]:
             train_list.append(input_target_pair)
-        if i > train_val_test_indices["train_upto"] and i <= train_val_test_indices["val_upto"]:
+        elif i > train_val_test_indices["train_upto"] and i <= train_val_test_indices["val_upto"]:
             val_list.append(input_target_pair)
         else:
             test_list.append(input_target_pair)
