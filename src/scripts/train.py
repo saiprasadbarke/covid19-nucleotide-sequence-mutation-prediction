@@ -24,12 +24,14 @@ def train():
     rnn_hidden_size = int(input("Choose RNN hidden size. :   "))
     rnn_num_layers = int(input("Choose RNN number of layers. :   "))
     dropout = float(input("Choose dropout. :   "))
+    embedded_dropout = float(input("Choose embedded dropout. :   "))
     model = create_model(
         vocab_size=len_vocabulary,
         embedding_size=embedding_size,
         hidden_size=rnn_hidden_size,
         num_layers=rnn_num_layers,
         dropout=dropout,
+        emb_dropout=embedded_dropout,
     )
     number_of_epochs = input("Choose number of epochs to train the model :   ")
     learning_rate = input("Choose the learning rate :   ")

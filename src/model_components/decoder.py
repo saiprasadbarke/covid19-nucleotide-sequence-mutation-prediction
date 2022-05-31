@@ -6,20 +6,35 @@ from torch import Tensor
 class Decoder(nn.Module):
     """A conditional RNN decoder with attention."""
 
-    def __init__(self, emb_size, hidden_size, attention, num_layers=1, dropout=0.5, bridge=True):
+    def __init__(
+        self,
+        emb_size,
+        hidden_size,
+        attention,
+        num_layers=1,
+        dropout=0.5,
+        emb_dropout=0.5,
+        bridge=True,
+    ):
         super(Decoder, self).__init__()
 
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.attention = attention
         self.dropout = dropout
-
-        self.rnn = nn.GRU(emb_size + 2 * hidden_size, hidden_size, num_layers, batch_first=True, dropout=dropout)
+        self.emb_dropout = nn.Dropout(p=emb_dropout, inplace=False)
+        self.rnn = nn.GRU(
+            emb_size + 2 * hidden_size,
+            hidden_size,
+            num_layers,
+            batch_first=True,
+            dropout=dropout if num_layers > 1 else 0,
+        )
 
         # to initialize from the final encoder state
         self.bridge = nn.Linear(2 * hidden_size, hidden_size, bias=True) if bridge else None
 
-        self.dropout_layer = nn.Dropout(p=dropout)
+        self.attention_dropout_layer = nn.Dropout(p=dropout)
         self.pre_output_layer = nn.Linear(hidden_size + 2 * hidden_size + emb_size, hidden_size, bias=False)
 
     def forward_step(self, prev_embed: Tensor, encoder_hidden: Tensor, proj_key: Tensor, hidden: Tensor):
@@ -29,12 +44,13 @@ class Decoder(nn.Module):
         query = hidden[-1].unsqueeze(1)  # [#layers, B, D] -> [B, 1, D]
         context, attn_probs = self.attention(query=query, proj_key=proj_key, value=encoder_hidden)
 
+        rnn_input = self.emb_dropout(rnn_input)
         # update rnn hidden state
         rnn_input = torch.cat([prev_embed, context], dim=2)
         output, hidden = self.rnn(rnn_input, hidden)
 
         pre_output = torch.cat([prev_embed, output, context], dim=2)
-        pre_output = self.dropout_layer(pre_output)
+        pre_output = self.attention_dropout_layer(pre_output)
         pre_output = self.pre_output_layer(pre_output)
 
         return output, hidden, pre_output

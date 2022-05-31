@@ -17,7 +17,7 @@ def run_epoch(data_iter, model: EncoderDecoder, loss_compute, print_every=50):
         epoch_loss += batch_loss
         total_tokens += batch.ntokens
         print_tokens += batch.ntokens
-
+        model.zero_grad()
         if model.training and i % print_every == 0:
             elapsed = time.time() - start
             print("Epoch Step: %d Loss: %f Tokens per Sec: %f" % (i, batch_loss / batch.nseqs, print_tokens / elapsed))

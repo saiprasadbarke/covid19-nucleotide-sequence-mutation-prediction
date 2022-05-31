@@ -43,6 +43,7 @@ def train_loop(
 
         print("Epoch", epoch)
         model.train()
+        model.zero_grad()
         with torch.set_grad_enabled(True):
             training_loss, training_perplexity = run_epoch(
                 (rebatch(b) for b in train_dataloader),
