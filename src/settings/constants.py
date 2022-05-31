@@ -88,7 +88,7 @@ USE_CUDA = is_available()
 SAVED_MODELS_PATH = f"{CURRENT_RUN_DIR}/saved_models"
 SAVED_PLOTS_PATH = f"{CURRENT_RUN_DIR}/reports/plots"
 SAVED_STATS_PATH = f"{CURRENT_RUN_DIR}/reports/stats"
-
+SAVED_TENSORBOARD_LOGS_PATH = f"{CURRENT_RUN_DIR}/reports/tensorboard"
 # Entry point
 ROUTINES_TO_EXECUTE = {
     1: "Create Datasets",

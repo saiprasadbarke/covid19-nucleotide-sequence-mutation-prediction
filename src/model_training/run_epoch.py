@@ -4,7 +4,7 @@ from model_components.model import EncoderDecoder
 from model_training.loss_computation import SimpleLossCompute
 
 
-def run_epoch(data_iter, model: EncoderDecoder, loss_compute: SimpleLossCompute, print_every=50):
+def run_epoch(data_iter, model: EncoderDecoder, loss_compute: SimpleLossCompute, print_every=50, tb_writer=None):
     """Standard Training and Logging Function"""
 
     start = time.time()

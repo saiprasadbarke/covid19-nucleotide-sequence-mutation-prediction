@@ -2,7 +2,7 @@ from settings.constants import USE_CUDA
 
 
 class Batch:
-    """Object for holding a batch of data with mask during training.
+    """Object for holding a batch of data during training.
     Input is a batch from a pytorch dataloader.
     """
 

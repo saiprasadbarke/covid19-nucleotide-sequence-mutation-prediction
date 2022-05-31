@@ -9,7 +9,7 @@ from settings.constants import NUM_SPECIAL_CHARS
 
 
 def train():
-    # Data Operations
+    ##################################### Data Operations
     kmer_size = int(input("Enter a kmer size between [2, 4]:   "))
     tokenizer = Tokenize(kmer_length=kmer_size)
     train_inputs, train_targets = tokenizer.kmerize_numericalize_pad_tensorize_sequences(dataset_type="train")
@@ -18,7 +18,7 @@ def train():
     train_dataloader = get_dataloader(train_inputs, train_targets, minibatch_size)
     val_dataloader = get_dataloader(val_inputs, val_targets)
 
-    # Model parameters
+    ##################################### Model parameters
     len_vocabulary = 4**kmer_size + NUM_SPECIAL_CHARS
     embedding_size = int(input("Choose size of embedding :   "))
     rnn_hidden_size = int(input("Choose RNN hidden size. :   "))
@@ -34,7 +34,7 @@ def train():
         emb_dropout=embedded_dropout,
     )
 
-    # Training parameters
+    ##################################### Training parameters
     number_of_epochs = int(input("Choose number of epochs to train the model :   "))
     learning_rate = float(input("Choose the learning rate :   "))
     train_loop(
