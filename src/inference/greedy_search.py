@@ -18,7 +18,7 @@ def greedy_decode(model: EncoderDecoder, src, max_len=500):
     for i in range(max_len):
         with torch.no_grad():
             out, hidden, pre_output = model.decode(
-                encoder_hidden=encoder_hidden, encoder_final=encoder_final, trg=prev_y, decoder_hidden=hidden
+                encoder_output=encoder_hidden, encoder_hidden=encoder_final, trg=prev_y, decoder_hidden=hidden
             )
 
             # we predict from the pre-output layer, which is
