@@ -9,6 +9,7 @@ from settings.constants import NUM_SPECIAL_CHARS
 
 
 def train():
+    # Data
     kmer_size = int(input("Enter a kmer size between [2, 4]:   "))
     tokenizer = Tokenize(kmer_length=kmer_size)
     train_inputs, train_targets = tokenizer.kmerize_numericalize_pad_tensorize_sequences(dataset_type="train")
@@ -16,6 +17,8 @@ def train():
     minibatch_size = int(input("Choose a batch size.\nPreferably a power of 2 :   "))
     train_dataloader = get_dataloader(train_inputs, train_targets, minibatch_size)
     val_dataloader = get_dataloader(val_inputs, val_targets)
+
+    # Model
     len_vocabulary = 4**kmer_size + NUM_SPECIAL_CHARS
     embedding_size = int(input("Choose size of embedding :   "))
     rnn_hidden_size = int(input("Choose RNN hidden size. :   "))
@@ -28,4 +31,12 @@ def train():
         num_layers=rnn_num_layers,
         dropout=dropout,
     )
-    train_loop(model=model, train_dataloader=train_dataloader, validation_dataloader=val_dataloader)
+    number_of_epochs = input("Choose number of epochs to train the model :   ")
+    learning_rate = input("Choose the learning rate :   ")
+    train_loop(
+        model=model,
+        train_dataloader=train_dataloader,
+        validation_dataloader=val_dataloader,
+        num_epochs=number_of_epochs,
+        learning_rate=learning_rate,
+    )

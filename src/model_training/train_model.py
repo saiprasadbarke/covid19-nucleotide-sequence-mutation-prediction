@@ -3,7 +3,7 @@
 from math import inf
 from helpers.check_dir_exists import check_dir_exists
 from model_components.model import EncoderDecoder
-from settings.constants import EARLY_STOPPING_THRESHOLD, LEARNING_RATE_ALPHA, N_EPOCHS, RUN_NAME, SAVED_MODELS_PATH
+from settings.constants import EARLY_STOPPING_THRESHOLD, RUN_NAME, SAVED_MODELS_PATH
 from model_training.run_epoch import run_epoch
 from model_training.loss_computation import SimpleLossCompute
 from model_training.batch import rebatch
@@ -11,7 +11,7 @@ from model_training.batch import rebatch
 # External
 
 from torch.utils.data import DataLoader
-from torch.optim import Adam
+from torch.optim import Adam, lr_scheduler
 import torch.nn as nn
 import torch
 
@@ -22,13 +22,14 @@ def train_loop(
     model: EncoderDecoder,
     train_dataloader: DataLoader,
     validation_dataloader: DataLoader,
-    num_epochs: int = N_EPOCHS,
-    learning_rate: float = LEARNING_RATE_ALPHA,
+    num_epochs: int = 50,
+    learning_rate: float = 1e-3,
     print_every=100,
 ):
 
     criterion = nn.NLLLoss(reduction="sum")
     optim = Adam(model.parameters(), lr=learning_rate)
+    scheduler = lr_scheduler.CosineAnnealingWarmRestarts(optim, T_0=1, eta_min=1e-06)
     number_of_epochs_without_improvement = 0
     best_val_loss = inf
     returned_metrics = {
@@ -53,6 +54,7 @@ def train_loop(
             print(f"Training perplexity: {training_perplexity}")
             returned_metrics["training_loss"].append(training_loss)
             returned_metrics["training_perplexity"].append(training_perplexity)
+
         model.eval()
         with torch.no_grad():
             validation_loss, validation_perplexity = run_epoch(
@@ -64,18 +66,19 @@ def train_loop(
             print(f"Validation perplexity: {validation_perplexity}")
             returned_metrics["validation_loss"].append(validation_loss)
             returned_metrics["validation_perplexity"].append(validation_perplexity)
-
+            scheduler.step()
             # Early stopping
             if validation_loss < best_val_loss:
-                check_dir_exists(f"{SAVED_MODELS_PATH}/{RUN_NAME}")
+                check_dir_exists(f"{SAVED_MODELS_PATH}")
                 torch.save(
                     {
                         "epoch": epoch,
                         "model_state_dict": model.state_dict(),
                         "optimizer_state_dict": optim.state_dict(),
+                        "scheduler_state_dict": scheduler.state_dict(),
                         "returned_metrics": returned_metrics,
                     },
-                    f"{SAVED_MODELS_PATH}/{RUN_NAME}/MODEL_{epoch}.pt",
+                    f"{SAVED_MODELS_PATH}/MODEL_{epoch}.pt",
                 )
                 best_val_loss = validation_loss
                 number_of_epochs_without_improvement = 0

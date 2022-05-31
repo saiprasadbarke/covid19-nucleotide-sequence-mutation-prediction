@@ -10,7 +10,7 @@ EOS_IDX = 1
 
 ################### Dataset
 RANDOM_SEED = 42
-CLADE_PAIRS = {
+CLADE_PAIRS_NEXTCLADE = {
     1: ("19A", "19B"),
     2: ("19A", "20A"),
     3: ("20A", "20B"),
@@ -82,8 +82,7 @@ CURRENT_RUN_DIR = f"{ROOT_RUN_DIR}/{RUN_NAME}"
 CURRENT_RUN_DATA_DIR = f"{CURRENT_RUN_DIR}/data"
 
 ################### Training parameters
-N_EPOCHS = 50
-LEARNING_RATE_ALPHA = 3e-3
+
 EARLY_STOPPING_THRESHOLD = 5
 USE_CUDA = is_available()
 SAVED_MODELS_PATH = f"{CURRENT_RUN_DIR}/saved_models"

@@ -2,14 +2,14 @@
 from pprint import pprint as pp
 
 # Local
-from settings.constants import CLADE_PAIRS
+from settings.constants import CLADE_PAIRS_NEXTCLADE
 from data_operations.generate_datasets import generate_datasets
 
 
 def create_dataset():
-    pp(CLADE_PAIRS, indent=3)
+    pp(CLADE_PAIRS_NEXTCLADE, indent=3)
     dataset_number = int(input("Choose a dataset by entering the number :   "))
-    clade_pair = CLADE_PAIRS[dataset_number]
+    clade_pair = CLADE_PAIRS_NEXTCLADE[dataset_number]
     number_of_sequence_pairs = int(input("Choose total number of sequence pairs for train+val+test :   "))
     max_seq_length = int(
         input(

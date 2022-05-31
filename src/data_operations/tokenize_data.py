@@ -45,7 +45,7 @@ class Tokenize:
             y_sequence = tensor(y_sequence)
             inputs.append(x_sequence)
             targets.append(y_sequence)
-        print(f"Kmerization and Numericalization complete...")
+        print(f"Kmerization and Numericalization complete for {dataset_type} data...")
         return inputs, targets
 
     def add_special_characters(self, sequence: List[str], is_target: bool = True) -> List[str]:
