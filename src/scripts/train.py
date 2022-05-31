@@ -1,11 +1,12 @@
 # Standard
 
 # Local
+from json import dump
 from data_operations.tokenize_data import Tokenize
 from data_operations.get_dataloaders import get_dataloader
 from model_training.train_model import train_loop
 from model_components.create_model import create_model
-from settings.constants import NUM_SPECIAL_CHARS
+from settings.constants import CURRENT_RUN_DIR, NUM_SPECIAL_CHARS
 
 
 def train():
@@ -44,3 +45,16 @@ def train():
         num_epochs=number_of_epochs,
         learning_rate=learning_rate,
     )
+
+    ##################################### Save Model Parameters
+    model_parameters_dict = {
+        "vocab_size": len_vocabulary,
+        "embedding_size": embedding_size,
+        "hidden_size": rnn_hidden_size,
+        "num_layers": rnn_num_layers,
+        "dropout": dropout,
+        "emb_dropout": embedded_dropout,
+    }
+    model_parameters_dict_path = f"{CURRENT_RUN_DIR}/model_parameters.json"
+    with open(model_parameters_dict_path, "w") as f:
+        dump(model_parameters_dict, f)
