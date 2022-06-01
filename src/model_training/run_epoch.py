@@ -20,7 +20,8 @@ def run_epoch(data_iter, model: EncoderDecoder, loss_compute: SimpleLossCompute,
         epoch_loss += batch_loss
         total_tokens += batch.ntokens
         print_tokens += batch.ntokens
-        epoch_learning_rate.append(loss_compute.optimizer.param_groups[0]["lr"])
+        if loss_compute.optimizer is not None:
+            epoch_learning_rate.append(loss_compute.optimizer.param_groups[0]["lr"])
         model.zero_grad()
         if model.training and i % print_every == 0:
             elapsed = time.time() - start
