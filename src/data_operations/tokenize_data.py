@@ -4,7 +4,7 @@ from json import dump, load
 from pathlib import Path
 from typing import List, Tuple
 
-from torch import tensor
+from torch import float16, tensor
 
 # Local
 
@@ -41,8 +41,8 @@ class Tokenize:
             x_sequence = self.tokenize_encode_sequence(input, is_target=False)
             y_sequence = self.tokenize_encode_sequence(target)
             assert len(x_sequence) == len(y_sequence) - 1, "Incorrect input and target sequence lengths"
-            x_sequence = tensor(x_sequence)
-            y_sequence = tensor(y_sequence)
+            x_sequence = tensor(x_sequence, dtype=float16)
+            y_sequence = tensor(y_sequence, dtype=float16)
             inputs.append(x_sequence)
             targets.append(y_sequence)
         print(f"Kmerization and Numericalization complete for {dataset_type} data...")

@@ -10,7 +10,7 @@ from settings.constants import USE_CUDA
 
 
 # External
-from torch import float32
+from torch import float16
 
 
 def create_model(
@@ -55,4 +55,4 @@ def create_model(
         ),
     )
 
-    return model.to("cuda", dtype=float32) if USE_CUDA else model.to("cpu", dtype=float32)
+    return model.to("cuda", dtype=float16) if USE_CUDA else model.to("cpu", dtype=float16)
