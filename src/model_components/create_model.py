@@ -10,16 +10,11 @@ from settings.constants import USE_CUDA
 
 
 # External
-from torch import float16
+from torch import float32
 
 
 def create_model(
-    vocab_size: int,
-    embedding_size: int,
-    hidden_size: int,
-    num_layers: int,
-    dropout: float,
-    emb_dropout: float,
+    vocab_size: int, embedding_size: int, hidden_size: int, num_layers: int, dropout: float, emb_dropout: float,
 ):
 
     attention_layer = BahdanauAttention(hidden_size)
@@ -39,20 +34,9 @@ def create_model(
             dropout=dropout,
             emb_dropout=emb_dropout,
         ),
-        KmerEmbedding(
-            vocab_size=vocab_size,
-            emb_size=embedding_size,
-            scale_gradient=True,
-        ),
-        KmerEmbedding(
-            vocab_size=vocab_size,
-            emb_size=embedding_size,
-            scale_gradient=True,
-        ),
-        Generator(
-            hidden_size=hidden_size,
-            vocab_size=vocab_size,
-        ),
+        KmerEmbedding(vocab_size=vocab_size, emb_size=embedding_size, scale_gradient=True,),
+        KmerEmbedding(vocab_size=vocab_size, emb_size=embedding_size, scale_gradient=True,),
+        Generator(hidden_size=hidden_size, vocab_size=vocab_size,),
     )
 
-    return model.to("cuda", dtype=float16) if USE_CUDA else model.to("cpu", dtype=float16)
+    return model.to("cuda", dtype=float32) if USE_CUDA else model.to("cpu", dtype=float32)
