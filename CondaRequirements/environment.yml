@@ -4,15 +4,16 @@ dependencies:
   - python==3.10
   - pytorch
   - pip
+  - pandas
+  - matplotlib
+  - scikit-learn
+  - nltk
+  - biopython
+  - seaborn
+  - black
+  - sacrebleu
 
   - pip:
-      - pandas
-      - matplotlib
-      - bio
-      - scikit-learn
-      - nltk
-      - Levenshtein
-      - biopython
-      - seaborn
-      - black
-      - sacrebleu
+    - Levenshtein
+
+
