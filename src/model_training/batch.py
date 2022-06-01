@@ -1,3 +1,5 @@
+from typing import Tuple
+from torch import Tensor
 from settings.constants import USE_CUDA
 
 
@@ -6,7 +8,7 @@ class Batch:
     Input is a batch from a pytorch dataloader.
     """
 
-    def __init__(self, src, trg):
+    def __init__(self, src: Tensor, trg: Tensor):
         self.src_input = src
         self.nseqs = src.size(0)
 
@@ -19,7 +21,7 @@ class Batch:
             self.trg_input = trg[:, :-1]
             # trg_y is used for loss computation, shifted by one since BOS
             self.trg_y = trg[:, 1:]
-            self.ntokens = self.trg_y.data.sum().item()
+            self.ntokens = self.trg_y.numel()
 
         if USE_CUDA:
             self.src_input = self.src_input.cuda()
@@ -28,7 +30,7 @@ class Batch:
                 self.trg_y = self.trg_y.cuda()
 
 
-def rebatch(batch):
+def rebatch(batch: Tuple[Tensor, Tensor]) -> Batch:
     """Wrap Dataloader batch into custom Batch class for pre-processing"""
     src = batch[0]
     trg = batch[1]
