@@ -59,7 +59,7 @@ class Decoder(nn.Module):
 
         att_vector_input = torch.cat([prev_embed, output, context], dim=2)
         att_vector_input = self.attention_dropout_layer(att_vector_input)
-        att_vector = torch.tanh(self.pre_output_layer(att_vector_input))
+        att_vector = self.pre_output_layer(att_vector_input)
 
         return output, hidden, att_vector, attn_prob
 
