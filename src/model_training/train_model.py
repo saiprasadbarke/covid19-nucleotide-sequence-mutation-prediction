@@ -37,7 +37,7 @@ def train_loop(
 
     criterion = nn.NLLLoss(reduction="sum")
     optim = Adam(model.parameters(), lr=learning_rate)
-    scheduler = lr_scheduler.CosineAnnealingWarmRestarts(optim, T_0=1, eta_min=1e-06)
+    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, mode="min", patience=2)
     # check_dir_exists(SAVED_TENSORBOARD_LOGS_PATH)
     learning_curve = []
     # tb_writer = SummaryWriter(log_dir=SAVED_TENSORBOARD_LOGS_PATH)
@@ -82,7 +82,7 @@ def train_loop(
             # tb_writer.add_scalar("validation/validation_epoch_perplexity", validation_perplexity, epoch)
             returned_metrics["validation_loss"].append(validation_loss)
             returned_metrics["validation_perplexity"].append(validation_perplexity)
-            scheduler.step()
+            scheduler.step(metrics=validation_loss)
             # Early stopping
             if validation_loss < best_val_loss:
                 check_dir_exists(SAVED_MODELS_PATH)

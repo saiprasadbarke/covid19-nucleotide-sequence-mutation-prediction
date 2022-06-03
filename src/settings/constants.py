@@ -76,7 +76,7 @@ MERGED_DATA = f"{ROOT_DATA_DIR}/merged.json"
 
 
 ################## RUN
-RUN_NAME = "RUN_2"
+RUN_NAME = "RUN_4"
 ROOT_RUN_DIR = f"{Path.cwd().parents[0]}/runs"
 CURRENT_RUN_DIR = f"{ROOT_RUN_DIR}/{RUN_NAME}"
 CURRENT_RUN_DATA_DIR = f"{CURRENT_RUN_DIR}/data"
