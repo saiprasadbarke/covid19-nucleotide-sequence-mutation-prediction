@@ -13,7 +13,7 @@ def plot_mutations(json_path: str, graph_path: str, data_dump_path: str):
         maximum_index = max(sorted_integer_keys)
 
         complete_sequence_mutation_data = {}
-        for i in range(1, maximum_index + 1):
+        for i in range(minimum_index, maximum_index + 1):
             if i in sorted_integer_keys:
                 complete_sequence_mutation_data[i] = sorted_mutation_data[str(i)]
             else:

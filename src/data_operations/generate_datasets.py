@@ -3,6 +3,7 @@ from itertools import product
 from json import dump, load
 from random import sample
 from typing import Dict, Tuple
+from data_operations.search_space_minimization import get_string_difference_indices
 
 # Local
 from helpers.check_dir_exists import check_dir_exists
@@ -10,6 +11,8 @@ from settings.constants import MERGED_DATA, CURRENT_RUN_DATA_DIR
 
 # External
 from Levenshtein import distance
+
+from visualization.plot_mutation_sites import plot_mutations
 
 
 def generate_datasets(
@@ -29,20 +32,14 @@ def generate_datasets(
     clade2_sequences = list(data[clade2].keys())
     count_sequences = 0
     cartesian_product_list = list(product(clade1_sequences, clade2_sequences))
-    random_sampled_cartesian_product_list = sample(
-        cartesian_product_list,
-        len(cartesian_product_list),
-    )
+    random_sampled_cartesian_product_list = sample(cartesian_product_list, len(cartesian_product_list),)
     input_target_list = []
+    difference_indices = {}
     for seq_pair in random_sampled_cartesian_product_list:
         if count_sequences == number_of_sequence_pairs:
             break
         elif is_valid_sequence_pair(
-            seq_pair[0],
-            seq_pair[1],
-            max_seq_length,
-            minimum_levenshtein_distance,
-            maximum_levenshtein_distance,
+            seq_pair[0], seq_pair[1], max_seq_length, minimum_levenshtein_distance, maximum_levenshtein_distance,
         ):
             input_target_list.append(
                 (
@@ -50,10 +47,28 @@ def generate_datasets(
                     seq_pair[1][sequence_start_postion:sequence_end_postion],
                 )
             )
+            difference = get_string_difference_indices(
+                seq_pair[0][sequence_start_postion:sequence_end_postion],
+                seq_pair[1][sequence_start_postion:sequence_end_postion],
+                sequence_start_postion,
+            )
+            for index in difference:
+                if index in difference_indices.keys():
+                    difference_indices[index] += 1
+                else:
+                    difference_indices[index] = 1
             count_sequences += 1
             if count_sequences % 1000 == 0:
                 print(f"Found {count_sequences} valid pairs .")
+
+    difference_indices_file = f"{CURRENT_RUN_DATA_DIR}/difference_indices.json"
+    with open(difference_indices_file, "w") as fout:
+        dump(difference_indices, fout)
+    mutations_graph_path = f"{CURRENT_RUN_DATA_DIR}/mutation_sites.png"
+    data_dump_path = f"{CURRENT_RUN_DATA_DIR}/sorted_difference_indices.json"
+    plot_mutations(difference_indices_file, mutations_graph_path, data_dump_path)
     # Split data into train, validation and test datasets
+
     split = {"train": 0.8, "val": 0.1, "test": 0.1}
     train_val_test_indices = {
         "train_upto": int(split["train"] * number_of_sequence_pairs),
@@ -84,11 +99,7 @@ def generate_datasets(
 
 
 def is_valid_sequence_pair(
-    seq1: str,
-    seq2: str,
-    max_seq_length: int,
-    minimum_levenshtein_distance: int,
-    maximum_levenshtein_distance: int,
+    seq1: str, seq2: str, max_seq_length: int, minimum_levenshtein_distance: int, maximum_levenshtein_distance: int,
 ) -> bool:
     lev_distance = distance(seq1, seq2)
     if (

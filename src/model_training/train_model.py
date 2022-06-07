@@ -37,7 +37,7 @@ def train_loop(
 
     criterion = nn.NLLLoss(reduction="sum")
     optim = Adam(model.parameters(), lr=learning_rate)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, mode="min", patience=2)
+    # scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, mode="min", patience=2)
     # check_dir_exists(SAVED_TENSORBOARD_LOGS_PATH)
     learning_curve = []
     # tb_writer = SummaryWriter(log_dir=SAVED_TENSORBOARD_LOGS_PATH)
@@ -82,7 +82,7 @@ def train_loop(
             # tb_writer.add_scalar("validation/validation_epoch_perplexity", validation_perplexity, epoch)
             returned_metrics["validation_loss"].append(validation_loss)
             returned_metrics["validation_perplexity"].append(validation_perplexity)
-            scheduler.step(metrics=validation_loss)
+            # scheduler.step(metrics=validation_loss)
             # Early stopping
             if validation_loss < best_val_loss:
                 check_dir_exists(SAVED_MODELS_PATH)
@@ -91,7 +91,7 @@ def train_loop(
                         "epoch": epoch,
                         "model_state_dict": model.state_dict(),
                         "optimizer_state_dict": optim.state_dict(),
-                        "scheduler_state_dict": scheduler.state_dict(),
+                        # "scheduler_state_dict": scheduler.state_dict(),
                         "returned_metrics": returned_metrics,
                     },
                     f"{SAVED_MODELS_PATH}/MODEL_{epoch}.pt",

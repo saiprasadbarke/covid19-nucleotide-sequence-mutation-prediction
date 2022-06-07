@@ -17,7 +17,7 @@ class Encoder(nn.Module):
         emb_dropout: float = 0.0,
     ):
         super(Encoder, self).__init__()
-        self.emb_dropout = nn.Dropout(p=emb_dropout, inplace=False)
+        # self.emb_dropout = nn.Dropout(p=emb_dropout, inplace=False)
         self.num_layers = num_layers
         self.rnn = nn.GRU(
             input_size,
@@ -33,17 +33,14 @@ class Encoder(nn.Module):
         Applies a bidirectional GRU to sequence of embeddings.
         embedded_src should have dimensions [batch, seq_len, embedding_dim].
         """
-        embedded_src = self.emb_dropout(embedded_src)
+        # embedded_src = self.emb_dropout(embedded_src)
         # hidden: dir*layers x batch x hidden
         # output: batch x max_length x directions*hidden
         output, hidden = self.rnn(embedded_src)
         batch_size = hidden.size(1)
         # separate final hidden states by layer and direction
         hidden_layerwise = hidden.view(
-            self.rnn.num_layers,
-            2 if self.rnn.bidirectional else 1,
-            batch_size,
-            self.rnn.hidden_size,
+            self.rnn.num_layers, 2 if self.rnn.bidirectional else 1, batch_size, self.rnn.hidden_size,
         )
         # hidden_layerwise: layers x directions x batch x hidden
         # we need to manually concatenate the final states of the last layer for both directions

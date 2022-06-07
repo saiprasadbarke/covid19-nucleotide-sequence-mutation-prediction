@@ -40,11 +40,7 @@ class Decoder(nn.Module):
         self.pre_output_layer = nn.Linear(hidden_size + 2 * hidden_size + emb_size, hidden_size, bias=False)
 
     def _forward_step(
-        self,
-        prev_embed: Tensor,
-        encoder_output: Tensor,
-        proj_key: Tensor,
-        hidden: Tensor,
+        self, prev_embed: Tensor, encoder_output: Tensor, proj_key: Tensor, hidden: Tensor,
     ):
         """Perform a single decoder step (1 word)"""
 
@@ -54,7 +50,7 @@ class Decoder(nn.Module):
 
         # update rnn hidden state
         rnn_input = torch.cat([prev_embed, context], dim=2)
-        rnn_input = self.emb_dropout(rnn_input)
+        # rnn_input = self.emb_dropout(rnn_input)
         output, hidden = self.rnn(rnn_input, hidden)
 
         att_vector_input = torch.cat([prev_embed, output, context], dim=2)
@@ -121,12 +117,7 @@ class Decoder(nn.Module):
         # unroll the decoder RNN for `unroll_steps` steps
         for i in range(unroll_steps):
             prev_embed = trg_embed[:, i].unsqueeze(1)
-            output, hidden, att_vector, att_prob = self._forward_step(
-                prev_embed,
-                encoder_output,
-                proj_key,
-                hidden,
-            )
+            output, hidden, att_vector, att_prob = self._forward_step(prev_embed, encoder_output, proj_key, hidden,)
             decoder_states.append(output)
             att_vectors.append(att_vector)
             att_probs.append(att_prob)
