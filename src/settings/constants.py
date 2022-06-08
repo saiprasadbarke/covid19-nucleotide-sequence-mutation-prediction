@@ -83,7 +83,7 @@ CURRENT_RUN_DATA_DIR = f"{CURRENT_RUN_DIR}/data"
 
 ################### Training parameters
 
-EARLY_STOPPING_THRESHOLD = 5
+EARLY_STOPPING_THRESHOLD = 15
 USE_CUDA = is_available()
 SAVED_MODELS_PATH = f"{CURRENT_RUN_DIR}/saved_models"
 SAVED_PLOTS_PATH = f"{CURRENT_RUN_DIR}/reports/plots"

@@ -18,8 +18,8 @@ def train():
     minibatch_size = int(input("--------->Choose a batch size.\nPreferably a power of 2 :   "))
     train_dataloader = get_dataloader(train_inputs, train_targets, minibatch_size)
     val_dataloader = get_dataloader(val_inputs, val_targets)
-    print(f"Size of train set is {train_dataloader.__len__()}")
-    print(f"Size of validation set is {val_dataloader.__len__()}")
+    print(f"Size of train set is {len(train_targets)}")
+    print(f"Size of validation set is {len(val_targets)}")
     ##################################### Model parameters
     len_vocabulary = 4 ** kmer_size + NUM_SPECIAL_CHARS
     embedding_size = int(input("--------->Choose size of embedding :   "))

@@ -11,6 +11,7 @@ from settings.constants import MERGED_DATA, CURRENT_RUN_DATA_DIR
 
 # External
 from Levenshtein import distance
+from settings.reference_sequence import WUHAN_REF
 
 from visualization.plot_mutation_sites import plot_mutations
 
@@ -34,41 +35,64 @@ def generate_datasets(
     cartesian_product_list = list(product(clade1_sequences, clade2_sequences))
     random_sampled_cartesian_product_list = sample(cartesian_product_list, len(cartesian_product_list),)
     input_target_list = []
-    difference_indices = {}
+    difference_indices_xy = {}
+    difference_indices_wuhan = {}
     for seq_pair in random_sampled_cartesian_product_list:
         if count_sequences == number_of_sequence_pairs:
             break
         elif is_valid_sequence_pair(
             seq_pair[0], seq_pair[1], max_seq_length, minimum_levenshtein_distance, maximum_levenshtein_distance,
         ):
+            # Append the valid sequence to the list of valid sequences
             input_target_list.append(
                 (
                     seq_pair[0][sequence_start_postion:sequence_end_postion],
                     seq_pair[1][sequence_start_postion:sequence_end_postion],
                 )
             )
-            difference = get_string_difference_indices(
+
+            # Compute differences wrt x sequence and wuhan reference genome and add them to the respective index dictionaries
+            difference_xy = get_string_difference_indices(
                 seq_pair[0][sequence_start_postion:sequence_end_postion],
                 seq_pair[1][sequence_start_postion:sequence_end_postion],
                 sequence_start_postion,
             )
-            for index in difference:
-                if index in difference_indices.keys():
-                    difference_indices[index] += 1
+            difference_wuhan = get_string_difference_indices(
+                WUHAN_REF[sequence_start_postion:sequence_end_postion],
+                seq_pair[1][sequence_start_postion:sequence_end_postion],
+                sequence_start_postion,
+            )
+            for index in difference_xy:
+                if index in difference_indices_xy.keys():
+                    difference_indices_xy[index] += 1
                 else:
-                    difference_indices[index] = 1
+                    difference_indices_xy[index] = 1
+            for index in difference_wuhan:
+                if index in difference_indices_wuhan.keys():
+                    difference_indices_wuhan[index] += 1
+                else:
+                    difference_indices_wuhan[index] = 1
             count_sequences += 1
             if count_sequences % 1000 == 0:
                 print(f"Found {count_sequences} valid pairs .")
 
-    difference_indices_file = f"{CURRENT_RUN_DATA_DIR}/difference_indices.json"
-    with open(difference_indices_file, "w") as fout:
-        dump(difference_indices, fout)
-    mutations_graph_path = f"{CURRENT_RUN_DATA_DIR}/mutation_sites.png"
-    data_dump_path = f"{CURRENT_RUN_DATA_DIR}/sorted_difference_indices.json"
-    plot_mutations(difference_indices_file, mutations_graph_path, data_dump_path)
-    # Split data into train, validation and test datasets
+    # Generate reports for mutations between input and target sequences
+    difference_indices_file_xy = f"{CURRENT_RUN_DATA_DIR}/difference_indices_xy.json"
+    with open(difference_indices_file_xy, "w") as fout:
+        dump(difference_indices_xy, fout)
+    mutations_graph_path_xy = f"{CURRENT_RUN_DATA_DIR}/mutation_sites_xy.png"
+    data_dump_path_xy = f"{CURRENT_RUN_DATA_DIR}/sorted_difference_indices_xy.json"
+    plot_mutations(difference_indices_file_xy, mutations_graph_path_xy, data_dump_path_xy)
 
+    # Generate reports for mutations between wuhan (reference genome) and target sequences
+    difference_indices_file_wuhan = f"{CURRENT_RUN_DATA_DIR}/difference_indices_wuhan.json"
+    with open(difference_indices_file_wuhan, "w") as fout:
+        dump(difference_indices_wuhan, fout)
+    mutations_graph_path_wuhan = f"{CURRENT_RUN_DATA_DIR}/mutation_sites_wuhan.png"
+    data_dump_path_wuhan = f"{CURRENT_RUN_DATA_DIR}/sorted_difference_indices_wuhan.json"
+    plot_mutations(difference_indices_file_wuhan, mutations_graph_path_wuhan, data_dump_path_wuhan)
+
+    # Split data into train, validation and test datasets
     split = {"train": 0.8, "val": 0.1, "test": 0.1}
     train_val_test_indices = {
         "train_upto": int(split["train"] * number_of_sequence_pairs),
