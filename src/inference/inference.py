@@ -83,5 +83,6 @@ def inference():
     )
     checkpoint = torch.load(f"{SAVED_MODELS_PATH}/{RUN_NAME}/MODEL_{35}.pt")
     model.load_state_dict(checkpoint["model_state_dict"])
+    losses = checkpoint["returned_metrics"]
     test_model(test_dataloader, model)
 
