@@ -7,7 +7,7 @@ from data_operations.search_space_minimization import get_string_difference_indi
 
 # Local
 from helpers.check_dir_exists import check_dir_exists
-from settings.constants import MERGED_DATA, CURRENT_RUN_DATA_DIR
+from settings.constants import MERGED_DATA, CURRENT_RUN_DATA_DIR, SAVED_PLOTS_PATH, SAVED_STATS_PATH
 
 # External
 from Levenshtein import distance
@@ -77,19 +77,19 @@ def generate_datasets(
                 print(f"Found {count_sequences} valid pairs .")
 
     # Generate reports for mutations between input and target sequences
-    difference_indices_file_xy = f"{CURRENT_RUN_DATA_DIR}/difference_indices_xy.json"
+    difference_indices_file_xy = f"{SAVED_STATS_PATH}/difference_indices_xy.json"
     with open(difference_indices_file_xy, "w") as fout:
         dump(difference_indices_xy, fout)
-    mutations_graph_path_xy = f"{CURRENT_RUN_DATA_DIR}/mutation_sites_xy.png"
-    data_dump_path_xy = f"{CURRENT_RUN_DATA_DIR}/sorted_difference_indices_xy.json"
+    mutations_graph_path_xy = f"{SAVED_PLOTS_PATH}/mutation_sites_xy.png"
+    data_dump_path_xy = f"{SAVED_STATS_PATH}/sorted_difference_indices_xy.json"
     plot_mutations(difference_indices_file_xy, mutations_graph_path_xy, data_dump_path_xy)
 
     # Generate reports for mutations between wuhan (reference genome) and target sequences
-    difference_indices_file_wuhan = f"{CURRENT_RUN_DATA_DIR}/difference_indices_wuhan.json"
+    difference_indices_file_wuhan = f"{SAVED_STATS_PATH}/difference_indices_wuhan_gt.json"
     with open(difference_indices_file_wuhan, "w") as fout:
         dump(difference_indices_wuhan, fout)
-    mutations_graph_path_wuhan = f"{CURRENT_RUN_DATA_DIR}/mutation_sites_wuhan.png"
-    data_dump_path_wuhan = f"{CURRENT_RUN_DATA_DIR}/sorted_difference_indices_wuhan.json"
+    mutations_graph_path_wuhan = f"{SAVED_PLOTS_PATH}/mutation_sites_wuhan_gt.png"
+    data_dump_path_wuhan = f"{SAVED_STATS_PATH}/sorted_difference_indices_wuhan_gt.json"
     plot_mutations(difference_indices_file_wuhan, mutations_graph_path_wuhan, data_dump_path_wuhan)
 
     # Split data into train, validation and test datasets
@@ -110,7 +110,6 @@ def generate_datasets(
             test_list.append(input_target_pair)
 
     # File operations
-    check_dir_exists(CURRENT_RUN_DATA_DIR)
     with open(f"{CURRENT_RUN_DATA_DIR}/train.json", "w") as fout:
         dump(train_list, fout)
     with open(f"{CURRENT_RUN_DATA_DIR}/val.json", "w") as fout:

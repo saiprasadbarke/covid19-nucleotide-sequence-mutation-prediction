@@ -13,23 +13,23 @@ def create_dataset():
     number_of_sequence_pairs = int(input("--------->Choose total number of sequence pairs for train+val+test :   "))
     max_seq_length = int(
         input(
-            "--------->Choose the sequence length.\nHint: 1. Should be less than 3700 for spike nucleotide sequences.\n2. Should be between less than 26000 for full nucleotide sequences. :   "
+            "--------->Choose the sequence length.\n          Hint: 1. Should be less than 3700 for spike nucleotide sequences.\n          2. Should be between less than 26000 for full nucleotide sequences. :   "
         )
     )
     sequence_start_postion = int(
         input(
-            f"--------->Choose the sequence start position\n Hint: 1. Should be between 0 and 3700 - max_seq_length for spike nucleotide sequences.\n2. Should be between 0 and 26000 - max_seq_length for full nucleotide sequences. :   "
+            f"--------->Choose the sequence start position\n          Hint: 1. Should be between 0 and 3700 - max_seq_length for spike nucleotide sequences.\n          2. Should be between 0 and 26000 - max_seq_length for full nucleotide sequences. :   "
         )
     )
     sequence_end_postion = sequence_start_postion + max_seq_length
     minimum_levenshtein_distance = int(
         input(
-            "--------->Choose a minimum levenshtein distance\n Hint: 1. Should be between [5, 15] for spike nucleotide sequences.\n2. Should be between [500,600] for full nucleotide sequences. :    "
+            "--------->Choose a minimum levenshtein distance\n          Hint: 1. Should be between [5, 15] for spike nucleotide sequences.\n          2. Should be between [500,600] for full nucleotide sequences. :    "
         )
     )
     maximum_levenshtein_distance = int(
         input(
-            "--------->Choose a maximum levenshtein distance\n Hint: 1. Should be between [15, 25] for spike nucleotide sequences.\n2. Should be between [600,700] for full nucleotide sequences. :    "
+            "--------->Choose a maximum levenshtein distance\n          Hint: 1. Should be between [15, 25] for spike nucleotide sequences.\n          2. Should be between [600,700] for full nucleotide sequences. :    "
         )
     )
     generate_datasets(

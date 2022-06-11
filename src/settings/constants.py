@@ -1,6 +1,8 @@
 from pathlib import Path
 from torch.cuda import is_available
 
+from helpers.check_dir_exists import check_dir_exists
+
 #################### Vocabulary
 
 NUCLEOTIDES = ["A", "C", "G", "T"]
@@ -76,18 +78,21 @@ MERGED_DATA = f"{ROOT_DATA_DIR}/merged.json"
 
 
 ################## RUN
-RUN_NAME = "RUN_4"
-ROOT_RUN_DIR = f"{Path.cwd().parents[0]}/runs"
+RUN_NAME = "test_code"
+ROOT_RUN_DIR = f"{Path.cwd()}/runs"
 CURRENT_RUN_DIR = f"{ROOT_RUN_DIR}/{RUN_NAME}"
 CURRENT_RUN_DATA_DIR = f"{CURRENT_RUN_DIR}/data"
-
+check_dir_exists(CURRENT_RUN_DATA_DIR)
 ################### Training parameters
 
 EARLY_STOPPING_THRESHOLD = 15
 USE_CUDA = is_available()
 SAVED_MODELS_PATH = f"{CURRENT_RUN_DIR}/saved_models"
+check_dir_exists(SAVED_MODELS_PATH)
 SAVED_PLOTS_PATH = f"{CURRENT_RUN_DIR}/reports/plots"
+check_dir_exists(SAVED_PLOTS_PATH)
 SAVED_STATS_PATH = f"{CURRENT_RUN_DIR}/reports/stats"
+check_dir_exists(SAVED_STATS_PATH)
 SAVED_TENSORBOARD_LOGS_PATH = f"{CURRENT_RUN_DIR}/reports/tensorboard"
 # Entry point
 ROUTINES_TO_EXECUTE = {
