@@ -1,22 +1,19 @@
 name: CNSMP
 
 dependencies:
-  - python==3.9
+  - python==3.10
   - pytorch
   - pip
+  - pandas
+  - matplotlib
+  - scikit-learn
+  - nltk
+  - biopython
+  - seaborn
+  - black
+  - sacrebleu
 
   - pip:
-      - h5py
-      - tensorflow-gpu
-      - keras
-      - pandas
-      - matplotlib
-      - bio
-      - scikit-learn
-      - nltk
-      - Levenshtein
-      - biopython
-      - seaborn
-      - black
-      - ijson
-      - sacrebleu
+    - Levenshtein
+
+

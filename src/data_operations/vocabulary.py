@@ -1,16 +1,17 @@
 # Standard
+from typing import List, Tuple
 from json import dump
 from itertools import combinations_with_replacement, permutations
 from typing import Dict
 
 # Local
-from settings.constants import NUCLEOTIDES, NUM_SPECIAL_CHARS
+from settings.constants import BOS_IDX, EOS_IDX, NUCLEOTIDES, NUM_SPECIAL_CHARS
 
 
 class Vocabulary:
     """Vocabulary represents mapping between tokens and indices."""
 
-    def __init__(self, kmer_length: int) -> None:
+    def __init__(self, kmer_length: int, file_path: str = None) -> None:
         """
         Create vocabulary based on the size of the kmer.
 
@@ -25,17 +26,18 @@ class Vocabulary:
             .
             and so on...
         """
-        self.stoi = self._generate_vocabulary(kmer_length=kmer_length)
-        self.itos = [s_k for s_k in self.stoi.keys()]
-        self.itos.insert(0, "<BOS>")
-        self.itos.insert(1, "<EOS>")
+        self.kmer_length = kmer_length
+        self.stoi, self.itos = self.generate_vocabulary()
+        assert len(self.stoi) == len(self.itos), "Lengths of stoi and itos not equal"
+        if file_path != None:
+            self.write_vocabulary_to_json(file_path=file_path)
 
-    def _generate_vocabulary(self, kmer_length: int) -> Dict[str, int]:
+    def generate_vocabulary(self) -> Tuple[Dict[str, int], List[str]]:
         # The number of possible k-combinations of these nucleotides taken with repetition is 4^kmer_length
-        vocabulary_list = [list(x) for x in combinations_with_replacement(NUCLEOTIDES, kmer_length)]
+        vocabulary_list = [list(x) for x in combinations_with_replacement(NUCLEOTIDES, self.kmer_length)]
         permuted_vocabulary = []
         for word in vocabulary_list:
-            permuted_vocabulary += [list(x) for x in permutations(word, kmer_length)]
+            permuted_vocabulary += [list(x) for x in permutations(word, self.kmer_length)]
 
         for permuted_word in permuted_vocabulary:
             if permuted_word not in vocabulary_list:
@@ -43,15 +45,19 @@ class Vocabulary:
 
         vocabulary_dict = {}
         for index, kmer in enumerate(vocabulary_list, NUM_SPECIAL_CHARS):
-            # We start the indexing from NUM_SPECIAL_CHARS as the first NUM_SPECIAL_CHARS indices are for the special characters such as BOS, EOS and PAD
+            # We start the indexing from NUM_SPECIAL_CHARS as the first NUM_SPECIAL_CHARS indices are for the special characters BOS, EOS
             vocabulary_dict["".join(kmer)] = index
-        return vocabulary_dict
+        vocabulary_dict["<BOS>"] = BOS_IDX
+        vocabulary_dict["<EOS>"] = EOS_IDX
+        vocabulary_dict = dict(sorted(vocabulary_dict.items(), key=lambda item: item[1]))
+        vocab_list = [s_k for s_k in vocabulary_dict.keys()]
+        return vocabulary_dict, vocab_list
 
     def __str__(self) -> str:
         return self.stoi.__str__()
 
     def __len__(self) -> int:
-        return len(self.itos)
+        return len(self.stoi)
 
     def write_vocabulary_to_json(self, file_path: str) -> None:
         with open(file_path, "w") as fout:

@@ -1,14 +1,13 @@
 # Local
+
 from model_components.decoder import Decoder
 from model_components.encoder import Encoder
 from model_components.generator import Generator
+from model_components.kmer_embedding import KmerEmbedding
 
 # External
 import torch.nn as nn
-
-from model_components.kmer_embedding import KmerEmbedding
-
-# from torch.nn import Embedding
+from torch import Tensor
 
 
 class EncoderDecoder(nn.Module):
@@ -32,14 +31,27 @@ class EncoderDecoder(nn.Module):
         self.trg_embed = trg_embed
         self.generator = generator
 
-    def forward(self, src, trg):
+    def forward(self, src: Tensor, trg: Tensor):
         """Take in and process masked src and target sequences."""
-        encoder_hidden, encoder_final = self.encode(src)
-        return self.decode(encoder_hidden, encoder_final, trg)
+        encoder_output, encoder_hidden = self.encode(src)
+        return self.decode(encoder_output, encoder_hidden, trg)
 
-    def encode(self, src):
+    def encode(self, src: Tensor):
         src_embedded = self.src_embed(src)
         return self.encoder(src_embedded)
 
-    def decode(self, encoder_hidden, encoder_final, trg, decoder_hidden=None):
-        return self.decoder(self.trg_embed(trg), encoder_hidden, encoder_final, hidden=decoder_hidden)
+    def decode(
+        self,
+        encoder_output: Tensor,
+        encoder_hidden: Tensor,
+        trg: Tensor,
+        unroll_steps: int = None,
+        decoder_hidden: Tensor = None,
+    ):
+        return self.decoder(
+            trg_embed=self.trg_embed(trg),
+            encoder_output=encoder_output,
+            encoder_hidden=encoder_hidden,
+            hidden=decoder_hidden,
+            unroll_steps=unroll_steps,
+        )
