@@ -136,4 +136,4 @@ class Decoder(nn.Module):
             # start with zeros
             return encoder_hidden.new_zeros(self.num_layers, batch_size, self.hidden_size)
 
-        return torch.tanh(self.bridge(encoder_hidden)).unsqueeze(0).repeat(self.num_layers, 1, 1)
+        return torch.tanh(self.bridge(encoder_hidden))  # .unsqueeze(0).repeat(self.num_layers, 1, 1)
