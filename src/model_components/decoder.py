@@ -50,7 +50,7 @@ class Decoder(nn.Module):
 
         # update rnn hidden state
         rnn_input = torch.cat([prev_embed, context], dim=2)
-        # rnn_input = self.emb_dropout(rnn_input)
+        rnn_input = self.emb_dropout(rnn_input)
         output, hidden = self.rnn(rnn_input, hidden)
 
         att_vector_input = torch.cat([prev_embed, output, context], dim=2)
@@ -136,4 +136,4 @@ class Decoder(nn.Module):
             # start with zeros
             return encoder_hidden.new_zeros(self.num_layers, batch_size, self.hidden_size)
 
-        return torch.tanh(self.bridge(encoder_hidden))  # .unsqueeze(0).repeat(self.num_layers, 1, 1)
+        return torch.tanh(self.bridge(encoder_hidden)).unsqueeze(0).repeat(self.num_layers, 1, 1)
