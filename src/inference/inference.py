@@ -81,5 +81,5 @@ def inference():
     checkpoint = torch.load(f"{SAVED_MODELS_PATH}/model_{training_parameters_performance_dict['last_best_epoch']}.pt")
     model.load_state_dict(checkpoint["model_state_dict"])
     kmer_size = training_parameters_performance_dict["kmer_size"]
-    test_model(test_dataloader, model, kmer_size)
+    predicted_sequences = test_model(test_dataloader, model, kmer_size)
 
