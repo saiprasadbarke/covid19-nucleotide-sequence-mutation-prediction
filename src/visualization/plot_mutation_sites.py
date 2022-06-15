@@ -28,7 +28,8 @@ def plot_mutations(json_path: str, graph_path: str, data_dump_path: str):
         plt.bar(x, y)
         plt.xlabel("Indices")
         plt.xticks(rotation=90)
-        plt.title("Frequency of mutations")
+        plt.ylabel("Frequency of mutations")
+        plt.title("Distribution of mutations at different indices for the dataset")
         plt.savefig(graph_path)
         plt.show()
 

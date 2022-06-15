@@ -2,16 +2,14 @@
 from itertools import product
 from json import dump, load
 from random import sample
-from typing import Dict, Tuple
-from data_operations.search_space_minimization import get_string_difference_indices
+from typing import List, Tuple
 
 # Local
-from helpers.check_dir_exists import check_dir_exists
 from settings.constants import MERGED_DATA, CURRENT_RUN_DATA_DIR, SAVED_PLOTS_PATH, SAVED_STATS_PATH
 
 # External
 from Levenshtein import distance
-from settings.reference_sequence import WUHAN_REF
+from settings.reference_sequence import REFERENCE_GENOME
 
 from visualization.plot_mutation_sites import plot_mutations
 
@@ -35,65 +33,66 @@ def generate_datasets(
     cartesian_product_list = list(product(clade1_sequences, clade2_sequences))
     random_sampled_cartesian_product_list = sample(cartesian_product_list, len(cartesian_product_list),)
     input_target_list = []
-    difference_indices_xy = {}
-    difference_indices_wuhan = {}
+    difference_indices_x_y = {}
+    difference_indices_refgen_gt = {}
     for seq_pair in random_sampled_cartesian_product_list:
         if count_sequences == number_of_sequence_pairs:
             break
-        elif is_valid_sequence_pair(
-            seq_pair[0], seq_pair[1], max_seq_length, minimum_levenshtein_distance, maximum_levenshtein_distance,
-        ):
-            # Append the valid sequence to the list of valid sequences
-            input_target_list.append(
-                (
-                    seq_pair[0][sequence_start_postion:sequence_end_postion],
-                    seq_pair[1][sequence_start_postion:sequence_end_postion],
-                )
-            )
+        else:
+            clipped_seq_1 = seq_pair[0][sequence_start_postion:sequence_end_postion]
+            clipped_seq_2 = seq_pair[1][sequence_start_postion:sequence_end_postion]
+            if is_valid_sequence_pair(
+                seq1=clipped_seq_1,
+                seq2=clipped_seq_2,
+                minimum_levenshtein_distance=minimum_levenshtein_distance,
+                maximum_levenshtein_distance=maximum_levenshtein_distance,
+            ):
+                # Append the valid sequence to the list of valid sequences
+                input_target_list.append((clipped_seq_1, clipped_seq_2))
 
-            # Compute differences wrt x sequence and wuhan reference genome and add them to the respective index dictionaries
-            difference_xy = get_string_difference_indices(
-                seq_pair[0][sequence_start_postion:sequence_end_postion],
-                seq_pair[1][sequence_start_postion:sequence_end_postion],
-                sequence_start_postion,
-            )
-            difference_wuhan = get_string_difference_indices(
-                WUHAN_REF[sequence_start_postion:sequence_end_postion],
-                seq_pair[1][sequence_start_postion:sequence_end_postion],
-                sequence_start_postion,
-            )
-            for index in difference_xy:
-                if index in difference_indices_xy.keys():
-                    difference_indices_xy[index] += 1
-                else:
-                    difference_indices_xy[index] = 1
-            for index in difference_wuhan:
-                if index in difference_indices_wuhan.keys():
-                    difference_indices_wuhan[index] += 1
-                else:
-                    difference_indices_wuhan[index] = 1
-            count_sequences += 1
-            if count_sequences % 1000 == 0:
-                print(f"Found {count_sequences} valid pairs .")
+                # Compute differences wrt x sequence and reference genome and add them to the respective index dictionaries
+                difference_x_y = get_string_difference_indices(clipped_seq_1, clipped_seq_2, sequence_start_postion,)
+                for idx_x_y in difference_x_y:
+                    if idx_x_y in difference_indices_x_y.keys():
+                        difference_indices_x_y[idx_x_y] += 1
+                    else:
+                        difference_indices_x_y[idx_x_y] = 1
+
+                difference_reference_gt = get_string_difference_indices(
+                    REFERENCE_GENOME[sequence_start_postion:sequence_end_postion],
+                    clipped_seq_2,
+                    sequence_start_postion,
+                )
+                for idx_rg_y in difference_reference_gt:
+                    if idx_rg_y in difference_indices_refgen_gt.keys():
+                        difference_indices_refgen_gt[idx_rg_y] += 1  # Added a 1 for every new instance of the index
+                    else:
+                        difference_indices_refgen_gt[idx_rg_y] = 1  # Capture the first instance of the index
+
+                # Increment the counter
+                count_sequences += 1
+                # Print the progress
+                if count_sequences % 1000 == 0:
+                    print(f"Found {count_sequences} valid pairs.")
 
     # Generate reports for mutations between input and target sequences
     difference_indices_file_xy = f"{SAVED_STATS_PATH}/difference_indices_xy.json"
     with open(difference_indices_file_xy, "w") as fout:
-        dump(difference_indices_xy, fout)
+        dump(difference_indices_x_y, fout)
     mutations_graph_path_xy = f"{SAVED_PLOTS_PATH}/mutation_sites_xy.png"
     data_dump_path_xy = f"{SAVED_STATS_PATH}/sorted_difference_indices_xy.json"
     plot_mutations(difference_indices_file_xy, mutations_graph_path_xy, data_dump_path_xy)
 
-    # Generate reports for mutations between wuhan (reference genome) and target sequences
-    difference_indices_file_wuhan = f"{SAVED_STATS_PATH}/difference_indices_wuhan_gt.json"
-    with open(difference_indices_file_wuhan, "w") as fout:
-        dump(difference_indices_wuhan, fout)
-    mutations_graph_path_wuhan = f"{SAVED_PLOTS_PATH}/mutation_sites_wuhan_gt.png"
-    data_dump_path_wuhan = f"{SAVED_STATS_PATH}/sorted_difference_indices_wuhan_gt.json"
-    plot_mutations(difference_indices_file_wuhan, mutations_graph_path_wuhan, data_dump_path_wuhan)
+    # Generate reports for mutations between reference genome and target sequences
+    difference_indices_file_ref = f"{SAVED_STATS_PATH}/difference_indices_ref_gt.json"
+    with open(difference_indices_file_ref, "w") as fout:
+        dump(difference_indices_refgen_gt, fout)
+    mutations_graph_path_ref = f"{SAVED_PLOTS_PATH}/mutation_sites_ref_gt.png"
+    data_dump_path_ref = f"{SAVED_STATS_PATH}/sorted_difference_indices_ref_gt.json"
+    plot_mutations(difference_indices_file_ref, mutations_graph_path_ref, data_dump_path_ref)
 
     # Split data into train, validation and test datasets
-    split = {"train": 0.8, "val": 0.1, "test": 0.1}
+    split = {"train": 0.9, "val": 0.05, "test": 0.05}
     train_val_test_indices = {
         "train_upto": int(split["train"] * number_of_sequence_pairs),
         "val_upto": int(split["train"] * number_of_sequence_pairs + split["val"] * number_of_sequence_pairs),
@@ -122,15 +121,14 @@ def generate_datasets(
 
 
 def is_valid_sequence_pair(
-    seq1: str, seq2: str, max_seq_length: int, minimum_levenshtein_distance: int, maximum_levenshtein_distance: int,
+    seq1: str, seq2: str, minimum_levenshtein_distance: int, maximum_levenshtein_distance: int,
 ) -> bool:
     lev_distance = distance(seq1, seq2)
-    if (
-        len(seq1) < max_seq_length
-        or len(seq2) < max_seq_length
-        or lev_distance < minimum_levenshtein_distance
-        or lev_distance > maximum_levenshtein_distance
-    ):
+    if lev_distance < minimum_levenshtein_distance or lev_distance > maximum_levenshtein_distance:
         return False
     else:
         return True
+
+
+def get_string_difference_indices(str1: str, str2: str, start: int = 0) -> List[int]:
+    return [i + start for i in range(len(str1)) if str1[i] != str2[i]]

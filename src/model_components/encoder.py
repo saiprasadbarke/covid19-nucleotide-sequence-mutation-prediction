@@ -33,7 +33,7 @@ class Encoder(nn.Module):
         Applies a bidirectional GRU to sequence of embeddings.
         embedded_src should have dimensions [batch, seq_len, embedding_dim].
         """
-        # embedded_src = self.emb_dropout(embedded_src)
+        embedded_src = self.emb_dropout(embedded_src)
         # hidden: dir*layers x batch x hidden
         # output: batch x max_length x directions*hidden
         output, hidden = self.rnn(embedded_src)

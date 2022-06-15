@@ -1,7 +1,6 @@
 # Local
 
 from math import inf
-from helpers.check_dir_exists import check_dir_exists
 from model_components.model import EncoderDecoder
 from settings.constants import (
     EARLY_STOPPING_THRESHOLD,
@@ -72,8 +71,6 @@ def train_loop(
             scheduler.step(metrics=validation_loss)
             # Early stopping
             if validation_loss < best_val_loss:
-
-                check_dir_exists(SAVED_MODELS_PATH)
                 torch.save(
                     {
                         "epoch": epoch,
