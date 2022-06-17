@@ -24,7 +24,7 @@ class Tokenize:
 
     def tokenize_encode_sequence(self, sequence: str, is_target: bool = True) -> List[int]:
         kmer_sequence = self.sliding_window(sequence)
-        kmer_sequence = self.add_special_characters(kmer_sequence, is_target)
+        # kmer_sequence = self.add_special_characters(kmer_sequence, is_target)
         encoded_kmer_seq = [self.vocabulary.stoi[kmer] for kmer in kmer_sequence]
         return encoded_kmer_seq
 
@@ -39,7 +39,7 @@ class Tokenize:
         for (input, target) in data:
             x_sequence = self.tokenize_encode_sequence(input, is_target=False)
             y_sequence = self.tokenize_encode_sequence(target)
-            assert len(x_sequence) == len(y_sequence) - 1, "Incorrect input and target sequence lengths"
+            assert len(x_sequence) == len(y_sequence), "Incorrect input and target sequence lengths"
             x_sequence = tensor(x_sequence, dtype=float32)
             y_sequence = tensor(y_sequence, dtype=float32)
             inputs.append(x_sequence)
@@ -47,11 +47,11 @@ class Tokenize:
         print(f"Kmerization and Numericalization complete for {dataset_type} data...")
         return inputs, targets
 
-    def add_special_characters(self, sequence: List[str], is_target: bool = True) -> List[str]:
-        """This function appends or prepends a EOS , BOS  depending on whether the sequence is an input sequence or a target sequence"""
-        if is_target:
-            sequence.insert(0, "<BOS>")
-            sequence.append("<EOS>")
-        else:
-            sequence.append("<EOS>")
-        return sequence
+    # def add_special_characters(self, sequence: List[str], is_target: bool = True) -> List[str]:
+    #     """This function appends or prepends a EOS , BOS  depending on whether the sequence is an input sequence or a target sequence"""
+    #     if is_target:
+    #         sequence.insert(0, "<BOS>")
+    #         sequence.append("<EOS>")
+    #     else:
+    #         sequence.append("<EOS>")
+    #     return sequence

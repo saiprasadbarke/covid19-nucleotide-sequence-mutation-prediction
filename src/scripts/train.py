@@ -6,7 +6,7 @@ from data_operations.tokenize_data import Tokenize
 from data_operations.get_dataloaders import get_dataloader
 from model_training.train_model import train_loop
 from model_components.create_model import create_model
-from settings.constants import CURRENT_RUN_DIR, NUM_SPECIAL_CHARS
+from settings.constants import CURRENT_RUN_DIR  # , NUM_SPECIAL_CHARS
 
 
 def train():
@@ -22,7 +22,7 @@ def train():
     val_dataloader = get_dataloader(val_inputs, val_targets, minibatch_size)
 
     ##################################### Model parameters
-    len_vocabulary = 4 ** kmer_size + NUM_SPECIAL_CHARS
+    len_vocabulary = 4 ** kmer_size  # + NUM_SPECIAL_CHARS
     model_parameters = input(
         f"Please enter the embedding_size, rnn_hidden_size, encoder_rnn_num_layers, decoder_rnn_num_layers:   "
     )

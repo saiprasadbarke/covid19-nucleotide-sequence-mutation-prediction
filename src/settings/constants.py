@@ -6,7 +6,7 @@ from helpers.check_dir_exists import check_dir_exists
 #################### Vocabulary
 
 NUCLEOTIDES = ["A", "C", "G", "T"]
-NUM_SPECIAL_CHARS = 2  # 0, 1 are for BOS , EOS respectively
+# NUM_SPECIAL_CHARS = 2  # 0, 1 are for BOS , EOS respectively
 BOS_IDX = 0
 EOS_IDX = 1
 
@@ -87,7 +87,7 @@ check_dir_exists(CURRENT_RUN_DATA_DIR)
 ################### Training parameters
 
 EARLY_STOPPING_THRESHOLD = 10
-USE_CUDA = is_available()
+USE_CUDA = False  # is_available()
 SAVED_MODELS_PATH = f"{CURRENT_RUN_DIR}/saved_models"
 check_dir_exists(SAVED_MODELS_PATH)
 SAVED_PLOTS_PATH = f"{CURRENT_RUN_DIR}/reports/plots"

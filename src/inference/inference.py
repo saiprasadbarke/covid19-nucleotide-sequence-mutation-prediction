@@ -25,7 +25,7 @@ from settings.constants import (
     SAVED_STATS_PATH,
 )
 from settings.reference_sequence import REFERENCE_GENOME
-from data_operations.search_space_minimization import get_string_difference_indices
+from data_operations.generate_datasets import get_string_difference_indices
 from visualization.plot_mutation_sites import plot_mutations
 
 
