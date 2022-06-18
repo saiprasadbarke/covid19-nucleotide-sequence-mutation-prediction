@@ -27,7 +27,7 @@ def train_loop(
     print_every=100,
 ):
 
-    criterion = nn.NLLLoss(reduction="sum")
+    criterion = nn.CrossEntropyLoss(reduction="mean")
     optim = Adam(model.parameters(), lr=learning_rate)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, mode="min", patience=1)
 
@@ -46,7 +46,6 @@ def train_loop(
 
         print("Epoch", epoch)
         model.train()
-        model.zero_grad()
         with torch.set_grad_enabled(True):
             training_loss, training_perplexity, epoch_learning_rate = run_epoch(
                 (rebatch(b) for b in train_dataloader),
