@@ -29,4 +29,4 @@ def run_epoch(data_iter, model: EncoderDecoder, loss_compute: SimpleLossCompute,
             print_tokens = 0
 
     perplexity = math.exp(epoch_loss / float(total_tokens))
-    return epoch_loss, perplexity, epoch_learning_rate
+    return epoch_loss / len(data_iter), perplexity, epoch_learning_rate
