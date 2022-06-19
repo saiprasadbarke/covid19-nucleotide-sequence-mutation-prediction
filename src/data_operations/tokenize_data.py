@@ -46,12 +46,3 @@ class Tokenize:
             targets.append(y_sequence)
         print(f"Kmerization and Numericalization complete for {dataset_type} data...")
         return inputs, targets
-
-    # def add_special_characters(self, sequence: List[str], is_target: bool = True) -> List[str]:
-    #     """This function appends or prepends a EOS , BOS  depending on whether the sequence is an input sequence or a target sequence"""
-    #     if is_target:
-    #         sequence.insert(0, "<BOS>")
-    #         sequence.append("<EOS>")
-    #     else:
-    #         sequence.append("<EOS>")
-    #     return sequence

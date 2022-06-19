@@ -1,7 +1,9 @@
 class SimpleLossCompute:
     """A simple loss compute and train function."""
 
-    def __init__(self, generator, criterion, scheduler=None, optimizer=None):
+    def __init__(
+        self, generator, criterion, optimizer=None, scheduler=None,
+    ):
         self.generator = generator
         self.criterion = criterion
         self.optimizer = optimizer

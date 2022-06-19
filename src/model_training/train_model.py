@@ -27,9 +27,9 @@ def train_loop(
     print_every=100,
 ):
 
-    criterion = nn.CrossEntropyLoss(reduction="mean")
+    criterion = nn.NLLLoss()
     optim = Adam(model.parameters(), lr=learning_rate)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, mode="min", patience=1)
+    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, patience=2)
 
     number_of_epochs_without_improvement = 0
     best_val_loss = inf
@@ -43,14 +43,17 @@ def train_loop(
     }
 
     for epoch in range(num_epochs):
-
+        training_loss = 0
+        training_perplexity = 0
+        validation_loss = 0
+        validation_perplexity = 0
         print("Epoch", epoch)
         model.train()
         with torch.set_grad_enabled(True):
             training_loss, training_perplexity, epoch_learning_rate = run_epoch(
                 (rebatch(b) for b in train_dataloader),
                 model,
-                SimpleLossCompute(model.generator, criterion, optim),
+                SimpleLossCompute(generator=model.generator, criterion=criterion, optimizer=optim,),
                 print_every=print_every,
             )
             print(f"Training loss: {training_loss}")
@@ -61,32 +64,37 @@ def train_loop(
         model.eval()
         with torch.no_grad():
             validation_loss, validation_perplexity, _ = run_epoch(
-                (rebatch(b) for b in validation_dataloader), model, SimpleLossCompute(model.generator, criterion),
+                (rebatch(b) for b in validation_dataloader),
+                model,
+                SimpleLossCompute(generator=model.generator, criterion=criterion),
             )
             print(f"Validation loss: {validation_loss}")
             print(f"Validation perplexity: {validation_perplexity}")
             returned_metrics["validation_loss"].append(validation_loss)
             returned_metrics["validation_perplexity"].append(validation_perplexity)
-            scheduler.step(metrics=validation_loss)
-            # Early stopping
-            if validation_loss < best_val_loss:
-                torch.save(
-                    {
-                        "epoch": epoch,
-                        "model_state_dict": model.state_dict(),
-                        "optimizer_state_dict": optim.state_dict(),
-                        "scheduler_state_dict": scheduler.state_dict(),
-                    },
-                    f"{SAVED_MODELS_PATH}/MODEL_{epoch}.pt",
-                )
-                best_val_loss = validation_loss
-                last_best_epoch = epoch
-                number_of_epochs_without_improvement = 0
-                if last_best_epoch == num_epochs:
-                    return returned_metrics, last_best_epoch
+
+        # Scheduler step
+        scheduler.step(metrics=validation_loss)
+
+        # Early stopping
+        if validation_loss < best_val_loss:
+            torch.save(
+                {
+                    "epoch": epoch,
+                    "model_state_dict": model.state_dict(),
+                    "optimizer_state_dict": optim.state_dict(),
+                    "scheduler_state_dict": scheduler.state_dict(),
+                },
+                f"{SAVED_MODELS_PATH}/save_epoch_{epoch}.pt",
+            )
+            best_val_loss = validation_loss
+            last_best_epoch = epoch
+            number_of_epochs_without_improvement = 0
+            if last_best_epoch == num_epochs:
+                return returned_metrics, last_best_epoch
+        else:
+            if number_of_epochs_without_improvement == EARLY_STOPPING_THRESHOLD:
+                print(f"Early stopping on epoch number {epoch}!")
+                return returned_metrics, last_best_epoch
             else:
-                if number_of_epochs_without_improvement == EARLY_STOPPING_THRESHOLD:
-                    print(f"Early stopping on epoch number {epoch}!")
-                    return returned_metrics, last_best_epoch
-                else:
-                    number_of_epochs_without_improvement += 1
+                number_of_epochs_without_improvement += 1

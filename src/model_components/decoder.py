@@ -35,7 +35,6 @@ class Decoder(nn.Module):
 
         # to initialize from the final encoder state
         self.bridge = nn.Linear(2 * hidden_size, hidden_size, bias=True) if bridge else None
-
         self.attention_dropout_layer = nn.Dropout(p=dropout)
         self.pre_output_layer = nn.Linear(hidden_size + 2 * hidden_size + emb_size, hidden_size, bias=False)
 

@@ -13,24 +13,12 @@ class Batch:
         self.nseqs = src.size(0)
         self.trg_input = trg
         self.ntokens = self.trg_input.numel()
-        # self.trg_y = None
-
-        # if trg is not None:
-        # trg_input is used for teacher forcing, last one is cut off
-        # self.trg_input = trg[:, :-1]
-        # trg_y is used for loss computation, shifted by one since BOS
-        # self.trg_y = trg[:, 1:]
-        # trg_y.numel()
 
         if USE_CUDA:
             self.src_input = self.src_input.cuda()
-            # if trg is not None:
             self.trg_input = self.trg_input.cuda()
-            # self.trg_y = self.trg_y.cuda()
 
 
 def rebatch(batch: Tuple[Tensor, Tensor]) -> Batch:
     """Wrap Dataloader batch into custom Batch class for pre-processing"""
-    src = batch[0]
-    trg = batch[1]
-    return Batch(src, trg)
+    return Batch(batch[0], batch[1])

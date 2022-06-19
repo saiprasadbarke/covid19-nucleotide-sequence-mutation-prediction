@@ -8,17 +8,17 @@ from settings.constants import ROUTINES_TO_EXECUTE
 
 pp(ROUTINES_TO_EXECUTE, indent=3)
 activity_number = int(input("Choose a task to run :   "))
-#################################### Create new dataset ####################################
+#################### Create new dataset #############
 if activity_number == 1:
     from scripts.create_dataset import create_dataset
 
     create_dataset()
-############################### Call the train network function ###############################
+################ Call the train network function ############
 elif activity_number == 2:
     from scripts.train import train
 
     train()
-############################### Inference ################################
+#################### Inference #####################
 elif activity_number == 3:
     from inference.inference import inference
 
