@@ -33,9 +33,4 @@ def greedy_decode(model: EncoderDecoder, src, max_len=500):
 
     output = np.array(output)
 
-    # cut off everything starting from </s>
-    first_eos = np.where(output == 1)[0]
-    if len(first_eos) > 0:
-        output = output[: first_eos[0]]
-
     return output.tolist(), np.concatenate(attention_scores, axis=1)

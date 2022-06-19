@@ -76,7 +76,7 @@ MERGED_DATA = f"{ROOT_DATA_DIR}/merged.json"
 
 
 ################## RUN
-RUN_NAME = "RUN_kmer_1"
+RUN_NAME = "RUN_mega"
 ROOT_RUN_DIR = f"{Path.cwd()}/runs"
 CURRENT_RUN_DIR = f"{ROOT_RUN_DIR}/{RUN_NAME}"
 CURRENT_RUN_DATA_DIR = f"{CURRENT_RUN_DIR}/data"

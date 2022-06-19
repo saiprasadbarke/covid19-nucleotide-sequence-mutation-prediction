@@ -30,15 +30,16 @@ from visualization.plot_mutation_sites import plot_mutations
 
 
 def test_model(test_dataloader: DataLoader, model: EncoderDecoder, kmer_size: int):
+    data_parameters = load(open(f"{CURRENT_RUN_DIR}/data_parameters.json"))
     vocab = Vocabulary(kmer_size)
     ground_truth_sequences = []
     predicted_sequences = []
     alphas = []
-    difference_indices_wuhan = {}
+    difference_indices_refgen_pred = {}
     for i, batch in enumerate(test_dataloader, 1):
         print(f"Predicting {i}")
         batch = rebatch(batch)
-        ground_truth = batch.trg_y[:, :-1].tolist()[0]
+        ground_truth = batch.trg_input.tolist()[0]
         max_len = len(ground_truth)
         ground_truth_sequences.append(ground_truth)
         pred, attention = greedy_decode(model, batch.src_input, max_len=max_len)
@@ -50,20 +51,23 @@ def test_model(test_dataloader: DataLoader, model: EncoderDecoder, kmer_size: in
             else:
                 concat.append(kmer)
         concat = "".join(concat)
-        difference_wuhan = get_string_difference_indices(REFERENCE_GENOME[250 : len(concat) + 250], concat, 250)
-        for index in difference_wuhan:
-            if index in difference_indices_wuhan.keys():
-                difference_indices_wuhan[index] += 1
+        difference_refgen_pred = get_string_difference_indices(
+            REFERENCE_GENOME[data_parameters["sequence_start_postion"] : data_parameters["sequence_end_postion"]],
+            concat,
+            data_parameters["sequence_start_postion"],
+        )
+        for index in difference_refgen_pred:
+            if index in difference_indices_refgen_pred.keys():
+                difference_indices_refgen_pred[index] += 1
             else:
-                difference_indices_wuhan[index] = 1
-        predicted_sequences.append(concat)
-    difference_indices_file_wuhan = f"{SAVED_STATS_PATH}/difference_indices_wuhan_pred.json"
-    with open(difference_indices_file_wuhan, "w") as fout:
-        dump(difference_indices_wuhan, fout)
-    mutations_graph_path_wuhan = f"{SAVED_PLOTS_PATH}/mutation_sites_wuhan_pred.png"
-    data_dump_path_wuhan = f"{SAVED_STATS_PATH}/sorted_difference_indices_wuhan_pred.json"
-    plot_mutations(difference_indices_file_wuhan, mutations_graph_path_wuhan, data_dump_path_wuhan)
-    return predicted_sequences
+                difference_indices_refgen_pred[index] = 1
+        # predicted_sequences.append(concat)
+    difference_indices_file_refgen_pred = f"{SAVED_STATS_PATH}/difference_indices_refgen_pred.json"
+    with open(difference_indices_file_refgen_pred, "w") as fout:
+        dump(difference_indices_refgen_pred, fout)
+    mutations_graph_path_wuhan = f"{SAVED_PLOTS_PATH}/mutation_sites_refgen_pred.png"
+    data_dump_path_wuhan = f"{SAVED_STATS_PATH}/sorted_difference_indices_refgen_pred.json"
+    plot_mutations(difference_indices_file_refgen_pred, mutations_graph_path_wuhan, data_dump_path_wuhan)
 
 
 def inference():
@@ -81,12 +85,14 @@ def inference():
         dropout=training_parameters_performance_dict["dropout"],
         emb_dropout=training_parameters_performance_dict["emb_dropout"],
     )
-    checkpoint = torch.load(f"{SAVED_MODELS_PATH}/MODEL_{training_parameters_performance_dict['last_best_epoch']}.pt")
+    checkpoint = torch.load(
+        f"{SAVED_MODELS_PATH}/save_epoch_{training_parameters_performance_dict['last_best_epoch']}.pt"
+    )
     model.load_state_dict(checkpoint["model_state_dict"])
     kmer_size = training_parameters_performance_dict["kmer_size"]
 
     tokenizer = Tokenize(kmer_length=kmer_size)
     test_inputs, test_targets = tokenizer.kmerize_numericalize_pad_tensorize_sequences(dataset_type="test")
     test_dataloader = get_dataloader(test_inputs, test_targets, batch_size=1)
-    predicted_sequences = test_model(test_dataloader, model, kmer_size)
-    plot_mutations_comparision_graphs()
+    test_model(test_dataloader, model, kmer_size)
+    # plot_mutations_comparision_graphs()

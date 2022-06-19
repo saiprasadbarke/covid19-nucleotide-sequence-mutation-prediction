@@ -92,10 +92,10 @@ def generate_datasets(
     plot_mutations(difference_indices_file_ref, mutations_graph_path_ref, data_dump_path_ref)
 
     # Split data into train, validation and test datasets
-    split = {"train": 0.9, "val": 0.05, "test": 0.05}
+    split = {"train": 0.6, "val": 0.2, "test": 0.2}
     train_val_test_indices = {
-        "train_upto": int(split["train"] * number_of_sequence_pairs),
-        "val_upto": int(split["train"] * number_of_sequence_pairs + split["val"] * number_of_sequence_pairs),
+        "train_upto": int(split["train"] * len(input_target_list)),
+        "val_upto": int(split["train"] * len(input_target_list) + split["val"] * len(input_target_list)),
     }
     train_list = []
     val_list = []
