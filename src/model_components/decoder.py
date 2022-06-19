@@ -35,7 +35,6 @@ class Decoder(nn.Module):
 
         # to initialize from the final encoder state
         self.bridge = nn.Linear(2 * hidden_size, hidden_size, bias=True) if bridge else None
-
         self.attention_dropout_layer = nn.Dropout(p=dropout)
         self.pre_output_layer = nn.Linear(hidden_size + 2 * hidden_size + emb_size, hidden_size, bias=False)
 
@@ -50,7 +49,7 @@ class Decoder(nn.Module):
 
         # update rnn hidden state
         rnn_input = torch.cat([prev_embed, context], dim=2)
-        # rnn_input = self.emb_dropout(rnn_input)
+        rnn_input = self.emb_dropout(rnn_input)
         output, hidden = self.rnn(rnn_input, hidden)
 
         att_vector_input = torch.cat([prev_embed, output, context], dim=2)

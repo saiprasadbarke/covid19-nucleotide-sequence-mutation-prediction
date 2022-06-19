@@ -17,7 +17,7 @@ def greedy_decode(model: EncoderDecoder, src, max_len=500):
 
     for i in range(max_len):
         with torch.no_grad():
-            out, hidden, pre_output = model.decode(
+            out, hidden, pre_output, _ = model.decode(
                 encoder_output=encoder_hidden, encoder_hidden=encoder_final, trg=prev_y, decoder_hidden=hidden
             )
 
@@ -32,10 +32,5 @@ def greedy_decode(model: EncoderDecoder, src, max_len=500):
         attention_scores.append(model.decoder.attention.alphas.cpu().numpy())
 
     output = np.array(output)
-
-    # cut off everything starting from </s>
-    first_eos = np.where(output == 1)[0]
-    if len(first_eos) > 0:
-        output = output[: first_eos[0]]
 
     return output.tolist(), np.concatenate(attention_scores, axis=1)

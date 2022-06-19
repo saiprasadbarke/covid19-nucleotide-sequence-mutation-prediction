@@ -1,7 +1,7 @@
 SARS-Cov-2 genome evolution prediction using Encoder-Decoder Architecture.
 ==============================
 
-Using an Attention Encoder- Decoder architecture to predict the mutations between clades in Nucleotide sequences of the SARS-Cov-2 virus genome.
+Using an  Encoder- Decoder architecture with Bahdanau Attention to predict the mutations between clades in the Spike Nucleotide sequences of the SARS-Cov-2 virus genome.
 
 Getting Started
 ------------
@@ -13,46 +13,32 @@ Getting Started
 
 Raw Dataset 
 ------------
-The raw dataset containing the genomes can be found on the NCBI website here: 
-https://www.ncbi.nlm.nih.gov/datasets/coronavirus/genomes/
+The raw dataset containing the genomes can be found on the GISAID website here: 
+https://www.epicov.org/epi3/
 
 Project Organization
 ------------
 
     ├── README.md          
     ├── data
-    │   ├── 00unfiltered        <- Unfiltered data from the NCBI website + their clades from the nextclade tool.
-    │   ├── 01cleaned           <- Data without any ambiguious characters + their clades from the nextclade tool
-    │   ├── 02merged            <- Sequences merged with the relevant clades (Obtained from 01cleaned)
-    │   ├── 03paired       
-    │   └── 04permuted 
-    │       
-    │
-    ├── models                  <- Trained and serialized models, model predictions, or model summaries
-    │   
-    ├── notebooks               <- Jupyter notebooks. 
-    │
-    ├── references              <- Data dictionaries, manuals, and all other explanatory materials.
-    │
-    ├── reports                 <- Generated analysis as HTML, PDF, LaTeX, etc.
-    │   └── plots               <- Generated graphics and figures to be used in reporting
-    │
+    │   ├── clades.tabular        <- Clades assigned to sequences usingthe  nextclade tool.
+    │   ├── sequences.fasta       <- Sequence Data without any ambiguious characters
+    │   └── merged.json           <- Merged data linking sequences and clades       
+    ├── notebooks                 <- Jupyter notebooks. 
+    ├── reports                   <- Generated analysis json and png plots.
+    │   ├── stats                 <- Json files of the plot data
+    │   └── plots                 <- Plots
     ├── CondaRequirements       
-    │   └── environment.yml     <- The requirements file for reproducing the analysis environment
-    │
-    └── src                     <- Source code for use in this project.
+    │   └── environment.yml       <- The requirements file for reproducing the analysis environment
+    └── src                       <- Source code for use in this project.
         │
-        ├── data_operations     <- Scripts to clean and generate data
-        │   ├── 
-        │   └── 
-        │
-        │
-        ├── models              <- 
-        │   ├── 
-        │
-        └── visualization       <- Scripts to create exploratory and results oriented visualizations
-            └── 
-    
-
-
---------
+        ├── data_operations       <- Scripts to clean and generate data
+        ├── helpers               <- Miscellaneous helper functions  
+        ├── inference             <- Inference script
+        ├── metrics               <- Functions to compute prediction metrics
+        ├── model_components      <- Components of the neural network
+        ├── model_training        <- Scripts to train the model
+        ├── scripts               <- Entry scripts
+        ├── settings              <- Settings and constants
+        └── visualization         <- Scripts to create visualizations of data and results
+------------

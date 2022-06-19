@@ -14,7 +14,13 @@ from torch import float32
 
 
 def create_model(
-    vocab_size: int, embedding_size: int, hidden_size: int, num_layers: int, dropout: float, emb_dropout: float,
+    vocab_size: int,
+    embedding_size: int,
+    hidden_size: int,
+    encoder_num_layers: int,
+    decoder_num_layers: int,
+    dropout: float,
+    emb_dropout: float,
 ):
 
     attention_layer = BahdanauAttention(hidden_size)
@@ -22,7 +28,7 @@ def create_model(
         Encoder(
             input_size=embedding_size,
             hidden_size=hidden_size,
-            num_layers=num_layers,
+            num_layers=encoder_num_layers,
             dropout=dropout,
             emb_dropout=emb_dropout,
         ),
@@ -30,7 +36,7 @@ def create_model(
             emb_size=embedding_size,
             hidden_size=hidden_size,
             attention=attention_layer,
-            num_layers=num_layers,
+            num_layers=decoder_num_layers,
             dropout=dropout,
             emb_dropout=emb_dropout,
         ),

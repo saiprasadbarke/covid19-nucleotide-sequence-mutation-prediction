@@ -6,7 +6,7 @@ from model_components.model import EncoderDecoder
 from model_training.loss_computation import SimpleLossCompute
 
 
-def run_epoch(data_iter, model: EncoderDecoder, loss_compute: SimpleLossCompute, print_every=50, tb_writer=None):
+def run_epoch(data_iter, model: EncoderDecoder, loss_compute: SimpleLossCompute, print_every=50):
     """Standard Training and Logging Function"""
 
     start = time.time()
@@ -16,13 +16,12 @@ def run_epoch(data_iter, model: EncoderDecoder, loss_compute: SimpleLossCompute,
     epoch_learning_rate = []
     for i, batch in enumerate(data_iter, 1):
         _, _, pre_output, _ = model.forward(batch.src_input, batch.trg_input)
-        batch_loss = loss_compute(pre_output, batch.trg_y, batch.nseqs)
+        batch_loss = loss_compute(pre_output, batch.trg_input)
         epoch_loss += batch_loss
         total_tokens += batch.ntokens
         print_tokens += batch.ntokens
         if loss_compute.optimizer is not None:
             epoch_learning_rate.append(loss_compute.optimizer.param_groups[0]["lr"])
-        model.zero_grad()
         if model.training and i % print_every == 0:
             elapsed = time.time() - start
             print("Epoch Step: %d Loss: %f Tokens per Sec: %f" % (i, batch_loss / batch.nseqs, print_tokens / elapsed))
