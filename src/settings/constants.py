@@ -6,7 +6,9 @@ from helpers.check_dir_exists import check_dir_exists
 #################### Vocabulary
 
 NUCLEOTIDES = ["A", "C", "G", "T"]
-
+NUM_SPECIAL_CHARS = 2  # 0, 1 are for BOS , EOS respectively
+BOS_IDX = 0
+EOS_IDX = 1
 ################### Dataset
 RANDOM_SEED = 42
 CLADE_PAIRS_NEXTCLADE = {
@@ -76,14 +78,14 @@ MERGED_DATA = f"{ROOT_DATA_DIR}/merged.json"
 
 
 ################## RUN
-RUN_NAME = "RUN_mega"
+RUN_NAME = "RUN_short_seq"
 ROOT_RUN_DIR = f"{Path.cwd()}/runs"
 CURRENT_RUN_DIR = f"{ROOT_RUN_DIR}/{RUN_NAME}"
 CURRENT_RUN_DATA_DIR = f"{CURRENT_RUN_DIR}/data"
 check_dir_exists(CURRENT_RUN_DATA_DIR)
 ################### Training parameters
 
-EARLY_STOPPING_THRESHOLD = 5
+EARLY_STOPPING_THRESHOLD = 15
 USE_CUDA = is_available()
 SAVED_MODELS_PATH = f"{CURRENT_RUN_DIR}/saved_models"
 check_dir_exists(SAVED_MODELS_PATH)

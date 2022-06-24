@@ -5,7 +5,7 @@ from itertools import combinations_with_replacement, permutations
 from typing import Dict
 
 # Local
-from settings.constants import NUCLEOTIDES  # , BOS_IDX, EOS_IDX, NUM_SPECIAL_CHARS
+from settings.constants import NUCLEOTIDES, BOS_IDX, EOS_IDX, NUM_SPECIAL_CHARS
 
 
 class Vocabulary:
@@ -44,11 +44,11 @@ class Vocabulary:
                 vocabulary_list.append(permuted_word)
 
         vocabulary_dict = {}
-        for index, kmer in enumerate(vocabulary_list):
+        for index, kmer in enumerate(vocabulary_list, NUM_SPECIAL_CHARS):
             # We start the indexing from NUM_SPECIAL_CHARS as the first NUM_SPECIAL_CHARS indices are for the special characters BOS, EOS
             vocabulary_dict["".join(kmer)] = index
-        # vocabulary_dict["<BOS>"] = BOS_IDX
-        # vocabulary_dict["<EOS>"] = EOS_IDX
+        vocabulary_dict["<BOS>"] = BOS_IDX
+        vocabulary_dict["<EOS>"] = EOS_IDX
         vocabulary_dict = dict(sorted(vocabulary_dict.items(), key=lambda item: item[1]))
         vocab_list = [s_k for s_k in vocabulary_dict.keys()]
         return vocabulary_dict, vocab_list

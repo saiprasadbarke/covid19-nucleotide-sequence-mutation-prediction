@@ -27,9 +27,9 @@ def train_loop(
     print_every=100,
 ):
 
-    criterion = nn.NLLLoss(reduction="sum")
+    criterion = nn.CrossEntropyLoss()
     optim = Adam(model.parameters(), lr=learning_rate)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, patience=1)
+    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim)
 
     number_of_epochs_without_improvement = 0
     best_val_loss = inf
@@ -53,7 +53,7 @@ def train_loop(
             training_loss, training_perplexity, epoch_learning_rate = run_epoch(
                 (rebatch(b) for b in train_dataloader),
                 model,
-                SimpleLossCompute(generator=model.generator, criterion=criterion, optimizer=optim,),
+                SimpleLossCompute(model=model, criterion=criterion, optimizer=optim,),
                 print_every=print_every,
             )
             print(f"Training loss: {training_loss}")
@@ -64,9 +64,7 @@ def train_loop(
         model.eval()
         with torch.no_grad():
             validation_loss, validation_perplexity, _ = run_epoch(
-                (rebatch(b) for b in validation_dataloader),
-                model,
-                SimpleLossCompute(generator=model.generator, criterion=criterion),
+                (rebatch(b) for b in validation_dataloader), model, SimpleLossCompute(model=model, criterion=criterion),
             )
             print(f"Validation loss: {validation_loss}")
             print(f"Validation perplexity: {validation_perplexity}")

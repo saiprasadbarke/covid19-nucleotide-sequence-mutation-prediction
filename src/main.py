@@ -20,6 +20,6 @@ elif activity_number == 2:
     train()
 #################### Inference #####################
 elif activity_number == 3:
-    from inference.inference import inference
+    from scripts.inference import inference
 
     inference()

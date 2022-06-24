@@ -1,7 +1,4 @@
 import time, math
-
-from sklearn.model_selection import learning_curve
-
 from model_components.model import EncoderDecoder
 from model_training.loss_computation import SimpleLossCompute
 
@@ -16,7 +13,8 @@ def run_epoch(data_iter, model: EncoderDecoder, loss_compute: SimpleLossCompute,
     epoch_learning_rate = []
     for i, batch in enumerate(data_iter, 1):
         _, _, pre_output, _ = model.forward(batch.src_input, batch.trg_input)
-        batch_loss = loss_compute(pre_output, batch.trg_input)
+        batch_loss = loss_compute(pre_output, batch.trg_y)
+
         epoch_loss += batch_loss
         total_tokens += batch.ntokens
         print_tokens += batch.ntokens
