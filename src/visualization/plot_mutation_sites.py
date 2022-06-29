@@ -34,6 +34,10 @@ def get_mutations_and_plot(
     difference_indices_file = f"{SAVED_STATS_PATH}/difference_indices_ref_{y_type}.json"
     with open(difference_indices_file, "w") as fout:
         dump(complete_sequence_mutation_data, fout)
+    sorted_difference_indices_by_value = dict(sorted(complete_sequence_mutation_data.items(), key=lambda x: x[1]))
+    difference_indices_file_sort_by_value = f"{SAVED_STATS_PATH}/difference_indices_ref_{y_type}_sort_by_value.json"
+    with open(difference_indices_file_sort_by_value, "w") as fout:
+        dump(sorted_difference_indices_by_value, fout)
     mutations_graph_path_ref = f"{SAVED_PLOTS_PATH}/mutation_sites_ref_{y_type}.png"
     x = list(complete_sequence_mutation_data.keys())
     y = list(complete_sequence_mutation_data.values())
