@@ -26,7 +26,7 @@ CLADE_PAIRS_NEXTCLADE = {
     12: ("20B", "20I"),
     13: ("20B", "20J"),
     14: ("20B", "21E"),
-    # 15: ("20B", "21M"),
+    15: ("20B", "21M"),
     16: ("20C", "20G"),
     17: ("20C", "20H"),
     18: ("20C", "21C"),
@@ -34,11 +34,11 @@ CLADE_PAIRS_NEXTCLADE = {
     20: ("21A", "21I"),
     21: ("21A", "21J"),
     22: ("20D", "21G"),
-    # 23: ("21M", "21K"),
-    # 24: ("21M", "21L"),
-    # 25: ("21L", "22A"),
-    # 26: ("21L", "22B"),
-    # 27: ("21L", "22C"),
+    23: ("21M", "21K"),
+    24: ("21M", "21L"),
+    25: ("21L", "22A"),
+    26: ("21L", "22B"),
+    27: ("21L", "22C"),
 }
 
 
@@ -68,14 +68,11 @@ LIST_OF_CLADES = [
     "21G",
     "21K",
     "21L",
-    "22A",
-    "22B",
-    "22C",
 ]
 
 ROOT_DATA_DIR = f"{Path.cwd().parents[0]}/data"
 MERGED_DATA = f"{ROOT_DATA_DIR}/merged.json"
-
+COMMON_REPORTS_PATH = f"{Path.cwd()}/reports/stats"
 
 ################## RUN
 RUN_NAME = "RUN_short_seq"
