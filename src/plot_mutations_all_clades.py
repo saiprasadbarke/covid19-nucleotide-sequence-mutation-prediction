@@ -1,6 +1,6 @@
 from json import dump, load
 from Levenshtein import distance
-from settings.constants import COMMON_REPORTS_PATH, MERGED_DATA
+from settings.constants import CLADE_PAIRS_NEXTCLADE, COMMON_REPORTS_PATH, MERGED_DATA
 from settings.reference_sequence import REFERENCE_GENOME
 from visualization.plot_mutation_sites import get_mutations_and_plot
 
@@ -32,6 +32,21 @@ def plot_lev_refgen():
         dump(data_dump, fout)
 
 
+def print_number_pairs():
+    data = load(open(MERGED_DATA))
+    data_dump = {}
+    for clade_pair in CLADE_PAIRS_NEXTCLADE.values():
+        clade1 = clade_pair[0]
+        clade2 = clade_pair[1]
+        clade1_sequences = list(data[clade1].keys())
+        clade2_sequences = list(data[clade2].keys())
+        prod = len(clade1_sequences) * len(clade2_sequences)
+        data_dump[f"{clade1}-{clade2}"] = prod
+    with open(f"{COMMON_REPORTS_PATH}/number_of_clade_pair_samples.json", "w") as fout:
+        dump(data_dump, fout)
+
+
 if __name__ == "__main__":
-    plot_mutations_all_clades()
-    #plot_lev_refgen()
+    # plot_mutations_all_clades()
+    # plot_lev_refgen()
+    print_number_pairs()

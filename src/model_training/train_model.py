@@ -27,9 +27,9 @@ def train_loop(
     print_every=100,
 ):
 
-    criterion = nn.CrossEntropyLoss()
+    criterion = nn.CrossEntropyLoss(reduction="sum", label_smoothing=0.2)
     optim = Adam(model.parameters(), lr=learning_rate)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim)
+    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, patience=2)
 
     number_of_epochs_without_improvement = 0
     best_val_loss = inf

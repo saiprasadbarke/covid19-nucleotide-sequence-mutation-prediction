@@ -36,9 +36,6 @@ CLADE_PAIRS_NEXTCLADE = {
     22: ("20D", "21G"),
     23: ("21M", "21K"),
     24: ("21M", "21L"),
-    25: ("21L", "22A"),
-    26: ("21L", "22B"),
-    27: ("21L", "22C"),
 }
 
 
@@ -75,7 +72,7 @@ MERGED_DATA = f"{ROOT_DATA_DIR}/merged.json"
 COMMON_REPORTS_PATH = f"{Path.cwd()}/reports/stats"
 
 ################## RUN
-RUN_NAME = "all_clades_mutations_plot"
+RUN_NAME = "20A_20C_150_250_k6"
 ROOT_RUN_DIR = f"{Path.cwd()}/runs"
 CURRENT_RUN_DIR = f"{ROOT_RUN_DIR}/{RUN_NAME}"
 CURRENT_RUN_DATA_DIR = f"{CURRENT_RUN_DIR}/data"

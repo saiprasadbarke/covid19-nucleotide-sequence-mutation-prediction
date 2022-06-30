@@ -27,6 +27,8 @@ def test_model(test_dataloader: DataLoader, model: EncoderDecoder, kmer_size: in
             else:
                 concat.append(kmer)
         concat = "".join(concat)
+        if i == 2:
+            print(f"Length of concat string: {len(concat)}")
         predicted_sequences.append(concat)
         alphas.append(attention)
     return predicted_sequences, alphas
