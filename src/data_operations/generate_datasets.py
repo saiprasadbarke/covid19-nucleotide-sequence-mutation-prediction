@@ -49,13 +49,14 @@ def generate_datasets(
             #     maximum_levenshtein_distance=maximum_levenshtein_distance,
             # ):
             # Append the valid sequence to the list of valid sequences
-            input_target_list.append((clipped_seq_1, clipped_seq_2))
+            if distance(clipped_seq_1, clipped_seq_2)>0:
+                input_target_list.append((clipped_seq_1, clipped_seq_2)) 
 
-            # Increment the counter
-            count_sequences += 1
-            # Print the progress
-            if count_sequences % 1000 == 0:
-                print(f"Found {count_sequences} valid pairs.")
+                # Increment the counter
+                count_sequences += 1
+                # Print the progress
+                if count_sequences % 1000 == 0:
+                    print(f"Found {count_sequences} valid pairs.")
 
     # Split data into train, validation and test datasets
     split = {"train": 0.6, "val": 0.2, "test": 0.2}

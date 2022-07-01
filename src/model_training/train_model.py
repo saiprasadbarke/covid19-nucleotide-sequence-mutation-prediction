@@ -27,7 +27,7 @@ def train_loop(
     print_every=100,
 ):
 
-    criterion = nn.CrossEntropyLoss(reduction="sum", label_smoothing=0.2)
+    criterion = nn.CrossEntropyLoss(reduction="sum")
     optim = Adam(model.parameters(), lr=learning_rate)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, patience=2)
 
@@ -60,7 +60,7 @@ def train_loop(
             print(f"Training perplexity: {training_perplexity}")
             returned_metrics["training_loss"].append(training_loss)
             returned_metrics["training_perplexity"].append(training_perplexity)
-            returned_metrics["learning_rate"] += epoch_learning_rate
+            returned_metrics["learning_rate"].append(epoch_learning_rate)
         model.eval()
         with torch.no_grad():
             validation_loss, validation_perplexity, _ = run_epoch(
