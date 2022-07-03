@@ -34,14 +34,13 @@ class Vocabulary:
 
     def generate_vocabulary(self) -> Tuple[Dict[str, int], List[str]]:
         # The number of possible k-combinations of these nucleotides taken with repetition is 4^kmer_length
-        vocabulary_list = [list(x) for x in combinations_with_replacement(NUCLEOTIDES, self.kmer_length)]
-        permuted_vocabulary = []
+        vocabulary_list = {x for x in combinations_with_replacement(NUCLEOTIDES, self.kmer_length)}
+        permuted_vocabulary = set()
         for word in vocabulary_list:
-            permuted_vocabulary += [list(x) for x in permutations(word, self.kmer_length)]
+            word_permutations = {permutation_of_word for permutation_of_word in permutations(word, self.kmer_length)}
+            permuted_vocabulary.update(word_permutations)
 
-        for permuted_word in permuted_vocabulary:
-            if permuted_word not in vocabulary_list:
-                vocabulary_list.append(permuted_word)
+        vocabulary_list.update(permuted_vocabulary)
 
         vocabulary_dict = {}
         for index, kmer in enumerate(vocabulary_list, NUM_SPECIAL_CHARS):
