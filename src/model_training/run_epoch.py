@@ -1,7 +1,7 @@
 import time, math
 from model_components.model import EncoderDecoder
 from model_training.loss_computation import SimpleLossCompute
-from statistics import mean
+
 
 def run_epoch(data_iter, model: EncoderDecoder, loss_compute: SimpleLossCompute, print_every=50):
     """Standard Training and Logging Function"""
@@ -27,4 +27,4 @@ def run_epoch(data_iter, model: EncoderDecoder, loss_compute: SimpleLossCompute,
             print_tokens = 0
 
     perplexity = math.exp(epoch_loss / float(total_tokens))
-    return epoch_loss, perplexity, mean(epoch_learning_rate)
+    return epoch_loss, perplexity, epoch_learning_rate
