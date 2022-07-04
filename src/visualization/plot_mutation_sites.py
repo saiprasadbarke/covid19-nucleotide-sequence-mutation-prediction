@@ -94,9 +94,9 @@ def get_mutations_and_plot(
 
 
 def get_string_difference_indices(str1: str, str2: str, start: int = 0, seq_len: int = 500) -> List[int]:
-    return [i + start for i in range(seq_len) if str1[i] != str2[i]]
+    return [i + start for i in range(min(len(str1), len(str2))) if str1[i] != str2[i]]
 
 
 def get_string_similarities_indices(str1: str, str2: str, start: int = 0, seq_len: int = 500) -> List[int]:
-    return [i + start for i in range(seq_len) if str1[i] == str2[i]]
+    return [i + start for i in range(min(len(str1), len(str2))) if str1[i] == str2[i]]
 
