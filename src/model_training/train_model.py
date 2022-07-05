@@ -4,6 +4,7 @@ from json import load
 from math import inf
 from model_components.model import EncoderDecoder
 from model_training.sequence_weighted_cross_entropy_loss import SequenceWeightedCELoss
+from model_training.sequence_weighted_mse import SequenceWeightedMSELoss
 from settings.constants import (
     CURRENT_RUN_DIR,
     EARLY_STOPPING_THRESHOLD,
@@ -32,7 +33,7 @@ def train_loop(
     print_every=100,
 ):
     weights = get_weights()
-    criterion = SequenceWeightedCELoss(weights=weights)
+    criterion = nn.NLLLoss(reduction="sum")
     optim = Adam(model.parameters(), lr=learning_rate)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, patience=2)
 
