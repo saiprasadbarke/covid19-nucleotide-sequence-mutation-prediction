@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch.nn.functional as F
 
 
 class Generator(nn.Module):
@@ -9,4 +10,4 @@ class Generator(nn.Module):
         self.proj = nn.Linear(hidden_size, vocab_size, bias=False)
 
     def forward(self, x):
-        return self.proj(x)
+        return F.log_softmax(self.proj(x), dim=-1)
