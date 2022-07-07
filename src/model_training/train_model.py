@@ -104,7 +104,7 @@ def train_loop(
 
 
 def get_weights():
-    weights_data = load(open(f"{SAVED_STATS_PATH}/similarity_indices_ref_overall_data.json"))
+    weights_data = load(open(f"{SAVED_STATS_PATH}/difference_indices_ref_overall_data.json"))
     number_of_sequence_pairs_in_dataset = load(open(f"{CURRENT_RUN_DIR}/data_parameters.json"))[
         "number_of_sequence_pairs"
     ]
