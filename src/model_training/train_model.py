@@ -94,7 +94,7 @@ def train_loop(
             best_val_loss = validation_loss
             last_best_epoch = epoch
             number_of_epochs_without_improvement = 0
-            if last_best_epoch == num_epochs:
+            if last_best_epoch == num_epochs - 1:
                 return returned_metrics, last_best_epoch
         else:
             if number_of_epochs_without_improvement == EARLY_STOPPING_THRESHOLD:
