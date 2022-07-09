@@ -32,8 +32,8 @@ def train_loop(
     print_every=100,
 ):
     weights = get_weights()
-    # criterion = SequenceWeightedCELoss(weights=weights)
-    criterion = nn.NLLLoss(reduction="sum")
+    criterion = SequenceWeightedCELoss(weights=weights)
+    # criterion = nn.NLLLoss(reduction="sum")
     optim = Adam(model.parameters(), lr=learning_rate)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, patience=2)
 
@@ -109,7 +109,8 @@ def get_weights():
     number_of_sequence_pairs_in_dataset = load(open(f"{CURRENT_RUN_DIR}/data_parameters.json"))[
         "number_of_sequence_pairs"
     ]
-    list_weights = [i / number_of_sequence_pairs_in_dataset for i in weights_data.values()]
+    # list_weights = [i / number_of_sequence_pairs_in_dataset for i in weights_data.values()]
+    list_weights = list(weights_data.values())
     list_weights.append(1)
     weights_tensor = torch.Tensor(list_weights)
     reshaped_weights_tensor = torch.reshape(weights_tensor, (-1, len(weights_data) + 1))

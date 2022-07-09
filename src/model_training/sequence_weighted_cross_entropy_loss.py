@@ -1,4 +1,4 @@
-from torch import nn, Tensor, sum
+from torch import nn, Tensor, mean
 from torch.nn.functional import cross_entropy
 
 
@@ -11,5 +11,5 @@ class SequenceWeightedCELoss(nn.Module):
         self, inputs: Tensor, targets: Tensor,
     ):
         loss = cross_entropy(inputs, targets, reduction="none")
-        return sum(loss * self.weights)
+        return mean(loss * self.weights)
 
