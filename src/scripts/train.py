@@ -6,6 +6,7 @@ from data_operations.tokenize_data import Tokenize
 from data_operations.get_dataloaders import get_dataloader
 from model_training.train_model import train_loop
 from model_components.create_model import create_model
+from model_components.two_dimensional_weights import compute_2d_weight_vector
 from settings.constants import CURRENT_RUN_DIR, NUM_SPECIAL_CHARS
 
 
@@ -15,6 +16,7 @@ def train():
     tokenizer = Tokenize(kmer_length=kmer_size)
     train_inputs, train_targets = tokenizer.kmerize_numericalize_pad_tensorize_sequences(dataset_type="train")
     val_inputs, val_targets = tokenizer.kmerize_numericalize_pad_tensorize_sequences(dataset_type="val")
+    weights = compute_2d_weight_vector(train_targets, tokenizer.vocabulary)
     print(f"Size of train set is {len(train_targets)}")
     print(f"Size of validation set is {len(val_targets)}")
     minibatch_size = int(input("Choose a batch size:   "))
@@ -49,6 +51,7 @@ def train():
         model=model,
         train_dataloader=train_dataloader,
         validation_dataloader=val_dataloader,
+        weights=weights,
         num_epochs=number_of_epochs,
         learning_rate=learning_rate,
     )

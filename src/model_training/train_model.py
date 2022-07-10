@@ -27,11 +27,12 @@ def train_loop(
     model: EncoderDecoder,
     train_dataloader: DataLoader,
     validation_dataloader: DataLoader,
+    weights: torch.Tensor,
     num_epochs: int = 50,
     learning_rate: float = 1e-3,
     print_every=100,
 ):
-    weights = get_weights()
+    # weights = get_weights()
     criterion = SequenceWeightedCELoss(weights=weights)
     # criterion = nn.NLLLoss(reduction="sum")
     optim = Adam(model.parameters(), lr=learning_rate)
