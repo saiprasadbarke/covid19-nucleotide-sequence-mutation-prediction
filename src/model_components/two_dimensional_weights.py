@@ -18,7 +18,13 @@ def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary) -> T
             weights_array[int(kmer_value), index] += 1
     with nditer(weights_array, op_flags=["readwrite"]) as iterator:
         for element in iterator:
-            element[...] = number_of_datapoints / element if element != 0 else 0
+            item = element.item()
+            if item == 0:
+                element[...] = 0
+            elif item == number_of_datapoints:
+                element[...] = number_of_datapoints
+            else:
+                element[...] = number_of_datapoints / item
     weights_array = delete(weights_array, 0, 1)
     weights_array = weights_array[newaxis, ...]
 
