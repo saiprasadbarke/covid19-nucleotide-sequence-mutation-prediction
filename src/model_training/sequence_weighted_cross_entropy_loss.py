@@ -18,26 +18,26 @@ class SequenceWeightedCELoss(nn.Module):
         # print("Targets")
         # print(targets)
         # Gather log probabilities with respect to target
-        # logp = gather(inputs, 1, targets.view(n, 1, l))
+        logp = gather(inputs, 1, targets.view(n, 1, l))
         # print()
         # print("logp")
         # print(logp)
         # generate_heatmap(logp, vocabulary.itos, list(range(sequence_length_kmerized)), "logp.png")
         # Multiply with weights
         broadcasted_weights = broadcast_to(self.weights, (n, c, l))
-        # weight_map = gather(broadcasted_weights, 1, targets.view(n, 1, l))
+        weight_map = gather(broadcasted_weights, 1, targets.view(n, 1, l))
         # print()
         # print("weights")
         # print(broadcasted_weights)
         # print()
         # print("weight_map")
         # print(weight_map)
-        weighted_logp = (inputs * broadcasted_weights).view(n, -1)
+        weighted_logp = (logp * weight_map).view(n, -1)
         # print()
         # print("weighted_logp")
         # print(weighted_logp)
         # Rescale so that loss is in approx. same interval
-        weighted_loss = weighted_logp.sum(1) / broadcasted_weights.view(n, -1).sum(1)
+        weighted_loss = weighted_logp.sum(1) / weight_map.view(n, -1).sum(1)
 
         # Average over mini-batch
         weighted_loss = -weighted_logp.mean()
