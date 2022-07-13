@@ -22,8 +22,8 @@ def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary) -> T
     with nditer(weights_array, op_flags=["readwrite"]) as iterator:
         for element in iterator:
             item = element.item()
-            if item ==0:
-                element[...]=0
+            if item == 0:
+                element[...] = 0
             else:
                 effective_num = 1.0 - pow(0.9999, item)
                 element[...] = (1.0 - 0.9999) / effective_num
@@ -31,6 +31,6 @@ def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary) -> T
         weights_array, vocabulary.itos, list(range(sequence_length_kmerized)), "class_weights_per_position.png"
     )
     weights_array = delete(weights_array, 0, 1)
-    weights_array = weights_array[newaxis, ...]
+    # weights_array = weights_array[newaxis, ...]
 
-    return Tensor(weights_array).cuda() if USE_CUDA else Tensor(weights_array)
+    return weights_array  # .cuda() if USE_CUDA else Tensor(weights_array)
