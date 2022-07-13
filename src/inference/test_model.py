@@ -28,6 +28,7 @@ def test_model(test_dataloader: DataLoader, model: EncoderDecoder, kmer_size: in
                 concat.append(kmer)
         concat = "".join(concat)
         assert len(concat) == max_len, f"Misprediction of {len(concat)- max_len}"
+        print(len(concat))
         predicted_sequences.append(concat)
         alphas.append(attention)
     return predicted_sequences, alphas
