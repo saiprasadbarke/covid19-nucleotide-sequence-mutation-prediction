@@ -1,6 +1,6 @@
 from numpy import nditer, zeros, zeros_like
 from torch import broadcast_to, nn, Tensor, permute, sum, gather, set_printoptions
-from torch.nn.functional import cross_entropy
+from torch.nn.functional import cross_entropy, nll_loss
 
 
 class SequenceWeightedCELoss(nn.Module):
@@ -19,8 +19,8 @@ class SequenceWeightedCELoss(nn.Module):
         # print("Targets")
         # print(targets)
         # Gather log probabilities with respect to target
-        logp = gather(inputs, 1, targets.view(n, 1, l))
-
+        # logp = gather(inputs, 1, targets.view(n, 1, l))
+        batch_loss = nll_loss(inputs, targets, reduction="none")
         # print()
         # print("logp")
         # print(logp)
@@ -38,16 +38,16 @@ class SequenceWeightedCELoss(nn.Module):
         # print()
         # print("weight_map")
         # print(weight_map)
-        weight_map = Tensor(weight_map).view(n, 1, l).cuda()
-        weighted_logp = (logp * weight_map).view(n, -1)
+        weight_map = Tensor(weight_map).cuda()
+        weighted_loss = batch_loss * weight_map
         # print()
         # print("weighted_logp")
         # print(weighted_logp)
         # Rescale so that loss is in approx. same interval
-        weighted_loss = weighted_logp.sum(1) / weight_map.view(n, -1).sum(1)
+        rescaled_loss = weighted_loss.sum(1) / weight_map.sum(1)
 
         # Average over mini-batch
-        weighted_loss = -weighted_logp.mean()
+        rescaled_loss = rescaled_loss.mean()
 
-        return weighted_loss
+        return rescaled_loss
 
