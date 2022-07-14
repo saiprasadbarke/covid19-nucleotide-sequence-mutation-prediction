@@ -72,7 +72,7 @@ MERGED_DATA = f"{ROOT_DATA_DIR}/merged.json"
 COMMON_REPORTS_PATH = f"{Path.cwd()}/reports/stats"
 
 ################## RUN
-RUN_NAME = "test_2d_weights_beta_4"
+RUN_NAME = "test_2d_weights_beta_5"
 ROOT_RUN_DIR = f"{Path.cwd()}/runs"
 CURRENT_RUN_DIR = f"{ROOT_RUN_DIR}/{RUN_NAME}"
 CURRENT_RUN_DATA_DIR = f"{CURRENT_RUN_DIR}/data"

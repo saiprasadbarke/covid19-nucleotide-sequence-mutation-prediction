@@ -25,8 +25,8 @@ def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary) -> T
             if item == 0:
                 element[...] = 0
             else:
-                effective_num = 1.0 - pow(0.9999, item)
-                element[...] = (1.0 - 0.9999) / effective_num
+                effective_num = 1.0 - pow(0.999, item)
+                element[...] = (1.0 - 0.99) / effective_num
     generate_heatmap(
         weights_array, vocabulary.itos, list(range(sequence_length_kmerized)), "class_weights_per_position.png"
     )
