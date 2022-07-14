@@ -2,6 +2,7 @@
 from data_operations.vocabulary import Vocabulary
 from inference.greedy_search import greedy_decode
 from model_components.model import EncoderDecoder
+from model_components.two_dimensional_weights import compute_2d_weight_vector
 from model_training.batch import rebatch
 
 # External
@@ -19,6 +20,7 @@ def test_model(test_dataloader: DataLoader, model: EncoderDecoder, kmer_size: in
         ground_truth = batch.trg_input.tolist()[0]
         max_len = len(ground_truth) - 1
         pred, attention = greedy_decode(model, batch.src_input, max_len=max_len)
+        predicted_sequences.append(pred)
         pred_kmer = [vocab.itos[idx] for idx in pred]
         concat = []
         for index, kmer in enumerate(pred_kmer, 1):
@@ -29,6 +31,7 @@ def test_model(test_dataloader: DataLoader, model: EncoderDecoder, kmer_size: in
         concat = "".join(concat)
         assert len(concat) == max_len, f"Misprediction of {len(concat)- max_len}"
         print(len(concat))
-        predicted_sequences.append(concat)
+        # predicted_sequences.append(concat)
         alphas.append(attention)
+    compute_2d_weight_vector(predicted_sequences, vocab, "predicted")
     return predicted_sequences, alphas
