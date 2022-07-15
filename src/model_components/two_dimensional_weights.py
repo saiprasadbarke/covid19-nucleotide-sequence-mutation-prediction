@@ -28,9 +28,11 @@ def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary, type
                 item = element.item()
                 if item == 0:
                     element[...] = 0
+                elif item == number_of_datapoints:
+                    element[...] = 1
                 else:
-                    effective_num = 1.0 - pow(0.999, item)
-                    element[...] = (1.0 - 0.99) / effective_num
+                    slope = 1 / number_of_datapoints
+                    element[...] = -slope * item + 1
         generate_heatmap(
             weights_array, vocabulary.itos, list(range(sequence_length_kmerized)), "class_weights_per_position.png"
         )
