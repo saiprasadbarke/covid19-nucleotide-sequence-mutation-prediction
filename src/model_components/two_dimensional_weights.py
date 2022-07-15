@@ -7,7 +7,7 @@ from settings.constants import USE_CUDA
 from visualization.heatmap import generate_heatmap
 
 
-def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary, type: str) -> Tensor:
+def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary, type: str = None) -> Tensor:
     sequence_length_kmerized = len(targets[0].tolist()) if isinstance(targets[0], Tensor) else len(targets[0])
     number_of_classes = len(vocabulary.itos)
     number_of_datapoints = len(targets)
