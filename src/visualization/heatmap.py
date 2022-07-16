@@ -117,12 +117,12 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}", textcolors=("black", "whit
     return texts
 
 
-def generate_heatmap(data, rows, cols, filename):
+def generate_heatmap(data, rows, cols, filename, float_flag=False):
     fig1, ax1 = plt.subplots()
-    plt.rc("font", size=5)
-    fig1.set_size_inches(10, 10)
+    plt.rc("font", size=6.5)
+    fig1.set_size_inches(15, 15)
     im1, cbar = heatmap(data, rows, cols, ax=ax1, cmap="YlGn", cbarlabel="frequencies",)
-    texts1 = annotate_heatmap(im1, valfmt="{x:.1f}")
+    texts1 = annotate_heatmap(im1, valfmt="{x:.5f}" if float_flag else "{x:.0f}")
 
     fig1.tight_layout()
     plt.savefig(f"{SAVED_PLOTS_PATH}/{filename}")
