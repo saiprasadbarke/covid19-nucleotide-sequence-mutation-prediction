@@ -19,8 +19,8 @@ class SequenceWeightedCELoss(nn.Module):
         # print("Targets")
         # print(targets)
         # Gather log probabilities with respect to target
-        # logp = gather(inputs, 1, targets.view(n, 1, l))
-        batch_loss = nll_loss(inputs, targets, reduction="none")
+        logp = gather(inputs, 1, targets.view(n, 1, l))
+        # batch_loss = nll_loss(inputs, targets, reduction="none")
         # print()
         # print("logp")
         # print(logp)
@@ -38,16 +38,16 @@ class SequenceWeightedCELoss(nn.Module):
         # print()
         # print("weight_map")
         # print(weight_map)
-        weight_map = Tensor(weight_map).cuda()
-        weighted_loss = batch_loss * weight_map
+        weight_map = Tensor(weight_map).view(n, 1, l).cuda()
+        weighted_loss = (logp * weight_map).view(n, -1)
         # print()
         # print("weighted_logp")
         # print(weighted_logp)
         # Rescale so that loss is in approx. same interval
-        rescaled_loss = weighted_loss.sum(1) / weight_map.sum(1)
+        rescaled_loss = weighted_loss.sum(1) / weight_map.view(n, -1).sum(1)
 
         # Average over mini-batch
-        rescaled_loss = rescaled_loss.mean()
+        rescaled_loss = -rescaled_loss.mean()
 
         return rescaled_loss
 
