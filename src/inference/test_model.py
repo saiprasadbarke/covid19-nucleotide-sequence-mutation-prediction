@@ -19,19 +19,21 @@ def test_model(test_dataloader: DataLoader, model: EncoderDecoder, kmer_size: in
         print(f"Predicting {i}")
         batch = rebatch(batch)
         ground_truth = batch.trg_input.tolist()[0]
-        max_len = len(ground_truth) - 1
-        pred, attention = greedy_decode(model, batch.src_input, max_len=max_len)
+        groundtruth_target_length_plus_bos = len(ground_truth)
+        pred, attention = greedy_decode(model, batch.src_input, max_len=groundtruth_target_length_plus_bos,)
         pred_kmer_seqs.append(pred)
         pred_kmer = [vocab.itos[idx] for idx in pred]
         concat = []
-        for index, kmer in enumerate(pred_kmer, 1):
-            if index != max_len - 1:
-                concat.append(kmer[0])
+        for index in range(len(pred_kmer)):
+            if index != len(pred_kmer) - 1:
+                concat.append(pred_kmer[index][0])
             else:
-                concat.append(kmer)
+                concat.append(pred_kmer[index])
         concat = "".join(concat)
-        assert len(concat) == max_len, f"Misprediction of {len(concat)- max_len}"
         print(len(concat))
+        assert (
+            len(concat) == groundtruth_target_length_plus_bos - 1
+        ), f"Misprediction of {groundtruth_target_length_plus_bos -1 -len(concat)}"
         predicted_sequences.append(concat)
         alphas.append(attention)
     compute_2d_weight_vector(pred_kmer_seqs, vocab, "predicted")

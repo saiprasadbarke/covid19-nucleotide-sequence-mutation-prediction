@@ -30,7 +30,7 @@ def greedy_decode(model: EncoderDecoder, src: torch.Tensor, max_len: int = 500):
             attention_scores.append(model.decoder.attention.alphas.cpu().numpy())
 
     output = np.array(output)
-    # first_eos = np.where(output == 1)[0]
-    # if len(first_eos) > 0:
-    #     output = output[: first_eos[0]]
+    first_eos = np.where(output == 1)[0]
+    if len(first_eos) > 0:
+        output = output[: first_eos[0]]
     return output.tolist(), np.concatenate(attention_scores, axis=1)

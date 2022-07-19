@@ -119,8 +119,8 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}", textcolors=("black", "whit
 
 def generate_heatmap(data, rows, cols, filename, float_flag=False):
     fig1, ax1 = plt.subplots()
-    plt.rc("font", size=6.5)
-    fig1.set_size_inches(15, 15)
+    plt.rc("font", size=10)
+    fig1.set_size_inches(len(cols), int(len(rows) / 2))
     im1, cbar = heatmap(data, rows, cols, ax=ax1, cmap="YlGn", cbarlabel="frequencies",)
     texts1 = annotate_heatmap(im1, valfmt="{x:.5f}" if float_flag else "{x:.0f}")
 
