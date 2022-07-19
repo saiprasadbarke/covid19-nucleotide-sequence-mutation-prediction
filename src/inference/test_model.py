@@ -32,8 +32,8 @@ def test_model(test_dataloader: DataLoader, model: EncoderDecoder, kmer_size: in
         concat = "".join(concat)
         print(len(concat))
         assert (
-            len(concat) == groundtruth_target_length_plus_bos - 1
-        ), f"Misprediction of {groundtruth_target_length_plus_bos -1 -len(concat)}"
+            len(concat) == groundtruth_target_length_plus_bos + kmer_size - 1 - 1
+        ), f"Misprediction of {groundtruth_target_length_plus_bos + kmer_size - 1 - 1 -len(concat)}"
         predicted_sequences.append(concat)
         alphas.append(attention)
     compute_2d_weight_vector(pred_kmer_seqs, vocab, "predicted")
