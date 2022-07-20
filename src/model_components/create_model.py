@@ -40,8 +40,8 @@ def create_model(
             dropout=dropout,
             emb_dropout=emb_dropout,
         ),
-        KmerEmbedding(vocab_size=vocab_size, emb_size=embedding_size,),
-        KmerEmbedding(vocab_size=vocab_size, emb_size=embedding_size,),
+        KmerEmbedding(vocab_size=vocab_size, emb_size=embedding_size, scale_gradient=True),
+        KmerEmbedding(vocab_size=vocab_size, emb_size=embedding_size, scale_gradient=True),
         Generator(hidden_size=hidden_size, vocab_size=vocab_size,),
     )
 
