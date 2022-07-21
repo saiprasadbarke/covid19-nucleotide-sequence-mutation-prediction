@@ -26,7 +26,7 @@ def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary, type
         position_class_weights = zeros_like(freq_array)
         # position_class_freq_dict = {}
         for position_index in range(sequence_length_kmerized):
-            column = targets.cpu().detach().numpy()[:, position_index]
+            column = targets.numpy()[:, position_index]
             unique_classes = unique(column).tolist()
             class_weights = compute_class_weight(class_weight="balanced", classes=unique_classes, y=column).tolist()
             # position_frequency_array = freq_array[:, i]

@@ -7,7 +7,7 @@ from model_components.kmer_embedding import KmerEmbedding
 
 # External
 import torch.nn as nn
-from torch import Tensor
+from torch import Tensor, randn_like
 
 
 class EncoderDecoder(nn.Module):
@@ -34,7 +34,9 @@ class EncoderDecoder(nn.Module):
     def forward(self, src: Tensor, trg: Tensor):
         """Take in and process masked src and target sequences."""
         encoder_output, encoder_hidden = self.encode(src)
-        return self.decode(encoder_output, encoder_hidden, trg)
+        noise = randn_like(encoder_output)
+        noisy_encoder_output = encoder_output + noise
+        return self.decode(noisy_encoder_output, encoder_hidden, trg)
 
     def encode(self, src: Tensor):
         src_embedded = self.src_embed(src)
