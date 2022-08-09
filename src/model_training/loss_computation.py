@@ -17,8 +17,8 @@ class SimpleLossCompute:
         self.scheduler = scheduler
 
     def __call__(self, x: Tensor, y: Tensor):
-        x = self.model.generator(x)
-        log_probs = permute(x, (0, 2, 1)).contiguous()
+        x = self.model.generator(x)  # N, D, C
+        log_probs = permute(x, (0, 2, 1)).contiguous()  # N, C, D
         targets = y.contiguous().long()
         loss = self.criterion(log_probs, targets)
         if self.optimizer is not None:

@@ -19,7 +19,7 @@ class SequenceWeightedCELoss(nn.Module):
         # print("Targets")
         # print(targets)
         # Gather log probabilities with respect to target
-        logp = gather(inputs, 1, targets.view(n, 1, l))
+        logp = gather(inputs, 1, targets.view(n, 1, l))  # logp: N, 1, D, targets : N, D
         # batch_loss = nll_loss(inputs, targets, reduction="none")
         # print()
         # print("logp")
