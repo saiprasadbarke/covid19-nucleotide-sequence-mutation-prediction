@@ -6,7 +6,7 @@ from data_operations.tokenize_data import Tokenize
 from data_operations.get_dataloaders import get_dataloader
 from model_training.train_model import train_loop
 from model_components.create_model import create_model
-from model_components.weights import compute_2d_weight_vector
+from model_components.reciprocal_weights import compute_2d_weight_vector
 from settings.constants import CURRENT_RUN_DIR, NUM_SPECIAL_CHARS
 
 
