@@ -33,8 +33,13 @@ def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary, type
                 else:
                     slope = 1 / number_of_datapoints
                     element[...] = -slope * item + 1
+                    # element[...] = (1 - 0.9999) / (1 - pow(0.9999, item))
         generate_heatmap(
-            weights_array, vocabulary.itos, list(range(sequence_length_kmerized)), "class_weights_per_position.png", float_flag=True
+            weights_array,
+            vocabulary.itos,
+            list(range(sequence_length_kmerized)),
+            "class_weights_per_position.png",
+            float_flag=True,
         )
         weights_array = delete(weights_array, 0, 1)
         # weights_array = weights_array[newaxis, ...]

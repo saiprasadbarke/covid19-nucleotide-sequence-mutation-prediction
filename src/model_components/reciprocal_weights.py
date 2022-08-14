@@ -34,6 +34,7 @@ def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary, type
             # freq_dict.update(zip(freq_dict, position_frequency_array))
             for kmer, weight in zip(unique_classes, class_weights):
                 position_class_weights[int(kmer), position_index] = weight
+        position_class_weights[:, 5] = 0
         generate_heatmap(
             position_class_weights,
             vocabulary.itos,

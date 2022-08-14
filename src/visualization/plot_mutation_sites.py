@@ -10,6 +10,7 @@ from settings.reference_sequence import REFERENCE_GENOME
 def get_mutations_and_plot(
     sequences: List[str], sequence_start_postion: int, sequence_end_postion: int, seq_len: int, y_type: str,
 ):
+    lol = REFERENCE_GENOME[sequence_start_postion:sequence_end_postion]
     difference_indices = {}
     similar_indices = {}
     for sequence in sequences:
