@@ -1,5 +1,5 @@
 from typing import List
-from numpy import nditer, reshape, zeros, newaxis, delete, unique, zeros_like
+from numpy import nditer, reshape, zeros, newaxis, delete, unique, zeros_like, square
 from torch import Tensor, cat, hsplit, stack
 from sklearn.utils.class_weight import compute_class_weight
 from data_operations.vocabulary import Vocabulary
@@ -34,7 +34,7 @@ def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary, type
             # freq_dict.update(zip(freq_dict, position_frequency_array))
             for kmer, weight in zip(unique_classes, class_weights):
                 position_class_weights[int(kmer), position_index] = weight
-        position_class_weights[:, 5] = 0
+        # position_class_weights[:, 5] = 0
         generate_heatmap(
             position_class_weights,
             vocabulary.itos,
@@ -45,4 +45,4 @@ def compute_2d_weight_vector(targets: List[Tensor], vocabulary: Vocabulary, type
         position_class_weights = delete(position_class_weights, 0, 1)
         # weights_array = weights_array[newaxis, ...]
 
-        return position_class_weights
+        return square(position_class_weights)
