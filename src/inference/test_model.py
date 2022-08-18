@@ -27,6 +27,7 @@ def test_model(test_dataloader: DataLoader, model: EncoderDecoder, kmer_size: in
             else:
                 concat.append(kmer)
         concat = "".join(concat)
+        assert len(concat) == max_len, "Concatenated string has incorrect length"
         predicted_sequences.append(concat)
         alphas.append(attention)
     return predicted_sequences, alphas

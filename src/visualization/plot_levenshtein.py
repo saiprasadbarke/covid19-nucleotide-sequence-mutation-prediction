@@ -1,5 +1,5 @@
 from itertools import product
-from json import load
+from json import load, dump
 from random import sample
 from settings.constants import MERGED_DATA, CLADE_PAIRS_NEXTCLADE, COMMON_REPORTS_PATH
 from settings.reference_sequence import REFERENCE_GENOME
@@ -8,7 +8,7 @@ from Levenshtein import distance
 
 def plot_lev_intraclade():
     data = load(open(MERGED_DATA))
-    dump = {}
+    data_dump = {}
     for clade_pair in CLADE_PAIRS_NEXTCLADE.values():
         clade1 = clade_pair[0]
         clade2 = clade_pair[1]
@@ -24,12 +24,7 @@ def plot_lev_intraclade():
             else:
                 lev_distance_dict[lev_dist] = 1
         sorted_lev_dist_dict = dict(sorted(lev_distance_dict.items(), key=lambda item: item[1]))
-        dump[f"{clade1}-{clade2}"] = sorted_lev_dist_dict
+        data_dump[f"{clade1}-{clade2}"] = sorted_lev_dist_dict
     with open(f"{COMMON_REPORTS_PATH}/plot_lev_intraclade.json", "w") as fout:
-        dump(dump, fout)
-
-
-def plot_lev_refgen():
-
-    raise NotImplementedError
+        dump(data_dump, fout)
 

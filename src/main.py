@@ -4,9 +4,10 @@ from pprint import pprint as pp
 
 # Local
 from settings.constants import ROUTINES_TO_EXECUTE
-from visualization.plot_levenshtein import plot_lev_intraclade
 
-plot_lev_intraclade()
+# from visualization.plot_levenshtein import plot_lev_intraclade
+
+# plot_lev_intraclade()
 
 pp(ROUTINES_TO_EXECUTE, indent=3)
 activity_number = int(input("Choose a task to run :   "))

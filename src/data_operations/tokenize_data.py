@@ -15,6 +15,8 @@ class Tokenize:
     def __init__(self, kmer_length: int = 3) -> None:
         self.kmer_length = kmer_length
         self.vocabulary = Vocabulary(kmer_length)
+        self.inputs = None
+        self.targets = None
 
     def sliding_window(self, sequence: str) -> List[str]:
         kmerized_sequence = []
@@ -45,6 +47,8 @@ class Tokenize:
             inputs.append(x_sequence)
             targets.append(y_sequence)
         print(f"Kmerization and Numericalization complete for {dataset_type} data...")
+        self.inputs = inputs
+        self.targets = targets
         return inputs, targets
 
     def add_special_characters(self, sequence: List[str], is_target: bool = True) -> List[str]:
@@ -55,4 +59,3 @@ class Tokenize:
         else:
             sequence.append("<EOS>")
         return sequence
-

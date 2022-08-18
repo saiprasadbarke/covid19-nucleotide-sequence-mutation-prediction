@@ -1,10 +1,16 @@
 # Local
 
+from json import load
 from math import inf
 from model_components.model import EncoderDecoder
+from model_training.sequence_weighted_cross_entropy_loss import SequenceWeightedCELoss
+from model_training.sequence_weighted_mse import SequenceWeightedMSELoss
 from settings.constants import (
+    CURRENT_RUN_DIR,
     EARLY_STOPPING_THRESHOLD,
     SAVED_MODELS_PATH,
+    SAVED_STATS_PATH,
+    USE_CUDA,
 )
 from model_training.run_epoch import run_epoch
 from model_training.loss_computation import SimpleLossCompute
@@ -26,10 +32,10 @@ def train_loop(
     learning_rate: float = 1e-3,
     print_every=100,
 ):
-
-    criterion = nn.CrossEntropyLoss()
+    weights = get_weights()
+    criterion = nn.NLLLoss(reduction="sum")
     optim = Adam(model.parameters(), lr=learning_rate)
-    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim)
+    scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, patience=2)
 
     number_of_epochs_without_improvement = 0
     best_val_loss = inf
@@ -96,3 +102,17 @@ def train_loop(
                 return returned_metrics, last_best_epoch
             else:
                 number_of_epochs_without_improvement += 1
+
+
+def get_weights():
+    weights_data = load(
+        open(f"{SAVED_STATS_PATH}/similarity_indices_ref_overall_data.json")
+    )  # change similarity to difference to get an inverse weighting scheme
+    number_of_sequence_pairs_in_dataset = load(open(f"{CURRENT_RUN_DIR}/data_parameters.json"))[
+        "number_of_sequence_pairs"
+    ]
+    list_weights = [i / number_of_sequence_pairs_in_dataset for i in weights_data.values()]
+    list_weights.append(1)
+    weights_tensor = torch.Tensor(list_weights)
+    reshaped_weights_tensor = torch.reshape(weights_tensor, (-1, len(weights_data) + 1))
+    return reshaped_weights_tensor.cuda() if USE_CUDA else reshaped_weights_tensor

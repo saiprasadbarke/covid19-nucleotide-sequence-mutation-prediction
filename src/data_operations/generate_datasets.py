@@ -42,13 +42,14 @@ def generate_datasets(
         else:
             clipped_seq_1 = seq_pair[0][sequence_start_postion:sequence_end_postion]
             clipped_seq_2 = seq_pair[1][sequence_start_postion:sequence_end_postion]
-            if is_valid_sequence_pair(
-                seq1=clipped_seq_1,
-                seq2=clipped_seq_2,
-                minimum_levenshtein_distance=minimum_levenshtein_distance,
-                maximum_levenshtein_distance=maximum_levenshtein_distance,
-            ):
-                # Append the valid sequence to the list of valid sequences
+            # if is_valid_sequence_pair(
+            #     seq1=clipped_seq_1,
+            #     seq2=clipped_seq_2,
+            #     minimum_levenshtein_distance=minimum_levenshtein_distance,
+            #     maximum_levenshtein_distance=maximum_levenshtein_distance,
+            # ):
+            # Append the valid sequence to the list of valid sequences
+            if distance(clipped_seq_1, clipped_seq_2) > 0:
                 input_target_list.append((clipped_seq_1, clipped_seq_2))
 
                 # Increment the counter
@@ -57,6 +58,13 @@ def generate_datasets(
                 if count_sequences % 1000 == 0:
                     print(f"Found {count_sequences} valid pairs.")
 
+    get_mutations_and_plot(
+        sequences=[sequence_pair[1] for sequence_pair in input_target_list],
+        sequence_start_postion=sequence_start_postion,
+        sequence_end_postion=sequence_end_postion,
+        seq_len=max_seq_length,
+        y_type="overall_data",
+    )
     # Split data into train, validation and test datasets
     split = {"train": 0.6, "val": 0.2, "test": 0.2}
     train_val_test_indices = {

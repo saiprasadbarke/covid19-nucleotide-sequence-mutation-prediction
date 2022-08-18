@@ -21,7 +21,6 @@ class SimpleLossCompute:
         log_probs = permute(x, (0, 2, 1)).contiguous()
         targets = y.contiguous().long()
         loss = self.criterion(log_probs, targets)
-
         if self.optimizer is not None:
             loss.backward()
             clip_grad_norm_(self.model.parameters(), max_norm=2.0)
