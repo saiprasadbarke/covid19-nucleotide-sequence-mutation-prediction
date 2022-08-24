@@ -23,7 +23,7 @@ class SimpleLossCompute:
         loss = self.criterion(log_probs, targets)
         if self.optimizer is not None:
             loss.backward()
-            # clip_grad_norm_(self.model.parameters(), max_norm=2.0)
+            clip_grad_norm_(self.model.parameters(), max_norm=2.0)
             self.optimizer.step()
             if self.scheduler is not None:
                 self.scheduler.step()

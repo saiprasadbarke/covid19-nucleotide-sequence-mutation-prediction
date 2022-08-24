@@ -32,9 +32,7 @@ def train_loop(
     learning_rate: float = 1e-3,
     print_every=100,
 ):
-    # weights = get_weights()
     criterion = SequenceWeightedCELoss2(weights=weights)
-    # criterion = nn.NLLLoss(reduction="sum")
     optim = Adam(model.parameters(), lr=learning_rate)
     scheduler = lr_scheduler.ReduceLROnPlateau(optimizer=optim, patience=2)
 
