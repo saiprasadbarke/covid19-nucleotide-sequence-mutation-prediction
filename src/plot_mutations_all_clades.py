@@ -10,7 +10,7 @@ def plot_mutations_all_clades():
     for clade in data:
         list_of_seq = list(data[clade].keys())
         get_mutations_and_plot(
-            sequences=list_of_seq, sequence_start_postion=0, sequence_end_postion=3700, seq_len=3700, y_type=clade,
+            targets=list_of_seq, sequence_start_postion=0, sequence_end_postion=3700, seq_len=3700, y_type=clade,
         )
 
 

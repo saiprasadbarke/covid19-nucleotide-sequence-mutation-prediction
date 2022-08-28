@@ -40,7 +40,7 @@ def inference():
     predicted_sequences, alphas = test_model(test_dataloader, model, kmer_size)
     data_parameters = load(open(f"{CURRENT_RUN_DIR}/data_parameters.json"))
     get_mutations_and_plot(
-        sequences=predicted_sequences,
+        targets=predicted_sequences,
         sequence_start_postion=data_parameters["sequence_start_postion"],
         sequence_end_postion=data_parameters["sequence_end_postion"],
         seq_len=data_parameters["max_seq_length"],

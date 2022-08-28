@@ -59,11 +59,21 @@ def generate_datasets(
                     print(f"Found {count_sequences} valid pairs.")
 
     get_mutations_and_plot(
-        sequences=[sequence_pair[1] for sequence_pair in input_target_list],
+        targets=[sequence_pair[1] for sequence_pair in input_target_list],
         sequence_start_postion=sequence_start_postion,
         sequence_end_postion=sequence_end_postion,
         seq_len=max_seq_length,
         y_type="overall_data",
+    )
+
+    get_mutations_and_plot(
+        targets=[sequence_pair[1] for sequence_pair in input_target_list],
+        sequence_start_postion=sequence_start_postion,
+        sequence_end_postion=sequence_end_postion,
+        seq_len=max_seq_length,
+        y_type="overall_data",
+        inputs=[sequence_pair[0] for sequence_pair in input_target_list],
+        parent_child=True,
     )
     # Split data into train, validation and test datasets
     split = {"train": 0.6, "val": 0.2, "test": 0.2}
@@ -94,21 +104,21 @@ def generate_datasets(
     )
 
     get_mutations_and_plot(
-        sequences=[sequence_pair[1] for sequence_pair in train_list],
+        targets=[sequence_pair[1] for sequence_pair in train_list],
         sequence_start_postion=sequence_start_postion,
         sequence_end_postion=sequence_end_postion,
         seq_len=max_seq_length,
         y_type="train_ground_truth",
     )
     get_mutations_and_plot(
-        sequences=[sequence_pair[1] for sequence_pair in val_list],
+        targets=[sequence_pair[1] for sequence_pair in val_list],
         sequence_start_postion=sequence_start_postion,
         sequence_end_postion=sequence_end_postion,
         seq_len=max_seq_length,
         y_type="val_ground_truth",
     )
     get_mutations_and_plot(
-        sequences=[sequence_pair[1] for sequence_pair in test_list],
+        targets=[sequence_pair[1] for sequence_pair in test_list],
         sequence_start_postion=sequence_start_postion,
         sequence_end_postion=sequence_end_postion,
         seq_len=max_seq_length,
