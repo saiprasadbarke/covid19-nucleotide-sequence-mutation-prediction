@@ -14,7 +14,7 @@ def greedy_decode(model: EncoderDecoder, src: torch.Tensor, max_len: int = 500):
         encoder_hidden, encoder_final = model.encode(src)
         prev_y = torch.ones(1, 1).fill_(0).type_as(src)
 
-        for i in range(max_len):
+        for _ in range(max_len):
             out, hidden, pre_output, _ = model.decode(
                 encoder_output=encoder_hidden, encoder_hidden=encoder_final, trg=prev_y, decoder_hidden=hidden
             )

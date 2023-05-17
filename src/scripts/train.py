@@ -24,7 +24,7 @@ def train():
     ##################################### Model parameters
     len_vocabulary = 4 ** kmer_size + NUM_SPECIAL_CHARS
     model_parameters = input(
-        f"Please enter the embedding_size, rnn_hidden_size, encoder_rnn_num_layers, decoder_rnn_num_layers:   "
+        "Please enter the embedding_size, rnn_hidden_size, encoder_rnn_num_layers, decoder_rnn_num_layers:   "
     )
     embedding_size, rnn_hidden_size, encoder_rnn_num_layers, decoder_rnn_num_layers, = (
         int(parameter) for parameter in list(model_parameters.split(","))

@@ -66,5 +66,7 @@ def sequence_accuracy(hypotheses, references):
     :return:
     """
     assert len(hypotheses) == len(references)
-    correct_sequences = sum([1 for (hyp, ref) in zip(hypotheses, references) if hyp == ref])
+    correct_sequences = sum(
+        1 for (hyp, ref) in zip(hypotheses, references) if hyp == ref
+    )
     return (correct_sequences / len(hypotheses)) * 100 if hypotheses else 0.0

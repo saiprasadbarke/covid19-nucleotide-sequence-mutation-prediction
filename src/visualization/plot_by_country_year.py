@@ -58,10 +58,12 @@ LIST_OF_COUNTRIES = [
 def split_sequences_by_country(import_file_path: str) -> Dict[str, List[SeqRecord]]:
     countrywise_sequences_dictionary = dict.fromkeys(LIST_OF_COUNTRIES)
     for country in countrywise_sequences_dictionary.keys():
-        sequences_list = []
-        for seq_record in SeqIO.parse(import_file_path, "fasta"):
-            if country in seq_record.description or country.lower() in seq_record.description:
-                sequences_list.append(seq_record)
+        sequences_list = [
+            seq_record
+            for seq_record in SeqIO.parse(import_file_path, "fasta")
+            if country in seq_record.description
+            or country.lower() in seq_record.description
+        ]
         countrywise_sequences_dictionary[country] = sequences_list
     return countrywise_sequences_dictionary
 
@@ -69,10 +71,9 @@ def split_sequences_by_country(import_file_path: str) -> Dict[str, List[SeqRecor
 def write_fasta_file_by_country(countrywise_dictionary: Dict[str, List[SeqRecord]], output_path: str):
 
     for country, sequences in countrywise_dictionary.items():
-        fasta_file_country = open(f"{output_path}/{country}", "w")
-        for sequence_record in sequences:
-            fasta_file_country.write(sequence_record.format("fasta"))
-        fasta_file_country.close()
+        with open(f"{output_path}/{country}", "w") as fasta_file_country:
+            for sequence_record in sequences:
+                fasta_file_country.write(sequence_record.format("fasta"))
 
 
 def generate_histogram_by_country(

@@ -10,11 +10,12 @@ from Bio import SeqIO
 def plot_seq_len_hist(hist_path: str, inp_file: str = None, sequences_array: list[str] = None):
     length_array = []
     if inp_file and not sequences_array:
-        for seq_record in SeqIO.parse(inp_file, "fasta"):
-            length_array.append(len(seq_record.seq))
+        length_array.extend(
+            len(seq_record.seq)
+            for seq_record in SeqIO.parse(inp_file, "fasta")
+        )
     elif sequences_array and not inp_file:
-        for seq in sequences_array:
-            length_array.append(len(seq))
+        length_array.extend(len(seq) for seq in sequences_array)
     else:
         return "Warning: You can either choose the file input or the sequences array and not both!"
 
@@ -23,9 +24,10 @@ def plot_seq_len_hist(hist_path: str, inp_file: str = None, sequences_array: lis
         if length not in unique_len_array:
             unique_len_array.append(length)
 
-    number_of_seq_and_counts_dict = {}
-    for unique_len in unique_len_array:
-        number_of_seq_and_counts_dict[str(unique_len)] = length_array.count(unique_len)
+    number_of_seq_and_counts_dict = {
+        str(unique_len): length_array.count(unique_len)
+        for unique_len in unique_len_array
+    }
     sorted_dict = dict(sorted(number_of_seq_and_counts_dict.items(), key=lambda item: item[1]))
     plt.figure(figsize=(60, 20))
     plt.bar(list(sorted_dict.keys()), list(sorted_dict.values()))

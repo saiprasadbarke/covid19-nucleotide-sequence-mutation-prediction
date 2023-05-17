@@ -22,7 +22,7 @@ def plot_lev_refgen():
         lev_distances = {}
         for seq in list_of_seq:
             lev_d = distance(seq, REFERENCE_GENOME)
-            if lev_d in lev_distances.keys():
+            if lev_d in lev_distances:
                 lev_distances[lev_d] += 1
             else:
                 lev_distances[lev_d] = 1
