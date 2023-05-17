@@ -39,24 +39,23 @@ def generate_datasets(
     for seq_pair in random_sampled_cartesian_product_list:
         if count_sequences == number_of_sequence_pairs:
             break
-        else:
-            clipped_seq_1 = seq_pair[0][sequence_start_postion:sequence_end_postion]
-            clipped_seq_2 = seq_pair[1][sequence_start_postion:sequence_end_postion]
-            # if is_valid_sequence_pair(
-            #     seq1=clipped_seq_1,
-            #     seq2=clipped_seq_2,
-            #     minimum_levenshtein_distance=minimum_levenshtein_distance,
-            #     maximum_levenshtein_distance=maximum_levenshtein_distance,
-            # ):
-            # Append the valid sequence to the list of valid sequences
-            if distance(clipped_seq_1, clipped_seq_2) > 0:
-                input_target_list.append((clipped_seq_1, clipped_seq_2))
+        clipped_seq_1 = seq_pair[0][sequence_start_postion:sequence_end_postion]
+        clipped_seq_2 = seq_pair[1][sequence_start_postion:sequence_end_postion]
+        # if is_valid_sequence_pair(
+        #     seq1=clipped_seq_1,
+        #     seq2=clipped_seq_2,
+        #     minimum_levenshtein_distance=minimum_levenshtein_distance,
+        #     maximum_levenshtein_distance=maximum_levenshtein_distance,
+        # ):
+        # Append the valid sequence to the list of valid sequences
+        if distance(clipped_seq_1, clipped_seq_2) > 0:
+            input_target_list.append((clipped_seq_1, clipped_seq_2))
 
-                # Increment the counter
-                count_sequences += 1
-                # Print the progress
-                if count_sequences % 1000 == 0:
-                    print(f"Found {count_sequences} valid pairs.")
+            # Increment the counter
+            count_sequences += 1
+            # Print the progress
+            if count_sequences % 1000 == 0:
+                print(f"Found {count_sequences} valid pairs.")
 
     get_mutations_and_plot(
         sequences=[sequence_pair[1] for sequence_pair in input_target_list],
@@ -77,7 +76,7 @@ def generate_datasets(
     for i, input_target_pair in enumerate(input_target_list, 1):
         if i <= train_val_test_indices["train_upto"]:
             train_list.append(input_target_pair)
-        elif i > train_val_test_indices["train_upto"] and i <= train_val_test_indices["val_upto"]:
+        elif i <= train_val_test_indices["val_upto"]:
             val_list.append(input_target_pair)
         else:
             test_list.append(input_target_pair)
@@ -120,7 +119,7 @@ def is_valid_sequence_pair(
     seq1: str, seq2: str, minimum_levenshtein_distance: int, maximum_levenshtein_distance: int,
 ) -> bool:
     lev_distance = distance(seq1, seq2)
-    if lev_distance < minimum_levenshtein_distance or lev_distance > maximum_levenshtein_distance:
-        return False
-    else:
-        return True
+    return (
+        lev_distance >= minimum_levenshtein_distance
+        and lev_distance <= maximum_levenshtein_distance
+    )

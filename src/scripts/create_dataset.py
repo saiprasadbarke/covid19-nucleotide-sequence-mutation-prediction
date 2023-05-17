@@ -13,7 +13,11 @@ def create_dataset():
     clade_pair = CLADE_PAIRS_NEXTCLADE[dataset_number]
     number_of_sequence_pairs = int(input("Choose total number of sequence pairs for train+val+test: "))
     max_seq_length = int(input("Choose the sequence length between [100,3700]:   "))
-    sequence_start_postion = int(input(f"Choose the sequence start position between [0,3700-max_seq_length]: "))
+    sequence_start_postion = int(
+        input(
+            "Choose the sequence start position between [0,3700-max_seq_length]: "
+        )
+    )
     sequence_end_postion = sequence_start_postion + max_seq_length
     # minimum_levenshtein_distance = int(input("Choose a minimum levenshtein distance between [5,15]: "))
     # maximum_levenshtein_distance = int(input("Choose a maximum levenshtein distance between [15,25]: "))

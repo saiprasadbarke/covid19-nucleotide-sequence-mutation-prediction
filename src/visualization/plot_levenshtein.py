@@ -19,7 +19,7 @@ def plot_lev_intraclade():
         lev_distance_dict = {}
         for pair in cartesian_product_list:
             lev_dist = distance(pair[0], pair[1])
-            if lev_dist in lev_distance_dict.keys():
+            if lev_dist in lev_distance_dict:
                 lev_distance_dict[lev_dist] += 1
             else:
                 lev_distance_dict[lev_dist] = 1

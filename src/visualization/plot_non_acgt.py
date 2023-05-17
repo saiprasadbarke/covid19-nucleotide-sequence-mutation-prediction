@@ -42,9 +42,10 @@ def plot_non_acgt(list_of_total_non_acgt_chars: list[int], hist_path: str):
         if number not in unique_total_nonacgt_array:
             unique_total_nonacgt_array.append(number)
 
-    number_of_nonacgt_and_counts_dict = {}
-    for unique_len in unique_total_nonacgt_array:
-        number_of_nonacgt_and_counts_dict[str(unique_len)] = list_of_total_non_acgt_chars.count(unique_len)
+    number_of_nonacgt_and_counts_dict = {
+        str(unique_len): list_of_total_non_acgt_chars.count(unique_len)
+        for unique_len in unique_total_nonacgt_array
+    }
     sorted_dict = dict(sorted(number_of_nonacgt_and_counts_dict.items(), key=lambda item: item[1]))
     plt.figure(figsize=(20, 20))
     plt.bar(list(sorted_dict.keys()), list(sorted_dict.values()))

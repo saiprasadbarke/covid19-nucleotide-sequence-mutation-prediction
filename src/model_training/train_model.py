@@ -91,17 +91,16 @@ def train_loop(
                 },
                 f"{SAVED_MODELS_PATH}/save_epoch_{epoch}.pt",
             )
+            number_of_epochs_without_improvement = 0
             best_val_loss = validation_loss
             last_best_epoch = epoch
-            number_of_epochs_without_improvement = 0
             if last_best_epoch == num_epochs:
                 return returned_metrics, last_best_epoch
+        elif number_of_epochs_without_improvement == EARLY_STOPPING_THRESHOLD:
+            print(f"Early stopping on epoch number {epoch}!")
+            return returned_metrics, last_best_epoch
         else:
-            if number_of_epochs_without_improvement == EARLY_STOPPING_THRESHOLD:
-                print(f"Early stopping on epoch number {epoch}!")
-                return returned_metrics, last_best_epoch
-            else:
-                number_of_epochs_without_improvement += 1
+            number_of_epochs_without_improvement += 1
 
 
 def get_weights():

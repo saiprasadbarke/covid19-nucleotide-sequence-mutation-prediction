@@ -18,5 +18,5 @@ def plot_kmer_position_mutations_graph(
     )
     targets_as_list = [target.tolist() for target in targets]
 
-    for target in targets_as_list:
+    for _ in targets_as_list:
         continue

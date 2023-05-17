@@ -18,7 +18,7 @@ def get_mutations_and_plot(
             REFERENCE_GENOME[sequence_start_postion:sequence_end_postion], sequence, sequence_start_postion, seq_len,
         )
         for idx in difference:
-            if idx in difference_indices.keys():
+            if idx in difference_indices:
                 difference_indices[idx] += 1  # Added a 1 for every new instance of the index
             else:
                 difference_indices[idx] = 1  # Capture the first instance of the index
@@ -27,19 +27,16 @@ def get_mutations_and_plot(
             REFERENCE_GENOME[sequence_start_postion:sequence_end_postion], sequence, sequence_start_postion, seq_len,
         )
         for idy in similarity:
-            if idy in similar_indices.keys():
+            if idy in similar_indices:
                 similar_indices[idy] += 1
             else:
                 similar_indices[idy] = 1
     # Sort the difference indices data
     sorted_difference_indices = dict(sorted(difference_indices.items(), key=lambda x: x[0]))
-    # Add 0 for indices with no difference
-    complete_sequence_mutation_data = {}
-    for i in range(sequence_start_postion, sequence_end_postion):
-        if i in sorted_difference_indices.keys():
-            complete_sequence_mutation_data[i] = sorted_difference_indices[i]
-        else:
-            complete_sequence_mutation_data[i] = 0
+    complete_sequence_mutation_data = {
+        i: sorted_difference_indices.get(i, 0)
+        for i in range(sequence_start_postion, sequence_end_postion)
+    }
     # Generate reports for mutations between reference genome and target sequences
     difference_indices_file = f"{SAVED_STATS_PATH}/difference_indices_ref_{y_type}.json"
     with open(difference_indices_file, "w") as fout:
@@ -51,13 +48,10 @@ def get_mutations_and_plot(
 
     # Sort the similarity indices data
     sorted_similarity_indices = dict(sorted(similar_indices.items(), key=lambda x: x[0]))
-    # Add 0 for indices with no difference
-    complete_sequence_similarity_data = {}
-    for i in range(sequence_start_postion, sequence_end_postion):
-        if i in sorted_similarity_indices.keys():
-            complete_sequence_similarity_data[i] = sorted_similarity_indices[i]
-        else:
-            complete_sequence_similarity_data[i] = 0
+    complete_sequence_similarity_data = {
+        i: sorted_similarity_indices.get(i, 0)
+        for i in range(sequence_start_postion, sequence_end_postion)
+    }
     # Generate reports for mutations between reference genome and target sequences
     similarity_indices_file = f"{SAVED_STATS_PATH}/similarity_indices_ref_{y_type}.json"
     with open(similarity_indices_file, "w") as fout:

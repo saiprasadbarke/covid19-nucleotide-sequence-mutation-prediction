@@ -34,22 +34,24 @@ class Vocabulary:
 
     def generate_vocabulary(self) -> Tuple[Dict[str, int], List[str]]:
         # The number of possible k-combinations of these nucleotides taken with repetition is 4^kmer_length
-        vocabulary_list = {x for x in combinations_with_replacement(NUCLEOTIDES, self.kmer_length)}
+        vocabulary_list = set(
+            combinations_with_replacement(NUCLEOTIDES, self.kmer_length)
+        )
         permuted_vocabulary = set()
         for word in vocabulary_list:
-            word_permutations = {permutation_of_word for permutation_of_word in permutations(word, self.kmer_length)}
+            word_permutations = set(permutations(word, self.kmer_length))
             permuted_vocabulary.update(word_permutations)
 
         vocabulary_list.update(permuted_vocabulary)
 
-        vocabulary_dict = {}
-        for index, kmer in enumerate(vocabulary_list, NUM_SPECIAL_CHARS):
-            # We start the indexing from NUM_SPECIAL_CHARS as the first NUM_SPECIAL_CHARS indices are for the special characters BOS, EOS
-            vocabulary_dict["".join(kmer)] = index
+        vocabulary_dict = {
+            "".join(kmer): index
+            for index, kmer in enumerate(vocabulary_list, NUM_SPECIAL_CHARS)
+        }
         vocabulary_dict["<BOS>"] = BOS_IDX
         vocabulary_dict["<EOS>"] = EOS_IDX
         vocabulary_dict = dict(sorted(vocabulary_dict.items(), key=lambda item: item[1]))
-        vocab_list = [s_k for s_k in vocabulary_dict.keys()]
+        vocab_list = list(vocabulary_dict.keys())
         return vocabulary_dict, vocab_list
 
     def __str__(self) -> str:

@@ -19,21 +19,22 @@ class Tokenize:
         self.targets = None
 
     def sliding_window(self, sequence: str) -> List[str]:
-        kmerized_sequence = []
-        for i in range(len(sequence) - self.kmer_length + 1):
-            kmerized_sequence.append(sequence[i : i + self.kmer_length])
-        return kmerized_sequence
+        return [
+            sequence[i : i + self.kmer_length]
+            for i in range(len(sequence) - self.kmer_length + 1)
+        ]
 
     def tokenize_encode_sequence(self, sequence: str, is_target: bool = True) -> List[int]:
         kmer_sequence = self.sliding_window(sequence)
         kmer_sequence = self.add_special_characters(kmer_sequence, is_target)
-        encoded_kmer_seq = [self.vocabulary.stoi[kmer] for kmer in kmer_sequence]
-        return encoded_kmer_seq
+        return [self.vocabulary.stoi[kmer] for kmer in kmer_sequence]
 
     def kmerize_numericalize_pad_tensorize_sequences(self, dataset_type: str):
-        assert (
-            dataset_type == "train" or dataset_type == "val" or dataset_type == "test"
-        ), "Valid values of dataset_type are [train, val ,test]"
+        assert dataset_type in {
+            "train",
+            "val",
+            "test",
+        }, "Valid values of dataset_type are [train, val ,test]"
         dataset_file_path = f"{CURRENT_RUN_DATA_DIR}/{dataset_type}.json"
         inputs = []
         targets = []
@@ -55,7 +56,5 @@ class Tokenize:
         """This function appends or prepends a EOS , BOS  depending on whether the sequence is an input sequence or a target sequence"""
         if is_target:
             sequence.insert(0, "<BOS>")
-            sequence.append("<EOS>")
-        else:
-            sequence.append("<EOS>")
+        sequence.append("<EOS>")
         return sequence

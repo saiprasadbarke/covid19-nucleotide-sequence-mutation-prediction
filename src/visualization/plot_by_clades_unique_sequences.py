@@ -4,11 +4,10 @@ import matplotlib.pyplot as plt
 
 
 def plot_by_clades_unique_sequences(merged_file: str, graph_path: str, stats_path: str):
-    clade_seqlen_dict = {}
     data = load(open(merged_file))
-    for clade, sequences_list in data.items():
-        clade_seqlen_dict[clade] = len(sequences_list)
-
+    clade_seqlen_dict = {
+        clade: len(sequences_list) for clade, sequences_list in data.items()
+    }
     with open(stats_path, "w") as fout:
         dump(clade_seqlen_dict, fout)
 

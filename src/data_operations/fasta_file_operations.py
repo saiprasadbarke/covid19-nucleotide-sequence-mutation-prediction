@@ -9,16 +9,15 @@ from Bio import SeqIO
 
 
 def create_cleaned_fasta_file(import_file_path: str, export_file_path: str):
-    fasta_file_with_cleaned_sequences = open(export_file_path, "w")
-    number_of_clean_sequences = 0
-    for seq_record in SeqIO.parse(import_file_path, "fasta"):
-        if is_valid_sequence(sequence=str(seq_record.seq)):
-            number_of_clean_sequences += 1
-            fasta_file_with_cleaned_sequences.write(seq_record.format("fasta"))
-            if number_of_clean_sequences % 100000 == 0:
-                print(f"Wrote {number_of_clean_sequences} clean sequences to file")
-    print(f"Wrote {number_of_clean_sequences} clean sequences to file")
-    fasta_file_with_cleaned_sequences.close()
+    with open(export_file_path, "w") as fasta_file_with_cleaned_sequences:
+        number_of_clean_sequences = 0
+        for seq_record in SeqIO.parse(import_file_path, "fasta"):
+            if is_valid_sequence(sequence=str(seq_record.seq)):
+                number_of_clean_sequences += 1
+                fasta_file_with_cleaned_sequences.write(seq_record.format("fasta"))
+                if number_of_clean_sequences % 100000 == 0:
+                    print(f"Wrote {number_of_clean_sequences} clean sequences to file")
+        print(f"Wrote {number_of_clean_sequences} clean sequences to file")
 
 
 def is_valid_sequence(sequence: str) -> bool:
